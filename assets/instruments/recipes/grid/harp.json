@@ -1,0 +1,10 @@
+{
+	ingredientPattern: "PPP	PFF	_P_",
+	ingredients: {
+		"F": { type: "item", code: "game:flaxfibers", "quantity": 6},
+		"P": { type: "item", code: "game:plank-*" }
+	},
+	width: 3,
+	height: 3,
+	output: { type: "item", code: "harp" }
+}

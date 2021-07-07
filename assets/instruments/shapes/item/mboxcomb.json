@@ -1,0 +1,72 @@
+{
+	"editor": {
+		"allAngles": false,
+		"entityTextureMode": false
+	},
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textureSizes": {
+	},
+	"textures": {
+		"steel": "game:block/metal/ingot/steel"
+	},
+	"elements": [
+		{
+			"name": "Cube1",
+			"from": [ 5.0, 0.0, 5.0 ], 
+			"to": [ 9.0, 4.0, 6.0 ], 
+			"rotationOrigin": [ 5.0, 0.0, 5.0 ],
+			"faces": {
+				"north": { "texture": "#steel", "uv": [ 0.0, 1.0, 3.0, 4.0 ], "autoUv": false },
+				"east": { "texture": "#null", "uv": [ 3.0, 1.0, 4.0, 4.0 ], "enabled": false, "autoUv": false },
+				"south": { "texture": "#steel", "uv": [ 4.0, 1.0, 8.0, 5.0 ] },
+				"west": { "texture": "#steel", "uv": [ 7.0, 1.0, 8.0, 5.0 ] },
+				"up": { "texture": "#steel", "uv": [ 0.0, 0.0, 4.0, 1.0 ] },
+				"down": { "texture": "#steel", "uv": [ 3.0, 0.0, 7.0, 1.0 ] }
+			},
+			"children": [
+				{
+					"name": "Cube2",
+					"from": [ 0.0, 0.0, 1.0 ], 
+					"to": [ 1.0, 4.0, 5.0 ], 
+					"rotationOrigin": [ 0.0, 0.0, 1.0 ],
+					"faces": {
+						"north": { "texture": "#null", "uv": [ 0.0, 0.0, 1.0, 4.0 ], "enabled": false },
+						"east": { "texture": "#steel", "uv": [ 0.0, 0.0, 4.0, 4.0 ] },
+						"south": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 4.0 ] },
+						"west": { "texture": "#steel", "uv": [ 0.0, 0.0, 4.0, 4.0 ] },
+						"up": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 4.0 ] },
+						"down": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 4.0 ] }
+					}
+				},
+				{
+					"name": "Cube3",
+					"from": [ 1.0, 0.0, 4.0 ], 
+					"to": [ 5.0, 4.0, 5.0 ], 
+					"rotationOrigin": [ 1.0, 0.0, 4.0 ],
+					"faces": {
+						"north": { "texture": "#steel", "uv": [ 0.0, 0.0, 4.0, 4.0 ] },
+						"east": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 4.0 ] },
+						"south": { "texture": "#steel", "uv": [ 0.0, 0.0, 4.0, 4.0 ] },
+						"west": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 4.0 ] },
+						"up": { "texture": "#steel", "uv": [ 0.0, 0.0, 4.0, 1.0 ] },
+						"down": { "texture": "#steel", "uv": [ 0.0, 0.0, 4.0, 1.0 ] }
+					}
+				},
+				{
+					"name": "Cube4",
+					"from": [ 4.0, 0.0, 0.0 ], 
+					"to": [ 5.0, 4.0, 4.0 ], 
+					"rotationOrigin": [ 4.0, 0.0, 0.0 ],
+					"faces": {
+						"north": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 4.0 ] },
+						"east": { "texture": "#steel", "uv": [ 1.0, 3.0, 5.0, 7.0 ] },
+						"south": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 3.0 ], "autoUv": false },
+						"west": { "texture": "#steel", "uv": [ 4.0, 3.0, 8.0, 7.0 ] },
+						"up": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 4.0 ] },
+						"down": { "texture": "#steel", "uv": [ 1.0, 0.0, 2.0, 4.0 ] }
+					}
+				}
+			]
+		}
+	]}

@@ -1,0 +1,13 @@
+{
+	ingredientPattern: "KS	FP	_L",
+	ingredients: {
+		"K": { type: "item", code: "game:knife-*", isTool: true },
+    "S": { type: "item", code: "game:saw-*", isTool: true },
+		"F": { type: "item", code: "game:flaxfibers", "quantity": 6},
+		"P": { type: "item", code: "game:plank-*" },
+		"L": { type: "block", code: "game:log-*-ud" }
+	},
+	width: 2,
+	height: 3,
+	output: { type: "item", code: "acousticguitar" }
+}

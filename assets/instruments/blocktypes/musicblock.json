@@ -1,0 +1,19 @@
+{
+	code: "musicblock",
+	class: "musicblock",
+	entityclass: "musicblockentity",
+	creativeinventory: {
+		"general": [ "*" ],
+		"instruments": [ "*" ]
+	},
+	blockmaterial: "Wood",
+	drawtype: "Cube",
+	textures: {
+		all: { base: "game:block/wood/crate/normal" }
+	},
+	resistance: 3.5,
+	sounds: {
+		"place": "game:block/anvil",
+		"walk": "game:walk/stone"
+	}
+}

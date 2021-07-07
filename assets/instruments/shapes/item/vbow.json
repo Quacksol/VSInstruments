@@ -1,0 +1,73 @@
+{
+	"editor": {
+		"allAngles": false,
+		"entityTextureMode": false
+	},
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textureSizes": {
+	},
+	"textures": {
+		"chalk1": "game:block/stone/rock/chalk1",
+		"sides": "game:block/wood/barrel/sides"
+	},
+	"elements": [
+		{
+			"name": "Cube1",
+			"from": [ 3.0, 0.0, 6.0 ], 
+			"to": [ 13.0, 1.0, 7.0 ], 
+			"rotationOrigin": [ 3.0, 0.0, 6.0 ],
+			"faces": {
+				"north": { "texture": "#sides", "uv": [ 0.0, 0.0, 10.0, 1.0 ] },
+				"east": { "texture": "#sides", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+				"south": { "texture": "#sides", "uv": [ 0.0, 0.0, 10.0, 1.0 ] },
+				"west": { "texture": "#sides", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+				"up": { "texture": "#sides", "uv": [ 0.0, 0.0, 10.0, 1.0 ] },
+				"down": { "texture": "#sides", "uv": [ 0.0, 0.0, 10.0, 1.0 ] }
+			},
+			"children": [
+				{
+					"name": "Cube2",
+					"from": [ -1.0, 0.0, 1.0 ], 
+					"to": [ 0.0, 1.0, 2.0 ], 
+					"rotationOrigin": [ -1.0, 0.0, 1.0 ],
+					"faces": {
+						"north": { "texture": "#sides", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"east": { "texture": "#sides", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"south": { "texture": "#sides", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"west": { "texture": "#sides", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"up": { "texture": "#sides", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"down": { "texture": "#sides", "uv": [ 0.0, 0.0, 1.0, 1.0 ] }
+					}
+				},
+				{
+					"name": "Cube3",
+					"from": [ 10.0, 0.0, 1.0 ], 
+					"to": [ 11.0, 1.0, 2.0 ], 
+					"rotationOrigin": [ 10.0, 0.0, 1.0 ],
+					"faces": {
+						"north": { "texture": "#sides", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"east": { "texture": "#sides", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"south": { "texture": "#sides", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"west": { "texture": "#sides", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"up": { "texture": "#sides", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"down": { "texture": "#sides", "uv": [ 0.0, 0.0, 1.0, 1.0 ] }
+					}
+				},
+				{
+					"name": "Cube4",
+					"from": [ -1.0, 0.0, 2.0 ], 
+					"to": [ 11.0, 1.0, 3.0 ], 
+					"rotationOrigin": [ -1.0, 0.0, 2.0 ],
+					"faces": {
+						"north": { "texture": "#chalk1", "uv": [ 0.0, 0.0, 12.0, 1.0 ] },
+						"east": { "texture": "#chalk1", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"south": { "texture": "#chalk1", "uv": [ 0.0, 0.0, 12.0, 1.0 ] },
+						"west": { "texture": "#chalk1", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+						"up": { "texture": "#chalk1", "uv": [ 0.0, 0.0, 12.0, 1.0 ] },
+						"down": { "texture": "#chalk1", "uv": [ 0.0, 0.0, 12.0, 1.0 ] }
+					}
+				}
+			]
+		}
+	]}

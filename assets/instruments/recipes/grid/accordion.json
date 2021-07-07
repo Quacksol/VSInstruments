@@ -1,0 +1,11 @@
+{
+	ingredientPattern: "PLB	PLP",
+	ingredients: {
+		"B": { type: "item", code: "game:bone", "quantity": 3},
+		"P": { type: "item", code: "game:plank-*" },
+		"L": { type: "item", code: "game:leather", "quantity": 2 }
+	},
+	width: 3,
+	height: 2,
+	output: { type: "item", code: "accordion" }
+}

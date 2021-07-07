@@ -1,0 +1,18 @@
+{
+	ingredient: { 
+		type: "item", 
+		code: "game:ingot-*", 
+		name: "metal", 
+		allowedVariants: ["brass"] 
+	},
+	pattern: [[
+		"#___________",
+		"##____#_#___",
+		"############",
+		"############",
+		"##__________",
+		"#___________"
+	]],
+	name: "Trumpet",
+	output: { type: "item", code: "trumpet"  }
+}

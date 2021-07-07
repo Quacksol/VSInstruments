@@ -1,0 +1,26 @@
+{
+	"item-accordion": "Accordion",
+	"item-acousticguitar": "Acoustic Guitar",
+	"item-clarinet": "Clarinet",
+	"item-dulcimer": "Dulcimer",
+	"item-drum": "Drum Kit",
+	"item-grandpiano": "Grand Piano",
+	"item-harp": "Harp",
+	"item-mic": "Microphone",
+	"item-musicbox": "Music Box",
+	"item-sax": "Saxophone",
+	"item-steeldrum": "Steel Drum",
+	"item-trumpet": "Trumpet",
+	"item-violin": "Violin",
+	"item-vbow": "Violin Bow",
+	"item-mboxcomb": "Music Box Comb",
+
+	"block-musicblock": "Music Block",
+
+	"madefrom-title-brass": "Note:",
+	"madefrom-brass": "Must be made from brass",
+	"madefrom-title-steel": "Note:",
+	"madefrom-steel": "Must be made from steel",
+
+	"game:tabname-instruments": "Instruments"
+}

@@ -1,0 +1,12 @@
+{
+	ingredientPattern: "K_	GR	S_",
+	ingredients: {
+		"K": { type: "item", code: "game:knife-*", isTool: true },
+		"G": { type: "item", code: "game:drygrass", "quantity": 4},
+		"R": { type: "item", code: "game:rope"},
+		"S": { type: "item", code: "game:stick" }
+	},
+	width: 2,
+	height: 3,
+	output: { type: "item", code: "mic" }
+}

@@ -1,0 +1,10 @@
+{
+	ingredientPattern: "PLP	PPP",
+	ingredients: {
+		"L": { type: "item", code: "game:leather"},
+		"P": { type: "item", code: "game:plank-*" }
+	},
+	width: 3,
+	height: 2,
+	output: { type: "item", code: "drum" }
+}

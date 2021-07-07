@@ -1,0 +1,45 @@
+{
+	"editor": {
+		"allAngles": false,
+		"entityTextureMode": false
+	},
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textureSizes": {
+	},
+	"textures": {
+		"sides": "game:block/wood/barrel/sides",
+		"bundle": "game:block/hay/bundle"
+	},
+	"elements": [
+		{
+			"name": "Cube1",
+			"from": [ 7.0, 0.0, 7.0 ], 
+			"to": [ 9.0, 6.0, 9.0 ], 
+			"rotationOrigin": [ 7.0, 0.0, 7.0 ],
+			"faces": {
+				"north": { "texture": "#sides", "uv": [ 0.5, 0.0, 2.5, 6.0 ] },
+				"east": { "texture": "#sides", "uv": [ 7.5, 0.0, 9.5, 6.0 ] },
+				"south": { "texture": "#sides", "uv": [ 2.5, 0.0, 4.5, 6.0 ] },
+				"west": { "texture": "#sides", "uv": [ 10.5, 0.0, 12.5, 6.0 ] },
+				"up": { "texture": "#sides", "uv": [ 0.0, 0.0, 2.0, 2.0 ] },
+				"down": { "texture": "#sides", "uv": [ 5.0, 3.0, 7.0, 5.0 ] }
+			},
+			"children": [
+				{
+					"name": "Cube2",
+					"from": [ -1.0, 6.0, -1.0 ], 
+					"to": [ 3.0, 9.0, 3.0 ], 
+					"rotationOrigin": [ -1.0, 6.0, -1.0 ],
+					"faces": {
+						"north": { "texture": "#bundle", "uv": [ 0.0, 4.5, 4.0, 7.5 ] },
+						"east": { "texture": "#bundle", "uv": [ 0.5, 7.5, 4.5, 10.5 ] },
+						"south": { "texture": "#bundle", "uv": [ 0.5, 5.5, 4.5, 8.5 ] },
+						"west": { "texture": "#bundle", "uv": [ 1.0, 3.0, 5.0, 6.0 ] },
+						"up": { "texture": "#bundle", "uv": [ 0.5, 6.0, 4.5, 10.0 ] },
+						"down": { "texture": "#bundle", "uv": [ 0.5, 10.5, 4.5, 14.5 ] }
+					}
+				}
+			]
+		}
+	]}

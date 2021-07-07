@@ -1,0 +1,82 @@
+{
+	"code": "accordion",
+	"class": "accordion",
+	"shape": { "base": "item/accordion" },
+	"creativeinventory": {
+		"general": [ "*" ],
+		"items": [ "*" ],
+		"instruments": [ "*" ]
+	},
+	"guiTransform": {
+		"translation": {
+			"x": 0,
+			"y": 0,
+			"z": 0
+		},
+		"rotation": {
+			"x": 146,
+			"y": -225,
+			"z": 0
+		},
+		"origin": {
+			"x": 0.55,
+			"y": 0.25,
+			"z": 0.5
+		},
+		"scale": 1.5
+	},
+	"fpHandTransform": {
+		"translation": {
+			"x": 0.7,
+			"y": 0.2,
+			"z": 0.2
+		},
+		"rotation": {
+			"x": 43,
+			"y": -3,
+			"z": 6
+		},
+		"origin": {
+			"x": 1,
+			"y": 0.4,
+			"z": 0.5
+		},
+		"scale": 3.4
+	},
+	"groundTransform": {
+		"translation": {
+			"x": 0,
+			"y": 0,
+			"z": 0
+		},
+		"rotation": {
+			"x": 0,
+			"y": 0,
+			"z": 0
+		},
+		"origin": {
+			"x": 1,
+			"y": 0,
+			"z": 0.5
+		},
+		"scale": 4.17
+	},
+	"tpHandTransform": {
+		"translation": {
+			"x": -0.87,
+			"y": 0,
+			"z": -0.6
+		},
+		"rotation": {
+			"x": 0,
+			"y": 180,
+			"z": 0
+		},
+		"origin": {
+			"x": 0.5,
+			"y": 0,
+			"z": 0.5
+		},
+		"scale": 0.8
+	}
+}

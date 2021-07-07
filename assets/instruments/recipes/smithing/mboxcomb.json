@@ -1,0 +1,30 @@
+{
+	ingredient: { 
+		type: "item", 
+		code: "game:ingot-*", 
+		name: "metal", 
+		allowedVariants: ["steel"] 
+	},
+	pattern: [
+		[
+			"_______",
+			"_#####_",
+			"_#___#_",
+			"_#___#_",
+			"_#___#_",
+			"_#####_",
+			"_______"
+		],
+		[
+			"_______",
+			"_#####_",
+			"_#___#_",
+			"_#___#_",
+			"_#___#_",
+			"_#####_",
+			"_______"
+		]
+	],
+	name: "Music Box Comb",
+	output: { type: "item", code: "mboxcomb"  }
+}

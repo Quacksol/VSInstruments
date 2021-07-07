@@ -1,0 +1,12 @@
+{
+	ingredientPattern: "KS_	BBB	PPP",
+	ingredients: {
+		"K": { type: "item", code: "game:knife-*", isTool: true },
+    "S": { type: "item", code: "game:saw-*", isTool: true },
+		"B": { type: "item", code: "game:bone", "quantity": 3},
+		"P": { type: "item", code: "game:plank-*" }
+	},
+	width: 3,
+	height: 3,
+	output: { type: "item", code: "grandpiano" }
+}

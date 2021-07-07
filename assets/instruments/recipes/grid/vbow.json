@@ -1,0 +1,11 @@
+{
+	ingredientPattern: "FS",
+	ingredients: {
+
+		"F": { type: "item", code: "game:flaxfibers"},
+		"S": { type: "item", code: "game:stick" }
+	},
+	width: 2,
+	height: 1,
+	output: { type: "item", code: "vbow" }
+}

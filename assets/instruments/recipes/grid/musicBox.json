@@ -1,0 +1,11 @@
+{
+	ingredientPattern: "PCS	PP_",
+	ingredients: {
+		"P": { type: "item", code: "game:plank-*" },
+		"S": { type: "item", code: "game:stick" },
+		"C": { type: "item", code: "mboxcomb" }
+	},
+	width: 3,
+	height: 2,
+	output: { type: "item", code: "musicBox" }
+}

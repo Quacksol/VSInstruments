@@ -1,0 +1,10 @@
+{
+	ingredientPattern: "F_	PF	PP",
+	ingredients: {
+		"F": { type: "item", code: "game:flaxfibers", "quantity": 3},
+		"P": { type: "item", code: "game:plank-*" }
+	},
+	width: 2,
+	height: 3,
+	output: { type: "item", code: "dulcimer" }
+}

@@ -1,0 +1,14 @@
+{
+	ingredientPattern: "KS_	FPB	_L_",
+	ingredients: {
+		"K": { type: "item", code: "game:knife-*", isTool: true },
+    "S": { type: "item", code: "game:saw-*", isTool: true },
+		"F": { type: "item", code: "game:flaxfibers", "quantity": 4},
+		"P": { type: "item", code: "game:plank-*" },
+		"B": { type: "item", code: "vbow" },
+		"L": { type: "block", code: "game:log-*-ud" }
+	},
+	width: 3,
+	height: 3,
+	output: { type: "item", code: "violin" }
+}
