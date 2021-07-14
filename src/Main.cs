@@ -436,7 +436,6 @@ namespace instruments
                                 bandPlayerNames.Add(player.PlayerName);
                             else
                                 bandPlayerNames.Add("ERROR");
-                            break;
                         }
                     }
                     if (bandFound)
