@@ -213,7 +213,14 @@ namespace instruments
                         else
                             ParseNote(file, ref charIndex);
                         break;
-
+                    case 'G': // Group, or a lot more likely, a G note. 
+                        if (file[charIndex + 1] == ':')
+                        {
+                            ParseGroup(file, ref charIndex);
+                        }
+                        else
+                            ParseNote(file, ref charIndex);
+                        break;
                     // Note modifiers!
                     case '[': // Chord start
                         inChord = true;
@@ -544,75 +551,186 @@ namespace instruments
         private void ParseKeySig(string inString, ref int i)
         {
             char key;
+            bool minor = false;
             Accidental acc = Accidental.natural;
-            List<char> checkList = new List<char> { 'A', 'B', 'C', 'D', 'E', 'F', 'G', '\n' }; // TODO sharps n flats
+            List<char> checkList = new List<char> { 'A', 'B', 'C', 'D', 'E', 'F', 'G', '\n' };
             SkipCharsUntil(inString, ref i, checkList);
             key = inString[i];
 
-            checkList = new List<char> { '#', 'b','\n' };
-            SkipCharsUntil(inString, ref i, checkList);
-            if (inString[i] == '#')
-                acc = Accidental.sharp;
-            if (inString[i] == 'b')
-                acc = Accidental.flat;
+            while (true)
+            {
+                checkList = new List<char> { '#', 'b', 'm', '\n' };
+                SkipCharsUntil(inString, ref i, checkList);
+                if (inString[i] == '#') // Sharp. There may be a minor, so repeat this section
+                {
+                    i++;
+                    acc = Accidental.sharp;
+                }
+                else if (inString[i] == 'b') // Flat. There may be a minor, so repeat this section
+                {
+                    i++;
+                    acc = Accidental.flat;
+                }
+                else if (inString[i] == 'm') // Minor. Always comes at the end, so break afterwards
+                {
+                    i++;
+                    minor = true;
+                    break;
+                }
+                else                    // No extras left, escape
+                    break;
+            }
 
             switch (key) // TODO Use a map!!!
             {
                 case 'C':
                     if (acc == Accidental.sharp)
-                        currentKeySig = Cs;
+                    {
+                        if(minor)
+                            currentKeySig = E;
+                        else
+                            currentKeySig = Cs;
+                    }
                     else if (acc == Accidental.flat)
+                    {
+                        // No minor
                         currentKeySig = Cf;
+                    }
                     else
-                        currentKeySig = C;
+                    {
+                        if(minor)
+                            currentKeySig = Bf;
+                        else
+                            currentKeySig = C;
+                    }
                     break;
                 case 'F':
                     if (acc == Accidental.sharp)
-                        currentKeySig = Fs;
+                    {
+                        if(minor)
+                            currentKeySig = A;
+                        else
+                            currentKeySig = Fs;
+                    }
                     else if (acc == Accidental.flat)
+                    {
+                        // No minor
                         currentKeySig = F; // Does not exist
+                    }
                     else
-                        currentKeySig = F;
+                    {
+                        if (minor)
+                            currentKeySig = Af;
+                        else
+                            currentKeySig = F;
+                    }
                     break;
                 case 'A':
                     if (acc == Accidental.sharp)
-                        currentKeySig = A; // Does not exist
+                    {
+                        if(minor)
+                            currentKeySig = Cs;
+                        else
+                            currentKeySig = A; // Does not exist
+                    }
                     else if (acc == Accidental.flat)
-                        currentKeySig = Af;
+                    {
+                        if(minor)
+                            currentKeySig = Cf;
+                        else
+                            currentKeySig = Af;
+                    }
                     else
-                        currentKeySig = A;
+                    {
+                        if (minor)
+                            currentKeySig = C;
+                        else
+                            currentKeySig = A;
+                    }
                     break;
                 case 'B':
                     if (acc == Accidental.sharp)
+                    {
+                        // No minor
                         currentKeySig = B; // Does not exist
+                    }
                     else if (acc == Accidental.flat)
-                        currentKeySig = Bf;
+                    {
+                        if(minor)
+                            currentKeySig = Df;
+                        else
+                            currentKeySig = Bf;
+                    }
                     else
-                        currentKeySig = B;
+                    {
+                        if (minor)
+                            currentKeySig = D;
+                        else
+                            currentKeySig = B;
+                    }
                     break;
                 case 'E':
                     if (acc == Accidental.sharp)
+                    {
+                        // No minor
                         currentKeySig = E; // Does not exist
+                    }
                     else if (acc == Accidental.flat)
-                        currentKeySig = Ef;
+                    {
+                        if(minor)
+                            currentKeySig = Gf;
+                        else
+                            currentKeySig = Ef;
+                    }
                     else
-                        currentKeySig = E;
+                    {
+                        if (minor)
+                            currentKeySig = G;
+                        else
+                            currentKeySig = E;
+                    }
                     break;
                 case 'G':
                     if (acc == Accidental.sharp)
-                        currentKeySig = G; // Does not exist
+                    {
+                        if(minor)
+                            currentKeySig = B;
+                        else
+                            currentKeySig = G; // Does not exist
+                    }
                     else if (acc == Accidental.flat)
+                    {
+                        // No minor
                         currentKeySig = Gf;
+                    }
                     else
-                        currentKeySig = G;
+                    {
+                        if (minor)
+                            currentKeySig = Bf;
+                        else
+                            currentKeySig = G;
+                    }
                     break;
                 case 'D':
                     if (acc == Accidental.sharp)
-                        currentKeySig = D; // Does not exist
+                    {
+                        if(minor)
+                            currentKeySig = Fs;
+                        else
+                            currentKeySig = D; // Does not exist
+                    }
                     else if (acc == Accidental.flat)
+                    {
+                        // No minor
                         currentKeySig = Df;
+                    }
                     else
-                        currentKeySig = D;
+                    {
+                        if (minor)
+                            currentKeySig = F;
+                        else
+                            currentKeySig = D;
+                    }
                     break;
 
                 case '\n': // If the line was escaped for some reason, assume C - but also log it?
@@ -712,6 +830,11 @@ namespace instruments
             LFound = true;
         }
         private void ParseComposer(string inString, ref int i)
+        {
+            List<char> checkList = new List<char> { '\n' };
+            SkipCharsUntil(inString, ref i, checkList);
+        }
+        private void ParseGroup(string inString, ref int i)
         {
             List<char> checkList = new List<char> { '\n' };
             SkipCharsUntil(inString, ref i, checkList);

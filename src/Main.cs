@@ -412,6 +412,7 @@ namespace instruments
                     }
                     else
                     {
+                        masterTime = -3000; // Start 3 seconds late, so that other players have time to start
                         MessageToClient(fromPlayer.ClientId, "Starting new band \"" + abcData.bandName + "\"!");
                     }
                 }
