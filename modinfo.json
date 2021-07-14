@@ -4,9 +4,9 @@
   "name": "Instruments",
   "description": "Play some tunes together on a variety of instruments!",
   "author": "Quacksol",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "dependency": {
-    "game": "1.14.10"
+    "game": "1.15.00"
   }
 }
 

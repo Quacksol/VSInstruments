@@ -2,6 +2,18 @@
 	"code": "violin",
 	"class": "violin",
 	"shape": { "base": "item/violin" },
+	"attributes": {
+		"toolrackTransform": {
+			"rotation": {
+				"x": 90,
+				"z": -90
+			},
+			"translation": {
+			},
+			"scale": 1.25
+		},
+		"rackable": true
+	},
 	"creativeinventory": {
 		"general": [ "*" ],
 		"items": [ "*" ],

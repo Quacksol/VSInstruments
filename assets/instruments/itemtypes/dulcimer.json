@@ -2,6 +2,19 @@
 	"code": "dulcimer",
 	"class": "dulcimer",
 	"shape": { "base": "item/dulcimer" },
+	"attributes": {
+		"toolrackTransform": {
+			"rotation": {
+				"x": 180,
+				"y": -90
+			},
+			"translation": {
+				"y": -0.65
+			},
+			"scale": 1.25
+		},
+		"rackable": true
+	},
 	"creativeinventory": {
 		"general": [ "*" ],
 		"items": [ "*" ],

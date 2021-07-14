@@ -2,6 +2,17 @@
 	"code": "accordion",
 	"class": "accordion",
 	"shape": { "base": "item/accordion" },
+	"attributes": {
+		"toolrackTransform": {
+			"rotation": {
+			},
+			"translation": {
+				"x": -0.2
+			},
+			"scale": 1.25
+		},
+		"rackable": true
+	},
 	"creativeinventory": {
 		"general": [ "*" ],
 		"items": [ "*" ],

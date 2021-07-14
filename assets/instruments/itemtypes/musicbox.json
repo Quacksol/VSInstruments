@@ -2,6 +2,20 @@
 	"code": "musicbox",
 	"class": "musicbox",
 	"shape": { "base": "item/musicbox" },
+	"attributes": {
+		"toolrackTransform": {
+			"rotation": {
+				"x": -90,
+				"y": 90,
+				"z": -90
+			},
+			"translation": {
+				"y": -0.5
+			},
+			"scale": 1.25
+		},
+		"rackable": true
+	},
 	"creativeinventory": {
 		"general": [ "*" ],
 		"items": [ "*" ],

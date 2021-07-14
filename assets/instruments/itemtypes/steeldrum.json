@@ -10,7 +10,17 @@
 					"text": "instruments:madefrom-steel"
 				}
 			]
-		}
+		},
+		"toolrackTransform": {
+			"rotation": {
+				"z": 180
+			},
+			"translation": {
+				"y": -0.4
+			},
+			"scale": 1.25
+		},
+		"rackable": true
 	},
 	"creativeinventory": {
 		"general": [ "*" ],

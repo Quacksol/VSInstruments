@@ -10,7 +10,18 @@
 					"text": "Gives you the courage to sing out loud!"
 				}
 			]
-		}
+		},
+		"toolrackTransform": {
+			"rotation": {
+				"x": -90,
+				"z": -90
+			},
+			"translation": {
+				"x": 0.3
+			},
+			"scale": 1.25
+		},
+		"rackable": true
 	},
 	"creativeinventory": {
 		"general": [ "*" ],

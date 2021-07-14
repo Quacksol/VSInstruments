@@ -2,6 +2,19 @@
 	"code": "clarinet",
 	"class": "clarinet",
 	"shape": { "base": "item/clarinet" },
+	"attributes": {
+		"toolrackTransform": {
+			"rotation": {
+				"x": -90
+			},
+			"translation": {
+				"x": -0.2,
+				"z": -0.4
+			},
+			"scale": 1.25
+		},
+		"rackable": true
+	},
 	"creativeinventory": {
 		"general": [ "*" ],
 		"items": [ "*" ],

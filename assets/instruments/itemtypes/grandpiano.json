@@ -2,6 +2,20 @@
 	"code": "grandpiano",
 	"class": "grandpiano",
 	"shape": { "base": "item/piano" },
+	"attributes": {
+		"toolrackTransform": {
+			"rotation": {
+				"z": 180
+			},
+			"translation": {
+				"x": -0.3,
+				"y": -0.1,
+				"y": -0.6
+			},
+			"scale": 1.25
+		},
+		"rackable": true
+	},
 	"creativeinventory": {
 		"general": [ "*" ],
 		"items": [ "*" ],
