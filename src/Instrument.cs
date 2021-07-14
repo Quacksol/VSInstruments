@@ -152,8 +152,17 @@ namespace instruments
             //if(index < abcFiles.Count)
             {
                 string abcData = "";
-                RecursiveFileProcessor.ReadFile(Definitions.GetInstance().ABCBasePath() + Path.DirectorySeparatorChar + filePath, ref abcData); // Todo don't send the whole thing
-                ABCSendStart(abcData);
+                bool abcOK = RecursiveFileProcessor.ReadFile(Definitions.GetInstance().ABCBasePath() + Path.DirectorySeparatorChar + filePath, ref abcData); // Todo don't send the whole thing
+                if (abcOK)
+                {
+                    ABCSendStart(abcData, false);
+                }
+                else
+                {
+                    // Either the file was deleted since opening the GUI, something weird happened, or the file exists on the server.
+                    // Whatever happened, let the server worry about it
+                    ABCSendStart(filePath, true);
+                }
             }
             return 1;
         }
@@ -161,9 +170,17 @@ namespace instruments
         {
             string filePath = Definitions.GetInstance().GetSongList()[index];
             string abcData = "";
-            RecursiveFileProcessor.ReadFile(Definitions.GetInstance().ABCBasePath() + Path.DirectorySeparatorChar + filePath, ref abcData); // Todo don't send the whole thing
-            if(abcData != null)
-                ABCSendStart(abcData);
+            bool abcOK = RecursiveFileProcessor.ReadFile(Definitions.GetInstance().ABCBasePath() + Path.DirectorySeparatorChar + filePath, ref abcData); // Todo don't send the whole thing
+            if (abcOK)
+            {
+                ABCSendStart(abcData, false);
+            }
+            else
+            {
+                // Either the file was deleted since opening the GUI, something weird happened, or the file exists on the server.
+                // Whatever happened, let the server worry about it
+                ABCSendStart(filePath, true);
+            }
             return 1;
         }
         private void Update(EntityAgent byEntity)
@@ -309,12 +326,13 @@ namespace instruments
                 ABCSendStop();
             }
         }
-        private void ABCSendStart(string fileData)
+        private void ABCSendStart(string fileData, bool isServerOwned)
         {
             ABCStartFromClient newABC = new ABCStartFromClient();
             newABC.abcData = fileData;
             newABC.instrument = instrument;
             newABC.bandName = Definitions.GetInstance().GetBandName();
+            newABC.isServerFile = isServerOwned;
             IClientNetworkChannel ch = capi.Network.GetChannel("abc");
             ch.SendPacket(newABC);
             abcPlaying = true;
@@ -464,6 +482,7 @@ namespace instruments
         private Dictionary<int, NoteFrequency> noteMap = new Dictionary<int, NoteFrequency>();
         private const int bufferSize = 32;
         private List<string> abcFiles = new List<string>();
+        private List<string> serverAbcFiles = new List<string>();
 
         string abcBaseDirectory = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "abc";
 
@@ -537,7 +556,10 @@ namespace instruments
             // The abc folder was found! Now find all the files in it.
             abcFiles.Clear();
             RecursiveFileProcessor.ProcessDirectory(abcBaseDirectory, abcBaseDirectory + Path.DirectorySeparatorChar, ref abcFiles);
-            Debug.WriteLine("Finished search for ABC files");
+            //Debug.WriteLine("Finished search for ABC files");
+            foreach (string song in serverAbcFiles)
+                abcFiles.Add(song);
+
             if (abcFiles.Count == 0)
             {
                 return false;
@@ -546,6 +568,10 @@ namespace instruments
             {
                 return true;
             }
+        }
+        public void AddToServerSongList(string songFileName)
+        {
+            serverAbcFiles.Add(songFileName);
         }
         public string ABCBasePath()
         {

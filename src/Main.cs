@@ -8,6 +8,8 @@ using System;               // Array.Find()
 using System.Collections.Generic; // List
 using System.Diagnostics;  // Debug todo remove
 
+using System.IO; // Open files
+
 //using System.IO; // Open files
 //using Newtonsoft.Json;
 //using Newtonsoft.Json.Linq;
@@ -60,6 +62,7 @@ namespace instruments
         public string abcData;
         public string bandName;
         public InstrumentType instrument;
+        public bool isServerFile;
     }
     [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
     public class ABCStopFromClient
@@ -79,6 +82,11 @@ namespace instruments
     public class ABCStopFromServer
     {
         public int fromClientID;
+    }
+    [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
+    public class ABCSendSongFromServer
+    {
+        public string abcFilename;
     }
 
     public class InstrumentModCommon : ModSystem
@@ -100,8 +108,8 @@ namespace instruments
             api.RegisterItemClass("trumpet", typeof(TrumpetItem));
             api.RegisterItemClass("violin", typeof(ViolinItem));
 
-            api.RegisterBlockClass("musicblock", typeof(MusicBlock));
-            api.RegisterBlockEntityClass("musicblockentity", typeof(BEMusicBlock));
+            //api.RegisterBlockClass("musicblock", typeof(MusicBlock));
+            //api.RegisterBlockEntityClass("musicblockentity", typeof(BEMusicBlock));
         }
     }
 
@@ -139,14 +147,16 @@ namespace instruments
                 .SetMessageHandler<NoteStop>(StopNote)
                 ;
             clientChannelABC =
-                 api.Network.RegisterChannel("abc")
-                 .RegisterMessageType(typeof(ABCStartFromClient))    // This needs to be here, even if there's no Message Handler
-                 .RegisterMessageType(typeof(ABCStopFromClient))     // I guess it's in order for the client to send stuff up to server, and below stuff is for receiving
-                 .RegisterMessageType(typeof(ABCUpdateFromServer))
-                 .RegisterMessageType(typeof(ABCStopFromServer))
-                 .SetMessageHandler<ABCUpdateFromServer>(ParseServerPacket)
-                 .SetMessageHandler<ABCStopFromServer>(StopSounds)
-                 ;
+                api.Network.RegisterChannel("abc")
+                .RegisterMessageType(typeof(ABCStartFromClient))    // This needs to be here, even if there's no Message Handler
+                .RegisterMessageType(typeof(ABCStopFromClient))     // I guess it's in order for the client to send stuff up to server, and below stuff is for receiving
+                .RegisterMessageType(typeof(ABCUpdateFromServer))
+                .RegisterMessageType(typeof(ABCStopFromServer))
+                .RegisterMessageType(typeof(ABCSendSongFromServer))
+                .SetMessageHandler<ABCUpdateFromServer>(ParseServerPacket)
+                .SetMessageHandler<ABCStopFromServer>(StopSounds)
+                .SetMessageHandler<ABCSendSongFromServer>(SongFromServer)
+                ;
 
             soundManagers = new List<SoundManager>();
 
@@ -234,6 +244,10 @@ namespace instruments
                 CheckSoundManagersEmpty();
             }
         }
+        private void SongFromServer(ABCSendSongFromServer serverPacket)
+        {
+            Definitions.GetInstance().AddToServerSongList(serverPacket.abcFilename);
+        }
 
         private void OnClientGameTick(float dt)
         {
@@ -290,6 +304,7 @@ namespace instruments
         IServerNetworkChannel serverChannelABC;
 
         long listenerID = -1;
+        string abcBaseDir;
 
         struct PlaybackData
         {
@@ -318,6 +333,7 @@ namespace instruments
                 .RegisterMessageType(typeof(ABCStopFromClient))
                 .RegisterMessageType(typeof(ABCUpdateFromServer))
                 .RegisterMessageType(typeof(ABCStopFromServer))
+                .RegisterMessageType(typeof(ABCSendSongFromServer))
                 .SetMessageHandler<ABCStartFromClient>(StartABC)
                 .SetMessageHandler<ABCStopFromClient>(StopABC)
                 .SetMessageHandler<ABCStopFromServer>(null)
@@ -326,8 +342,28 @@ namespace instruments
 
                 serverAPI.Event.RegisterGameTickListener(OnServerGameTick, 1); // arg1 is millisecond Interval
             MusicBlockManager.GetInstance().Reset();
-        }
 
+            abcBaseDir = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "abc_server";
+            serverAPI.Event.PlayerJoin += SendSongs;
+        }
+        public void SendSongs(IServerPlayer byPlayer)
+        {
+            if (!RecursiveFileProcessor.DirectoryExists(abcBaseDir))
+                return; // Server has no abcs, do nothing
+
+            List<string> abcFiles = new List<string>();
+            RecursiveFileProcessor.ProcessDirectory(abcBaseDir, abcBaseDir + Path.DirectorySeparatorChar, ref abcFiles);
+            if (abcFiles.Count == 0)
+            {
+                return; // No files in the folder
+            }
+            foreach(string song in abcFiles)
+            {
+                ABCSendSongFromServer packet = new ABCSendSongFromServer();
+                packet.abcFilename = song;
+                serverChannelABC.SendPacket(packet, byPlayer);
+            }
+        }
         private void RelayMakeNote(IPlayer fromPlayer, NoteStart note)
         {
             // Send A packet to all clients (or clients within the area?) to start a note
@@ -419,7 +455,19 @@ namespace instruments
                 else
                     MessageToClient(fromPlayer.ClientId, "Starting solo abc playback!");
 
-                abcp = new ABCParser(serverAPI, fromPlayer.ClientId, abcData.abcData, abcData.instrument, abcData.bandName, masterTime);
+                string abcSong = "";
+                if(abcData.isServerFile)
+                {
+                    // The contained string is NOT a full song, but a link to it on the server.
+                    // Find this file, load it, and make the abcParser in the same way
+                    RecursiveFileProcessor.ReadFile(abcBaseDir + Path.DirectorySeparatorChar + abcData.abcData, ref abcSong);
+                }
+                else
+                {
+                    abcSong = abcData.abcData;
+                }
+
+                abcp = new ABCParser(serverAPI, fromPlayer.ClientId, abcSong, abcData.instrument, abcData.bandName, masterTime);
                 ExitStatus parseOk = abcp.Start();
                 if (parseOk != ExitStatus.allGood)
                     BadABC(abcp.playerID, abcp.charIndex);

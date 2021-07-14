@@ -35,7 +35,7 @@ namespace instruments
             if (path.Substring(path.Length - 4) ==  ".abc")
                 abcFiles.Add(path.Replace(baseDirectory, ""));
         }
-        public static void ReadFile(string path, ref string fileData)
+        public static bool ReadFile(string path, ref string fileData)
         {
             System.IO.FileStream stream;
             if (File.Exists(path))
@@ -48,6 +48,9 @@ namespace instruments
                     fileData = temp.GetString(b);
                 }
             }
+            else
+                return false;
+            return true;
         }
     }
 }
