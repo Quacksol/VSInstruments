@@ -20,7 +20,7 @@ namespace instruments
         public Sound(IClientWorldAccessor client, Vec3d pos, float pitchModifier, string assetLocation, int id, bool play=true)
         {
             SoundParams soundData = new SoundParams(new AssetLocation("instruments", assetLocation));
-            soundData.Volume = 0.7f;
+            soundData.Volume = 0.5f;
             sound = client.LoadSound(soundData);
             if (sound != null)
             {
