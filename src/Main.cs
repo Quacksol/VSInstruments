@@ -175,6 +175,20 @@ namespace instruments
             soundLocations.Add(InstrumentType.violin, "sounds/violin");
 
             thisClientPlaying = false;
+            MusicBlockManager.GetInstance().Reset(); // I think there's a manager for both Server and Client, so reset it I guess
+            Definitions.GetInstance().Reset();
+        }
+        public override void Dispose()
+        {
+            // We MIGHT need this when resetting worlds without restarting the game
+            base.Dispose();
+            if (listenerIDClient != -1)
+            {
+                clientApi.Event.UnregisterGameTickListener(listenerIDClient);
+                listenerIDClient = 0;
+            }
+            //soundManagers.Clear(); //Already null!
+            soundList.Clear();
         }
         private void MakeNote(NoteStart note)
         {
@@ -345,6 +359,17 @@ namespace instruments
 
             abcBaseDir = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "abc_server";
             serverAPI.Event.PlayerJoin += SendSongs;
+        }
+        public override void Dispose()
+        {
+            // We MIGHT need this when resetting worlds without restarting the game
+            base.Dispose();
+            if (listenerID != -1)
+            {
+                serverAPI.Event.UnregisterGameTickListener(listenerID);
+                listenerID = 0;
+            }
+            ABCParsers.GetInstance().Reset();
         }
         public void SendSongs(IServerPlayer byPlayer)
         {

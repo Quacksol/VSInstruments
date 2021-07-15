@@ -41,18 +41,15 @@ namespace instruments
             if (sound.IsPlaying)
                 sound.Dispose();
         }
-
+        public void UpdatePosition(Vec3d position)
+        {
+            sound.SetPosition((float)position.X, (float)position.Y, (float)position.Z);
+        }
         public float UpdateSound(Vec3d position, float pitch)
         {
             sound.SetPitch(pitch);
-            sound.SetPosition((float)position.X, (float)position.Y, (float)position.Z);
+            UpdatePosition(position);
             return 0;
-        }
-
-        private IClientWorldAccessor GetClient(EntityAgent entity, out bool isClient)
-        {
-            isClient = entity.World.Side == EnumAppSide.Client;
-            return isClient ? entity.World as IClientWorldAccessor : null;
         }
     }
 
@@ -132,7 +129,18 @@ namespace instruments
             if (!active)
                 return false;
 
-            // First, check if a chord in the buffer should play.
+            // Check if the sounds have a player, so we can update their positions
+            bool playerExists = false;
+            {
+                IPlayer player = Array.Find(client.AllOnlinePlayers, x => x.ClientId == sourceID);
+                if (player != null)
+                {
+                    sourcePosition = new Vec3d(player.Entity.Pos.X, player.Entity.Pos.Y, player.Entity.Pos.Z);
+                    playerExists = true;
+                }
+            }
+
+            // Check if a chord in the buffer should play.
             nowTime += (dt*1000);
             int chordCount = chordBuffer.Count;
             if (chordCount == 0)
@@ -221,6 +229,12 @@ namespace instruments
                         soundsOngoing.RemoveAt(i);
                         soundCount--;
                         i--;
+                    }
+                    else
+                    {
+                        // Find the source owner, and update the position. Might be too intensive, test
+                        if (playerExists)
+                            soundsOngoing[i].UpdatePosition(sourcePosition);
                     }
                 }
             return true;

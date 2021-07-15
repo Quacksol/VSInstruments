@@ -231,14 +231,14 @@ namespace instruments
     public class MusicBlockGUI : GuiDialogBlockEntity
     {
 
-        public MusicBlockGUI(string title, InventoryBase inventory, BlockPos bePos, ICoreClientAPI capi, string blockName, string bandName) : base(title, inventory, bePos, capi)
+        public MusicBlockGUI(string title, InventoryBase inventory, BlockPos bePos, ICoreClientAPI capi, string blockName, string bandName, string songName) : base(title, inventory, bePos, capi)
         {
             if (IsDuplicate)
                 return;
             capi.World.Player.InventoryManager.OpenInventory(Inventory);
-            SetupDialog(blockName, bandName);
+            SetupDialog(blockName, bandName, songName);
         }
-        private void SetupDialog(string name, string bandName)
+        private void SetupDialog(string name, string bandName, string songName)
         {
             ItemSlot hoveredSlot = capi.World.Player.InventoryManager.CurrentHoveredSlot;
             if (hoveredSlot != null && hoveredSlot.Inventory == Inventory)
@@ -262,9 +262,11 @@ namespace instruments
 
             ElementBounds instrumentTextBounds = ElementBounds.Fixed(0, 180, 300, 30);
 
-            ElementBounds instrumentSlotBounds = ElementStdBounds.SlotGrid(EnumDialogArea.None, 0, 210, 4, 1);
+            ElementBounds instrumentSlotBounds = ElementStdBounds.SlotGrid(EnumDialogArea.None, 10, 210, 4, 1);
 
-            ElementBounds mediaSlotBounds = ElementStdBounds.SlotGrid(EnumDialogArea.None, 0, 250, 1, 1);
+            ElementBounds songNameBounds = ElementBounds.Fixed(100, 180, 200, 90);
+
+            ElementBounds mediaSlotBounds = ElementStdBounds.SlotGrid(EnumDialogArea.None, 0, 210, 1, 1);
 
             ElementBounds sendButtonBounds = ElementBounds.FixedSize(0, 0).FixedUnder(mediaSlotBounds, 2 * 5).WithAlignment(EnumDialogArea.CenterFixed).WithFixedPadding(10, 2);
 
@@ -290,6 +292,7 @@ namespace instruments
                     .AddTextInput(bandnameInputBounds, OnBandNameChange)
                     .AddItemSlotGrid(Inventory, SendInvPacket, 1, new int[] { 0 }, instrumentSlotBounds)
                     .AddStaticText(Lang.Get("Instrument"), CairoFont.WhiteSmallText(), instrumentTextBounds)
+                    .AddDynamicText(Lang.Get("Song File: \n\"" + songName + "\""), CairoFont.WhiteSmallText(), EnumTextOrientation.Left, songNameBounds, "songName")
                 .AddSmallButton(Lang.Get("Song Select"), OnSongSelect, sendButtonBounds, EnumButtonStyle.Normal, EnumTextOrientation.Center, "songSelectButton")
                 .EndChildElements()
                 .Compose()
@@ -306,19 +309,21 @@ namespace instruments
             if (newName != "")
                 newText = "Name: \"" + newName + "\"";
             else
-                newText = "No Band";
+                newText = "Please give me a name!";
             SingleComposer.GetDynamicText("name").SetNewText(newText);
 
-            byte[] data;
-
-            using (MemoryStream ms = new MemoryStream())
+            if (newName != "")
             {
-                BinaryWriter writer = new BinaryWriter(ms);
-                writer.Write(newName);
-                data = ms.ToArray();
-            }
+                byte[] data;
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    BinaryWriter writer = new BinaryWriter(ms);
+                    writer.Write(newName);
+                    data = ms.ToArray();
+                }
 
-            capi.Network.SendBlockEntityPacket(BlockEntityPosition.X, BlockEntityPosition.Y, BlockEntityPosition.Z, 1004, data);
+                capi.Network.SendBlockEntityPacket(BlockEntityPosition.X, BlockEntityPosition.Y, BlockEntityPosition.Z, 1004, data);
+            }
         }
         private void OnBandNameChange(string newBand)
         {
@@ -355,11 +360,14 @@ namespace instruments
             if (!readOk)
                 return 1;
 
+            SingleComposer.GetDynamicText("songName").SetNewText("Song File: \n\"" + filePath + "\"");
+
             byte[] data;
 
             using (MemoryStream ms = new MemoryStream())
             {
                 BinaryWriter writer = new BinaryWriter(ms);
+                writer.Write(filePath);
                 writer.Write(songData);
                 data = ms.ToArray();
             }

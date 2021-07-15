@@ -25,7 +25,8 @@ namespace instruments
         musicBox,
         harp,
         mic,
-        drum
+        drum,
+        none
     }
     public class InstrumentItem : Item
     {
@@ -573,6 +574,11 @@ namespace instruments
         public string ABCBasePath()
         {
             return abcBaseDirectory;
+        }
+        public void Reset()
+        {
+            abcFiles.Clear();
+            serverAbcFiles.Clear();
         }
     }
 }

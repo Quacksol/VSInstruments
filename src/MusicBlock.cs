@@ -51,21 +51,21 @@ namespace instruments
     {
         int ID; // do we actually need ids?
 
-        string blockName = "";
-        string bandName = "Music Block";
+        string blockName = "Music Block";
+        string bandName = "";
         string songData = "";
+        string songName = "No abc selected!";   // Only used to show the current song, not for anything smart
 
         internal MusicBlockInventory inventory;
         MusicBlockGUI musicBlockGUI;
 
-        InstrumentType instrumentType;
+        InstrumentType instrumentType = InstrumentType.none;
         bool isPlaying = false;
         public BEMusicBlock()
         {
             // Set up inventory here - I'm copying necessaries' mailbox, seems simple enough.
             inventory = new MusicBlockInventory(null, null);
-            inventory.SlotModified += OnSlotModified;
-            
+            inventory.SlotModified += OnSlotModified;            
         }
         public override InventoryBase Inventory
         {
@@ -95,6 +95,7 @@ namespace instruments
             tree.SetString("name", blockName);
             tree.SetString("band", bandName);
             tree.SetString("file", songData);
+            tree.SetString("songname", songName);
         }
         public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldAccessForResolve)
         {
@@ -102,6 +103,7 @@ namespace instruments
             blockName = tree.GetString("name");
             bandName = tree.GetString("band");
             songData = tree.GetString("file");
+            songName = tree.GetString("songname");
         }
         
         public override void OnBlockPlaced(ItemStack byItemStack = null)
@@ -124,7 +126,6 @@ namespace instruments
                 ch.BroadcastPacket(packet);
                 ABCParsers.GetInstance().Remove(abcp);
             }
-            
         }
         public void OnUse(IPlayer byPlayer)
         {
@@ -134,7 +135,10 @@ namespace instruments
                 if (!isPlaying)
                 {
                     // Make a new ABCPlayer!
-                    ABCParsers.GetInstance().MakeNewParser(Api as ICoreServerAPI, songData, ID, blockName, bandName, Pos.ToVec3d(), instrumentType);
+                    if (blockName != "" && songData != "" && instrumentType != InstrumentType.none)
+                        ABCParsers.GetInstance().MakeNewParser(Api as ICoreServerAPI, songData, ID, blockName, bandName, Pos.ToVec3d(), instrumentType);
+                    else
+                        return;
                 }
                 else
                 {
@@ -224,6 +228,7 @@ namespace instruments
                     using (MemoryStream ms = new MemoryStream(data))
                     {
                         BinaryReader reader = new BinaryReader(ms);
+                        songName = reader.ReadString();
                         songData = reader.ReadString();
                         if (songData == null)
                             songData = "";
@@ -261,7 +266,7 @@ namespace instruments
 
                     if (musicBlockGUI == null)
                     {
-                        musicBlockGUI = new MusicBlockGUI(DialogTitle, Inventory, Pos, Api as ICoreClientAPI, blockName, bandName);
+                        musicBlockGUI = new MusicBlockGUI(DialogTitle, Inventory, Pos, Api as ICoreClientAPI, blockName, bandName, songName);
                         musicBlockGUI.OnClosed += () =>
                         {
                             musicBlockGUI = null;
@@ -278,15 +283,12 @@ namespace instruments
             ItemStack item = inventory[slotid].Itemstack;
             if (item != null)
             {
-                try
-                {
-                    instrumentType = (item.Item as InstrumentItem).instrument;
-                }
-                catch(InvalidCastException e)
-                {
-                    Debug.WriteLine("Not an instrument!");
-                }
+                InstrumentItem dummy = (item.Item as InstrumentItem);
+                if(dummy != null)
+                    instrumentType = dummy.instrument;
             }
+            else
+                instrumentType = InstrumentType.none;
         }
     }
     public class MusicBlockManager // I've gone singleton crazy

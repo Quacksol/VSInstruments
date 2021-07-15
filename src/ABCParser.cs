@@ -739,7 +739,7 @@ namespace instruments
                     break;
             }
             SetKeySig(false);
-            Debug.WriteLine("New key: " + key);
+            //Debug.WriteLine("New key: " + key);
         }
         /*
         void CheckKeySigAccidentals(int nts, int shrps, int flts)
@@ -972,9 +972,9 @@ namespace instruments
                     list.Add(abcp);
             }
         }
-        public void Add(ABCParser abcp)
+        public void Reset()
         {
-            list.Add(abcp);
+            list.Clear();
         }
 
         public void Remove(ABCParser abcp)
