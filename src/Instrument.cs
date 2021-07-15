@@ -353,10 +353,6 @@ namespace instruments
                 SongSelectGUI songGui = new SongSelectGUI(capi, PlaySong, Definitions.GetInstance().GetSongList());
                 songGui.TryOpen();
             }
-            else
-            { 
-                
-            }
         }
     }
 

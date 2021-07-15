@@ -290,7 +290,7 @@ namespace instruments
                     .AddTextInput(bandnameInputBounds, OnBandNameChange)
                     .AddItemSlotGrid(Inventory, SendInvPacket, 1, new int[] { 0 }, instrumentSlotBounds)
                     .AddStaticText(Lang.Get("Instrument"), CairoFont.WhiteSmallText(), instrumentTextBounds)
-                //.AddSmallButton(Lang.Get("necessaries:mailbox-send"), OnButtonSend, sendButtonBounds, EnumButtonStyle.Normal, EnumTextOrientation.Center, "sendBtn")
+                .AddSmallButton(Lang.Get("Song Select"), OnSongSelect, sendButtonBounds, EnumButtonStyle.Normal, EnumTextOrientation.Center, "songSelectButton")
                 .EndChildElements()
                 .Compose()
             ;
@@ -322,7 +322,7 @@ namespace instruments
         }
         private void OnBandNameChange(string newBand)
         {
-            // Called when the text needs to change. Update the SingleComposer's Dynamic text field.
+            // Called when the band name needs to change. Update the SingleComposer's Dynamic text field.
             string newText;
             if (newBand != "")
                 newText = "Band Name: \"" + newBand + "\"";
@@ -340,6 +340,32 @@ namespace instruments
             }
 
             capi.Network.SendBlockEntityPacket(BlockEntityPosition.X, BlockEntityPosition.Y, BlockEntityPosition.Z, 1005, data);
+        }
+        private bool OnSongSelect()
+        {
+            SongSelectGUI songGui = new SongSelectGUI(capi, SetSong, Definitions.GetInstance().GetSongList());
+            songGui.TryOpen();
+            return true;
+        }
+        private int SetSong(string filePath)
+        {
+            // Read the selected file, and send the contents to the server
+            string songData = "";
+            bool readOk = RecursiveFileProcessor.ReadFile(Definitions.GetInstance().ABCBasePath() + Path.DirectorySeparatorChar + filePath, ref songData);
+            if (!readOk)
+                return 1;
+
+            byte[] data;
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                BinaryWriter writer = new BinaryWriter(ms);
+                writer.Write(songData);
+                data = ms.ToArray();
+            }
+
+            capi.Network.SendBlockEntityPacket(BlockEntityPosition.X, BlockEntityPosition.Y, BlockEntityPosition.Z, 1006, data);
+            return 1;
         }
         private void SendInvPacket(object p)
         {

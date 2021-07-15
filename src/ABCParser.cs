@@ -72,7 +72,7 @@ namespace instruments
         int tupletDuration;         // Value of ( duration modifier
         //float barDuration;          // How long a bar is in millis
         float barTime;              // How far through the bar we are, used to reset accidentals
-        long chordStartTime;
+        float chordStartTime;
         bool endOfFile;
 
         public int playerID;
@@ -292,7 +292,7 @@ namespace instruments
             // First, check that the new chord's endTime is after the parser's startTime.
             // This will be false for late starters in band play.
 
-            long nextChordDuration = nextChord.duration; // Need to remember it before it is changed
+            float nextChordDuration = nextChord.duration; // Need to remember it before it is changed
             if (currentTime > (chordStartTime + nextChordDuration))
 
                 ;
@@ -310,7 +310,7 @@ namespace instruments
                     }
                     else
                     {
-                        long duration = (chordStartTime + nextChordDuration) - currentTime;
+                        float duration = (chordStartTime + nextChordDuration) - currentTime;
                         nextChord = new Chord();
                         nextChord.startTime = currentTime;
                         nextChord.duration = duration;
@@ -903,6 +903,121 @@ namespace instruments
                 endOfFile = true;
                 return false;
             }
+        }
+    }
+    public class ABCParsers
+    {
+        private static ABCParsers _instance;
+        List<ABCParser> list;
+        private ABCParsers()
+        {
+            list = new List<ABCParser>();
+        }
+        public static ABCParsers GetInstance()
+        {
+            if (_instance != null)
+                return _instance;
+            return _instance = new ABCParsers();
+        }
+        public List<ABCParser> Get()
+        {
+            return list;
+        }
+        public void MakeNewParser(ICoreServerAPI sapi, string songData, int ownerID, string bandName, InstrumentType instrument)
+        {
+            // Does some band related checks before creating the parser
+            if(bandName == "")
+            {
+                // Just a bog standard parser
+                ABCParser abcp = new ABCParser(sapi, ownerID, songData, instrument, bandName, 0);
+                ExitStatus parseOk = abcp.Start();
+                if (parseOk != ExitStatus.allGood)
+                    ;// BadABC(abcp.playerID, abcp.charIndex);
+                else
+                    list.Add(abcp);
+            }
+            else
+            {
+                int masterTime = CheckBand(sapi, bandName);
+
+                ABCParser abcp = new ABCParser(sapi, ownerID, songData, instrument, bandName, masterTime);
+                ExitStatus parseOk = abcp.Start();
+                if (parseOk != ExitStatus.allGood)
+                    ;// BadABC(abcp.playerID, abcp.charIndex);
+                else
+                    list.Add(abcp);
+            }
+        }
+        public void MakeNewParser(ICoreServerAPI sapi, string songData, int ownerID, string ownerName, string bandName, Vec3d pos, InstrumentType instrument)
+        {
+            if (bandName == "")
+            {
+                // Just a bog standard parser
+                ABCParser abcp = new ABCParser(sapi, ownerID, pos, ownerName, songData, instrument, bandName, 0);
+                ExitStatus parseOk = abcp.Start();
+                if (parseOk != ExitStatus.allGood)
+                    ;// BadABC(abcp.playerID, abcp.charIndex);
+                else
+                    list.Add(abcp);
+            }
+            else
+            {
+                int masterTime = CheckBand(sapi, bandName);
+
+                ABCParser abcp = new ABCParser(sapi, ownerID, pos, ownerName, songData, instrument, bandName, masterTime);
+                ExitStatus parseOk = abcp.Start();
+                if (parseOk != ExitStatus.allGood) // TODO check that the thing is actually destroyed
+                    ;// BadABC(abcp.playerID, abcp.charIndex);
+                else
+                    list.Add(abcp);
+            }
+        }
+        public void Add(ABCParser abcp)
+        {
+            list.Add(abcp);
+        }
+
+        public void Remove(ABCParser abcp)
+        {
+            list.Remove(abcp);
+        }
+
+        public ABCParser FindByID(int ID)
+        {
+            return list.Find(x => x.playerID == ID);
+        }
+        private int CheckBand(ICoreServerAPI sapi, string bandName)
+        {
+            bool bandFound = false;
+            List<string> bandPlayerNames = new List<string>();
+            int masterTime = 0;
+            foreach (ABCParser p in list)
+            {
+                if (p.bandName == bandName)
+                {
+                    masterTime = p.currentTime; // Otherwise, copy the master's time
+                    bandFound = true;
+                    IPlayer player = Array.Find(sapi.World.AllOnlinePlayers, x => x.ClientId == p.playerID); // Get the player that owns the abcParser
+                    if (player != null) // Player might have left, or I'm doing weird test stuff
+                        bandPlayerNames.Add(player.PlayerName);
+                    else
+                        bandPlayerNames.Add("ERROR");
+                }
+            }
+            if (bandFound)
+            {
+                string message = "Joining band \"" + bandName + "\" with players";
+                foreach (string name in bandPlayerNames)
+                    message += " " + name + ",";
+                //MessageToClient(fromPlayer.ClientId, message.Substring(0, message.Length - 1)); // substring stuff to remove the last comma
+            }
+            else
+            {
+                masterTime = -3000; // Start 3 seconds late, so that other players have time to start
+                                    //MessageToClient(fromPlayer.ClientId, "Starting new band \"" + abcData.bandName + "\"!");
+            }
+
+            return masterTime;
         }
     }
 }

@@ -15,8 +15,6 @@ using Vintagestory.API.Config;
 using Vintagestory.GameContent;
 
 
-
-
 namespace instruments
 {
     class MusicBlock : Block
@@ -55,12 +53,12 @@ namespace instruments
 
         string blockName = "";
         string bandName = "Music Block";
-        string songFile = "";
+        string songData = "";
 
         internal MusicBlockInventory inventory;
         MusicBlockGUI musicBlockGUI;
 
-        InstrumentType instrumentType = InstrumentType.trumpet;
+        InstrumentType instrumentType;
         bool isPlaying = false;
         public BEMusicBlock()
         {
@@ -88,11 +86,7 @@ namespace instruments
             if (api.Side != EnumAppSide.Server)
                 return;
             ID = MusicBlockManager.GetInstance().GetNewID();
-            Debug.WriteLine(blockName);
-            // todo Select songFile
-            string songFilename = "HGSS- viridian forest.abc"; // remove
-            RecursiveFileProcessor.ReadFile(Definitions.GetInstance().ABCBasePath() + Path.DirectorySeparatorChar + songFilename, ref songFile);
-            Debug.WriteLine(bandName);
+            OnSlotModified(0); // Parses the item in the inventory slot
         }
         
         public override void ToTreeAttributes(ITreeAttribute tree)
@@ -100,15 +94,14 @@ namespace instruments
             base.ToTreeAttributes(tree);
             tree.SetString("name", blockName);
             tree.SetString("band", bandName);
-            tree.SetString("file", songFile);
-            //tree.SetString("instrument", blockName);
+            tree.SetString("file", songData);
         }
         public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldAccessForResolve)
         {
             base.FromTreeAttributes(tree, worldAccessForResolve);
             blockName = tree.GetString("name");
             bandName = tree.GetString("band");
-            songFile = tree.GetString("file");
+            songData = tree.GetString("file");
         }
         
         public override void OnBlockPlaced(ItemStack byItemStack = null)
@@ -137,18 +130,11 @@ namespace instruments
         {
             if (!byPlayer.WorldData.EntityControls.Sneak)
             {
-
-                return;
                 // Play the song using the current setup
                 if (!isPlaying)
                 {
                     // Make a new ABCPlayer!
-                    ABCParser abcp = new ABCParser(Api as ICoreServerAPI, ID, Pos.ToVec3d(), blockName, songFile, instrumentType, bandName, 0);
-                    ExitStatus parseOk = abcp.Start();
-                    if (parseOk != ExitStatus.allGood)
-                        Debug.WriteLine(":(");// BadABC(abcp.playerID, abcp.charIndex);
-                    else
-                        ABCParsers.GetInstance().Add(abcp);
+                    ABCParsers.GetInstance().MakeNewParser(Api as ICoreServerAPI, songData, ID, blockName, bandName, Pos.ToVec3d(), instrumentType);
                 }
                 else
                 {
@@ -170,7 +156,7 @@ namespace instruments
                     BinaryWriter writer = new BinaryWriter(ms);
                     writer.Write(byPlayer.PlayerName);
                     writer.Write(bandName);
-                    writer.Write(songFile);
+                    writer.Write(songData);
                     TreeAttribute tree = new TreeAttribute();
                     inventory.ToTreeAttributes(tree);
                     tree.ToBytes(writer);
@@ -185,9 +171,6 @@ namespace instruments
                 );
                 byPlayer.InventoryManager.OpenInventory(inventory);
             }
-
-
-            Debug.WriteLine(ID);
         }
         public override void OnReceivedClientPacket(IPlayer fromPlayer, int packetid, byte[] data)
         {
@@ -233,6 +216,25 @@ namespace instruments
                     fromPlayer.InventoryManager.CloseInventory(Inventory);
                 }
             }
+
+            if (packetid == 1006) // Song select
+            {
+                if (data != null)
+                {
+                    using (MemoryStream ms = new MemoryStream(data))
+                    {
+                        BinaryReader reader = new BinaryReader(ms);
+                        songData = reader.ReadString();
+                        if (songData == null)
+                            songData = "";
+                    }
+                    MarkDirty();
+                }
+                if (fromPlayer.InventoryManager != null)
+                {
+                    fromPlayer.InventoryManager.CloseInventory(Inventory);
+                }
+            }
         }
         public override void OnReceivedServerPacket(int packetid, byte[] data)
         {
@@ -246,13 +248,16 @@ namespace instruments
                     BinaryReader reader = new BinaryReader(ms);
                     string playerName = reader.ReadString();
                     bandName = reader.ReadString();
-                    songFile = reader.ReadString();
+                    songData = reader.ReadString();
                     TreeAttribute tree = new TreeAttribute();
                     tree.FromBytes(reader);
                     Inventory.FromTreeAttributes(tree);
                     Inventory.ResolveBlocksOrItems();
 
                     IClientWorldAccessor clientWorld = (IClientWorldAccessor)Api.World;
+
+                    if (!Definitions.GetInstance().UpdateSongList(Api as ICoreClientAPI))
+                        return;
 
                     if (musicBlockGUI == null)
                     {
@@ -270,6 +275,18 @@ namespace instruments
         private void OnSlotModified(int slotid)
         {
             // set the instrument type here?
+            ItemStack item = inventory[slotid].Itemstack;
+            if (item != null)
+            {
+                try
+                {
+                    instrumentType = (item.Item as InstrumentItem).instrument;
+                }
+                catch(InvalidCastException e)
+                {
+                    Debug.WriteLine("Not an instrument!");
+                }
+            }
         }
     }
     public class MusicBlockManager // I've gone singleton crazy

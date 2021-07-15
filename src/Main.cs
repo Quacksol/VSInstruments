@@ -212,7 +212,7 @@ namespace instruments
             if (sm == null)
             {
                 // This was the first packet from the server with data from this client. Need to register a new SoundManager.
-                long startTime = serverPacket.newChord.startTime;
+                float startTime = serverPacket.newChord.startTime;
                 sm = new SoundManager(clientApi.World, serverPacket.fromClientID, soundLocations[serverPacket.instrument], serverPacket.instrument, startTime);
                 soundManagers.Add(sm);
             }
@@ -420,40 +420,6 @@ namespace instruments
             ABCParser abcp = ABCParsers.GetInstance().FindByID(fromPlayer.ClientId);
             if (abcp == null)
             {
-                int masterTime = 0; // If not part of a band, startTime is 0
-                if (abcData.bandName != "")
-                {
-                    bool bandFound = false;
-                    List<string> bandPlayerNames = new List<string>();
-                    foreach (ABCParser p in ABCParsers.GetInstance().Get())
-                    {
-                        if (p.bandName == abcData.bandName)
-                        {
-                            masterTime = p.currentTime; // Otherwise, copy the master's time
-                            bandFound = true;
-                            IPlayer player = Array.Find(serverAPI.World.AllOnlinePlayers, x => x.ClientId == p.playerID); // Get the player that owns the abcParser
-                            if (player != null) // Player might have left, or I'm doing weird test stuff
-                                bandPlayerNames.Add(player.PlayerName);
-                            else
-                                bandPlayerNames.Add("ERROR");
-                        }
-                    }
-                    if (bandFound)
-                    {
-                        string message = "Joining band \"" + abcData.bandName + "\" with players";
-                        foreach (string name in bandPlayerNames)
-                            message += " " + name + ",";
-                        MessageToClient(fromPlayer.ClientId, message.Substring(0, message.Length - 1)); // substring stuff to remove the last comma
-                    }
-                    else
-                    {
-                        masterTime = -3000; // Start 3 seconds late, so that other players have time to start
-                        MessageToClient(fromPlayer.ClientId, "Starting new band \"" + abcData.bandName + "\"!");
-                    }
-                }
-                else
-                    MessageToClient(fromPlayer.ClientId, "Starting solo abc playback!");
-
                 string abcSong = "";
                 if(abcData.isServerFile)
                 {
@@ -466,12 +432,7 @@ namespace instruments
                     abcSong = abcData.abcData;
                 }
 
-                abcp = new ABCParser(serverAPI, fromPlayer.ClientId, abcSong, abcData.instrument, abcData.bandName, masterTime);
-                ExitStatus parseOk = abcp.Start();
-                if (parseOk != ExitStatus.allGood)
-                    BadABC(abcp.playerID, abcp.charIndex);
-                else
-                    ABCParsers.GetInstance().Add(abcp);
+                ABCParsers.GetInstance().MakeNewParser(serverAPI, abcSong, fromPlayer.ClientId, abcData.bandName, abcData.instrument);
             }
             else
             {
@@ -544,38 +505,5 @@ namespace instruments
                 serverAPI.SendMessage(player, 0, message, EnumChatType.Notification);
         }
         #endregion
-    }
-    public class ABCParsers
-    {
-        private static ABCParsers _instance;
-        List<ABCParser> list;
-        private ABCParsers()
-        {
-            list = new List<ABCParser>();
-        }
-        public static ABCParsers GetInstance()
-        {
-            if (_instance != null)
-                return _instance;
-            return _instance = new ABCParsers();
-        }
-        public List<ABCParser> Get()
-        {
-            return list;
-        }
-        public void Add(ABCParser abcp)
-        {
-            list.Add(abcp);
-        }
-
-        public void Remove(ABCParser abcp)
-        {
-            list.Remove(abcp);
-        }
-
-        public ABCParser FindByID(int ID)
-        {
-            return list.Find(x => x.playerID == ID);
-        }
     }
 }

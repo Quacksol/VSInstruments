@@ -86,7 +86,7 @@ namespace instruments
 
         const int drumSamples = 64;
 
-        public SoundManager(IClientWorldAccessor clientAcc, int sID, string location, InstrumentType inst, long startTime)
+        public SoundManager(IClientWorldAccessor clientAcc, int sID, string location, InstrumentType inst, float startTime)
         {
             client = clientAcc;
 
@@ -321,8 +321,8 @@ namespace instruments
     public class Chord
     {
         public List<Note> notes;
-        public long duration; // The duration of a chord is the same as the duration of the shortest note (including rests)
-        public long startTime;
+        public float duration; // The duration of a chord is the same as the duration of the shortest note (including rests)
+        public float startTime;
 
         public Chord()
         {
@@ -360,7 +360,7 @@ namespace instruments
     {
         public char key;
         public int octave;
-        public long duration;
+        public float duration;
         public Accidental accidental;
     }
 }
