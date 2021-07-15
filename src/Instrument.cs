@@ -348,22 +348,14 @@ namespace instruments
         private void ABCSongSelect()
         {
             // Load abc folder
-            if (RecursiveFileProcessor.DirectoryExists(Definitions.GetInstance().ABCBasePath()))
+            if(Definitions.GetInstance().UpdateSongList(capi))
             {
-                if(Definitions.GetInstance().UpdateSongList(Definitions.GetInstance().ABCBasePath()))
-                {
-                    SongSelectGUI songGui = new SongSelectGUI(capi, PlaySong, Definitions.GetInstance().GetSongList());
-                    songGui.TryOpen();
-                }
-                else
-                { 
-                    capi.ShowChatMessage("ABC error: No ABC files found within \"" + Definitions.GetInstance().ABCBasePath() + "\"");
-                }
+                SongSelectGUI songGui = new SongSelectGUI(capi, PlaySong, Definitions.GetInstance().GetSongList());
+                songGui.TryOpen();
             }
             else
-            {
-                // ABC folder not found, log a message to tell the player
-                capi.ShowChatMessage("ABC error: Could not find folder at \""+ Definitions.GetInstance().ABCBasePath() + "\"");
+            { 
+                
             }
         }
     }
@@ -551,17 +543,26 @@ namespace instruments
         {
             return abcFiles;
         }
-        public bool UpdateSongList(string abcBaseDirectory)
+        public bool UpdateSongList(ICoreClientAPI capi)
         {
-            // The abc folder was found! Now find all the files in it.
             abcFiles.Clear();
-            RecursiveFileProcessor.ProcessDirectory(abcBaseDirectory, abcBaseDirectory + Path.DirectorySeparatorChar, ref abcFiles);
-            //Debug.WriteLine("Finished search for ABC files");
+            // First, check the client's dir exists
+            if (RecursiveFileProcessor.DirectoryExists(abcBaseDirectory))
+            {
+                // It exists! Now find the files in it
+                RecursiveFileProcessor.ProcessDirectory(abcBaseDirectory, abcBaseDirectory + Path.DirectorySeparatorChar, ref abcFiles);
+            }
+            else
+            {
+                // Client ABC folder not found, log a message to tell the player where it should be. But still search the server folder
+                capi.ShowChatMessage("ABC warning: Could not find folder at \"" + abcBaseDirectory + "\"");
+            }
             foreach (string song in serverAbcFiles)
                 abcFiles.Add(song);
 
             if (abcFiles.Count == 0)
             {
+                capi.ShowChatMessage("ABC error: No abc files found!");
                 return false;
             }
             else
