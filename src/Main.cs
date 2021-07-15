@@ -108,8 +108,8 @@ namespace instruments
             api.RegisterItemClass("trumpet", typeof(TrumpetItem));
             api.RegisterItemClass("violin", typeof(ViolinItem));
 
-            //api.RegisterBlockClass("musicblock", typeof(MusicBlock));
-            //api.RegisterBlockEntityClass("musicblockentity", typeof(BEMusicBlock));
+            api.RegisterBlockClass("musicblock", typeof(MusicBlock));
+            api.RegisterBlockEntityClass("musicblockentity", typeof(BEMusicBlock));
         }
     }
 

@@ -1,4 +1,5 @@
 ﻿using Vintagestory.API.Common;
+using Vintagestory.API.Client;
 using Vintagestory.API.Server;
 using System.Collections.Generic; // List
 using System.Diagnostics;  // Debug todo remove
@@ -7,6 +8,14 @@ using Vintagestory.API.Common.Entities;
 using Vintagestory.API.MathTools;
 using System.IO;
 using Vintagestory.API.Datastructures;
+using System;
+
+
+using Vintagestory.API.Config;
+using Vintagestory.GameContent;
+
+
+
 
 namespace instruments
 {
@@ -25,30 +34,52 @@ namespace instruments
             if(world.Api.Side == EnumAppSide.Client)
             {
                 // GUI stuff
+
             }
 
             if(world.Api.Side == EnumAppSide.Server)
             {
-                BEMusicBlock be = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BEMusicBlock;
-                be.OnUse(byPlayer);                
+                //if (!byPlayer.WorldData.EntityControls.Sneak)
+                {
+                    BEMusicBlock be = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BEMusicBlock;
+                    if(be != null)
+                        be.OnUse(byPlayer);                
+                }
             }
             return true;
         }
     }
-    class BEMusicBlock : BlockEntity
+    class BEMusicBlock : BlockEntityContainer
     {
         int ID; // do we actually need ids?
 
         string blockName = "";
-        string bandName = "test"; // Todo set to blank
+        string bandName = "Music Block";
         string songFile = "";
-        
-        InstrumentItem instrument = new TrumpetItem();
+
+        internal MusicBlockInventory inventory;
+        MusicBlockGUI musicBlockGUI;
+
+        InstrumentType instrumentType = InstrumentType.trumpet;
         bool isPlaying = false;
         public BEMusicBlock()
         {
             // Set up inventory here - I'm copying necessaries' mailbox, seems simple enough.
+            inventory = new MusicBlockInventory(null, null);
+            inventory.SlotModified += OnSlotModified;
             
+        }
+        public override InventoryBase Inventory
+        {
+            get { return inventory; }
+        }
+        public override string InventoryClassName
+        {
+            get { return "musicblock"; }
+        }
+        public virtual string DialogTitle
+        {
+            get { return Lang.Get("Music Block"); }
         }
 
         public override void Initialize(ICoreAPI api)
@@ -56,12 +87,12 @@ namespace instruments
             base.Initialize(api);
             if (api.Side != EnumAppSide.Server)
                 return;
-            ID = MusicBlockManager.GetInstance().GetNewID(); // todo - clientIDs also start from 0. Need either an offset, or something to say it's a block
-            blockName = "Music Block " + ID;
+            ID = MusicBlockManager.GetInstance().GetNewID();
             Debug.WriteLine(blockName);
             // todo Select songFile
             string songFilename = "HGSS- viridian forest.abc"; // remove
             RecursiveFileProcessor.ReadFile(Definitions.GetInstance().ABCBasePath() + Path.DirectorySeparatorChar + songFilename, ref songFile);
+            Debug.WriteLine(bandName);
         }
         
         public override void ToTreeAttributes(ITreeAttribute tree)
@@ -104,17 +135,15 @@ namespace instruments
         }
         public void OnUse(IPlayer byPlayer)
         {
-            if (byPlayer.WorldData.EntityControls.Sneak)
+            if (!byPlayer.WorldData.EntityControls.Sneak)
             {
-                // Shift held - do setup stuff
-            }
-            else
-            {
+
+                return;
                 // Play the song using the current setup
                 if (!isPlaying)
                 {
                     // Make a new ABCPlayer!
-                    ABCParser abcp = new ABCParser(Api as ICoreServerAPI, ID, Pos.ToVec3d(), blockName, songFile, instrument.instrument, bandName, 0);
+                    ABCParser abcp = new ABCParser(Api as ICoreServerAPI, ID, Pos.ToVec3d(), blockName, songFile, instrumentType, bandName, 0);
                     ExitStatus parseOk = abcp.Start();
                     if (parseOk != ExitStatus.allGood)
                         Debug.WriteLine(":(");// BadABC(abcp.playerID, abcp.charIndex);
@@ -132,17 +161,6 @@ namespace instruments
                 }
                 isPlaying = !isPlaying;
             }
-
-
-            Debug.WriteLine(ID);
-        }
-        /*
-        public void OnBlockInteract(IPlayer byPlayer)
-        {
-            if(Api.Side == EnumAppSide.Client)
-            {
-                // commented out gui stuff
-            }
             else
             {
                 byte[] data;
@@ -150,6 +168,9 @@ namespace instruments
                 using (MemoryStream ms = new MemoryStream())
                 {
                     BinaryWriter writer = new BinaryWriter(ms);
+                    writer.Write(byPlayer.PlayerName);
+                    writer.Write(bandName);
+                    writer.Write(songFile);
                     TreeAttribute tree = new TreeAttribute();
                     inventory.ToTreeAttributes(tree);
                     tree.ToBytes(writer);
@@ -159,22 +180,101 @@ namespace instruments
                 ((ICoreServerAPI)Api).Network.SendBlockEntityPacket(
                     (IServerPlayer)byPlayer,
                     Pos.X, Pos.Y, Pos.Z,
-                    (int)EnumBlockStovePacket.OpenGUI,
+                    69,
                     data
                 );
+                byPlayer.InventoryManager.OpenInventory(inventory);
+            }
+
+
+            Debug.WriteLine(ID);
+        }
+        public override void OnReceivedClientPacket(IPlayer fromPlayer, int packetid, byte[] data)
+        {
+            if (packetid <= 1000)   // Called when the client changes the inventory slot
+            {
+                inventory.InvNetworkUtil.HandleClientPacket(fromPlayer, packetid, data);
+            }
+
+            if (packetid == 1004) // Name change
+            {
+                if (data != null)
+                {
+                    using (MemoryStream ms = new MemoryStream(data))
+                    {
+                        BinaryReader reader = new BinaryReader(ms);
+                        blockName = reader.ReadString();
+                        if (blockName == null)
+                            blockName = "";
+                    }
+                    MarkDirty();
+                }
+                if (fromPlayer.InventoryManager != null)
+                {
+                    fromPlayer.InventoryManager.CloseInventory(Inventory);
+                }
+            }
+
+            if (packetid == 1005) // Band change
+            {
+                if (data != null)
+                {
+                    using (MemoryStream ms = new MemoryStream(data))
+                    {
+                        BinaryReader reader = new BinaryReader(ms);
+                        bandName = reader.ReadString();
+                        if (bandName == null)
+                            bandName = "";
+                    }
+                    MarkDirty();
+                }
+                if (fromPlayer.InventoryManager != null)
+                {
+                    fromPlayer.InventoryManager.CloseInventory(Inventory);
+                }
             }
         }
-        */
         public override void OnReceivedServerPacket(int packetid, byte[] data)
         {
-            base.OnReceivedServerPacket(packetid, data);
             // The server saw a player tried to open the music box - it sent a packet, and here it is!
-            // Open 
+            // Open the gui.
+            base.OnReceivedServerPacket(packetid, data);
+            if (packetid == 69)
+            {
+                using (MemoryStream ms = new MemoryStream(data))
+                {
+                    BinaryReader reader = new BinaryReader(ms);
+                    string playerName = reader.ReadString();
+                    bandName = reader.ReadString();
+                    songFile = reader.ReadString();
+                    TreeAttribute tree = new TreeAttribute();
+                    tree.FromBytes(reader);
+                    Inventory.FromTreeAttributes(tree);
+                    Inventory.ResolveBlocksOrItems();
+
+                    IClientWorldAccessor clientWorld = (IClientWorldAccessor)Api.World;
+
+                    if (musicBlockGUI == null)
+                    {
+                        musicBlockGUI = new MusicBlockGUI(DialogTitle, Inventory, Pos, Api as ICoreClientAPI, blockName, bandName);
+                        musicBlockGUI.OnClosed += () =>
+                        {
+                            musicBlockGUI = null;
+                        };
+                    }
+
+                    musicBlockGUI.TryOpen();
+                }
+            }
+        }
+        private void OnSlotModified(int slotid)
+        {
+            // set the instrument type here?
         }
     }
     public class MusicBlockManager // I've gone singleton crazy
     {
-        public int nMusicBlocks = 0;
+        const int IDOffset = 1000;
         public List<int> activeBlockIDs;
 
         private static MusicBlockManager _instance;
@@ -195,7 +295,7 @@ namespace instruments
         public int GetNewID()
         {
             // Search the list for a free ID
-            int i = 0;
+            int i = IDOffset;
             for(int ID=0; ID<activeBlockIDs.Count; ID++)
             {
                 if (activeBlockIDs.Contains(i))
@@ -212,6 +312,53 @@ namespace instruments
         public void RemoveID(int id)
         {
             activeBlockIDs.Remove(id);
+        }
+    }
+    class MusicBlockInventory : InventoryBase, ISlotProvider
+    {
+        // 'Borrowed' from necessaries' mailbox. Thanks Zig <3
+        ItemSlot[] slots;
+        public ItemSlot[] Slots { get { return slots; } }
+        public override int Count
+        {
+            get { return slots.Length; }
+        }
+
+        public MusicBlockInventory(string inventoryID, ICoreAPI api) : base(inventoryID, api)
+        {
+            // Only 1 slot, for the instrument
+            slots = GenEmptySlots(1);
+        }
+
+        public MusicBlockInventory(string className, string instanceID, ICoreAPI api) : base(className, instanceID, api)
+        {
+            slots = GenEmptySlots(1);
+        }
+
+        public override ItemSlot this[int slotId]
+        {
+            get
+            {
+                if (slotId < 0 || slotId >= Count) return null;
+                return slots[slotId];
+            }
+            set
+            {
+                if (slotId < 0 || slotId >= Count) throw new ArgumentOutOfRangeException(nameof(slotId));
+                if (value == null) throw new ArgumentNullException(nameof(value));
+                slots[slotId] = value;
+            }
+        }
+
+
+        public override void FromTreeAttributes(ITreeAttribute tree)
+        {
+            slots = SlotsFromTreeAttributes(tree);
+        }
+
+        public override void ToTreeAttributes(ITreeAttribute tree)
+        {
+            SlotsToTreeAttributes(slots, tree);
         }
     }
 }
