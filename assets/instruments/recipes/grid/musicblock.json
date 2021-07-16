@@ -7,5 +7,5 @@
 	width: 3,
 	height: 3,
 	name: "musicblockentity",
-	output: { type: "block", code: "musicblock" }
+	output: { type: "block", code: "musicblock-south" }
 }
