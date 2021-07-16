@@ -88,7 +88,6 @@ namespace instruments
             ID = MusicBlockManager.GetInstance().GetNewID();
             OnSlotModified(0); // Parses the item in the inventory slot
         }
-        
         public override void ToTreeAttributes(ITreeAttribute tree)
         {
             base.ToTreeAttributes(tree);
@@ -135,9 +134,23 @@ namespace instruments
                 if (!isPlaying)
                 {
                     // Make a new ABCPlayer!
-                    if (blockName != "" && songData != "" && instrumentType != InstrumentType.none)
-                        ABCParsers.GetInstance().MakeNewParser(Api as ICoreServerAPI, byPlayer,
-                            songData, ID, blockName, bandName, Pos.ToVec3d(), instrumentType);
+                    if (blockName != "" && songName != "" && instrumentType != InstrumentType.none)
+                    {
+                        if(songData == "") // If there is no songData, the file is probably a server file. Read it from the abc_server folder
+                        {
+                            string abcServerBaseDir = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "abc_server"; // EXTREME todo this is copied from main, make into one thing
+
+                            RecursiveFileProcessor.ReadFile(abcServerBaseDir + Path.DirectorySeparatorChar + songName, ref songData);
+
+                            ABCParsers.GetInstance().MakeNewParser(Api as ICoreServerAPI, byPlayer,
+                                songData, ID, blockName, bandName, Pos.ToVec3d(), instrumentType);
+                        }
+                        else
+                        {
+                            ABCParsers.GetInstance().MakeNewParser(Api as ICoreServerAPI, byPlayer,
+                                songData, ID, blockName, bandName, Pos.ToVec3d(), instrumentType);
+                        }
+                    }
                     else
                         return;
                 }

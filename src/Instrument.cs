@@ -167,23 +167,6 @@ namespace instruments
             }
             return 1;
         }
-        public int PlaySong(int index)
-        {
-            string filePath = Definitions.GetInstance().GetSongList()[index];
-            string abcData = "";
-            bool abcOK = RecursiveFileProcessor.ReadFile(Definitions.GetInstance().ABCBasePath() + Path.DirectorySeparatorChar + filePath, ref abcData); // Todo don't send the whole thing
-            if (abcOK)
-            {
-                ABCSendStart(abcData, false);
-            }
-            else
-            {
-                // Either the file was deleted since opening the GUI, something weird happened, or the file exists on the server.
-                // Whatever happened, let the server worry about it
-                ABCSendStart(filePath, true);
-            }
-            return 1;
-        }
         private void Update(EntityAgent byEntity)
         {
             if(!holding)

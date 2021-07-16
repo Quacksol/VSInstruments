@@ -356,9 +356,8 @@ namespace instruments
         {
             // Read the selected file, and send the contents to the server
             string songData = "";
-            bool readOk = RecursiveFileProcessor.ReadFile(Definitions.GetInstance().ABCBasePath() + Path.DirectorySeparatorChar + filePath, ref songData);
-            if (!readOk)
-                return 1;
+            // Try to read the file. If it failed, it's propably a server file, so we should send the filename when starting playback, just as with handheld instruments.
+            RecursiveFileProcessor.ReadFile(Definitions.GetInstance().ABCBasePath() + Path.DirectorySeparatorChar + filePath, ref songData);
 
             SingleComposer.GetDynamicText("songName").SetNewText("Song File: \n\"" + filePath + "\"");
 

@@ -298,7 +298,6 @@ namespace instruments
 
             float nextChordDuration = nextChord.duration; // Need to remember it before it is changed
             if (currentTime > (chordStartTime + nextChordDuration))
-
                 ;
             else
             {

@@ -133,7 +133,7 @@ namespace instruments
             bool playerExists = false;
             {
                 IPlayer player = Array.Find(client.AllOnlinePlayers, x => x.ClientId == sourceID);
-                if (player != null)
+                if (player != null && player.Entity != null)  // 1. No player if it's a block 2. Player's don't have entities if too far from client
                 {
                     sourcePosition = new Vec3d(player.Entity.Pos.X, player.Entity.Pos.Y, player.Entity.Pos.Z);
                     playerExists = true;
