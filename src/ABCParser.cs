@@ -559,7 +559,7 @@ namespace instruments
 
             while (true)
             {
-                checkList = new List<char> { '#', 'b', 'm', '\n' };
+                checkList = new List<char> { '#', 'b', 'm', ' ', '\n' };
                 SkipCharsUntil(inString, ref i, checkList);
                 if (inString[i] == '#') // Sharp. There may be a minor, so repeat this section
                 {
@@ -571,10 +571,24 @@ namespace instruments
                     i++;
                     acc = Accidental.flat;
                 }
-                else if (inString[i] == 'm') // Minor. Always comes at the end, so break afterwards
+                else if(inString[i] == ' ') // Space - will probably have a maj/min after it, stay in the loop
                 {
                     i++;
-                    minor = true;
+                }
+                else if (inString[i] == 'm') // Major/Minor. Always comes at the end, so break afterwards
+                {
+                    i++;
+                    if (inString[i] == 'a' && inString[i + 1] == 'j')
+                    {
+                        // Major; ignore it, major is assumed
+                    }
+                    else
+                    {
+                        // Every other case - if we received just an m, or it says min/minor, it's a minor.
+                        minor = true;
+                    }
+                    checkList = new List<char> { '\n' }; // Ignore anything else, go to newline
+                    SkipCharsUntil(inString, ref i, checkList);
                     break;
                 }
                 else                    // No extras left, escape
