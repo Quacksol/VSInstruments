@@ -55,7 +55,6 @@ namespace instruments
         string bandName = "";
         string songData = "";
         string songName = "No abc selected!";   // Only used to show the current song, not for anything smart
-        int ownerID = -1;                       // The last player to activate the block, for error reporting
 
         internal MusicBlockInventory inventory;
         MusicBlockGUI musicBlockGUI;
@@ -125,7 +124,7 @@ namespace instruments
                 packet.fromClientID = ID;
                 IServerNetworkChannel ch = (Api as ICoreServerAPI).Network.GetChannel("abc");
                 ch.BroadcastPacket(packet);
-                ABCParsers.GetInstance().Remove(abcp);
+                ABCParsers.GetInstance().Remove((Api as ICoreServerAPI), null, abcp);
             }
         }
         public void OnUse(IPlayer byPlayer)
@@ -149,7 +148,7 @@ namespace instruments
                     packet.fromClientID = ID;
                     IServerNetworkChannel ch = (Api as ICoreServerAPI).Network.GetChannel("abc");
                     ch.BroadcastPacket(packet);
-                    ABCParsers.GetInstance().Remove(abcp);
+                    ABCParsers.GetInstance().Remove((Api as ICoreServerAPI), byPlayer, abcp);
                 }
                 isPlaying = !isPlaying;
             }

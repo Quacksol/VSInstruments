@@ -77,8 +77,9 @@ namespace instruments
 
         public int playerID;
         public string playerName; // May be the name of the block, not only players!
-        private Vec3d position;
+        public int playerOwnerID;   // The ID of the player that created the parser, not the same as playerID for blocks
         bool isPlayer;
+        private Vec3d position;
         public string bandName;
         private ICoreServerAPI serverAPI;
         private InstrumentType instrument;
@@ -90,6 +91,7 @@ namespace instruments
             // For now, read the entire file and make all the chord objects at once
             serverAPI = sAPI;
             playerID = pID;
+            playerOwnerID = pID;
             playerName = name;
             file = f;
             instrument = inst;
@@ -98,13 +100,14 @@ namespace instruments
             isPlayer = true;
             Reset();
         }
-        public ABCParser(ICoreServerAPI sAPI, int bID, Vec3d pos, string name, string f, InstrumentType inst, string bn, float masterTime)
+        public ABCParser(ICoreServerAPI sAPI, int owningPlayerID, int bID, Vec3d pos, string name, string f, InstrumentType inst, string bn, float masterTime)
         {
             // Make an ABC parser for a block. The position is not updated
             // For now, read the entire file and make all the chord objects at once
             serverAPI = sAPI;
             playerID = bID;
             playerName = name;
+            playerOwnerID = owningPlayerID;
             position = pos;
             file = f;
             instrument = inst;
@@ -941,15 +944,17 @@ namespace instruments
             {
                 ABCParser abcp = list[i];
                 ExitStatus parseStatus = abcp.Update(dt);
-                //serverAPI.BroadcastMessageToAllGroups("Part " + index++ + " time " + abcp.currentTime, EnumChatType.Notification);
                 if (parseStatus == ExitStatus.finished || parseStatus == ExitStatus.error)
                 {
                     // TODO
-                    //IPlayer player = Array.Find(sapi.World.AllOnlinePlayers, x => x.ClientId == abcp.playerID);
-                    //if (parseStatus == ExitStatus.finished)
-                    //    MessageToClient(sapi, , "abc playback finished!");
-                    //else
-                    //    ;// BadABC(abcp.playerID, abcp.charIndex);
+                    IPlayer player = Array.Find(sapi.World.AllOnlinePlayers, x => x.ClientId == abcp.playerOwnerID);
+                    if(player != null)
+                    {
+                        if (parseStatus == ExitStatus.finished)
+                            MessageToClient(sapi, player, "abc playback finished!");
+                        else
+                            BadABC(sapi, player, abcp.charIndex);
+                    }
                     // This is my attempt at gracefully removing something from a list                
                     list.Remove(abcp);
                     count--;
@@ -995,7 +1000,7 @@ namespace instruments
             if (bandName == "")
             {
                 // Just a bog standard parser
-                ABCParser abcp = new ABCParser(sapi, ownerID, pos, ownerName, songData, instrument, bandName, 0);
+                ABCParser abcp = new ABCParser(sapi, byPlayer.ClientId, ownerID, pos, ownerName, songData, instrument, bandName, 0);
                 ExitStatus parseOk = abcp.Start();
                 if (parseOk != ExitStatus.allGood)
                     BadABC(sapi, byPlayer, abcp.charIndex);
@@ -1009,7 +1014,7 @@ namespace instruments
             {
                 float masterTime = CheckBand(sapi, byPlayer, bandName);
 
-                ABCParser abcp = new ABCParser(sapi, ownerID, pos, ownerName, songData, instrument, bandName, masterTime);
+                ABCParser abcp = new ABCParser(sapi, byPlayer.ClientId, ownerID, pos, ownerName, songData, instrument, bandName, masterTime);
                 ExitStatus parseOk = abcp.Start();
                 if (parseOk != ExitStatus.allGood) // TODO check that the thing is actually destroyed
                     BadABC(sapi, byPlayer, abcp.charIndex);
@@ -1022,11 +1027,14 @@ namespace instruments
             list.Clear();
         }
 
-        public void Remove(ABCParser abcp)
+        public void Remove(ICoreServerAPI sapi, IPlayer byPlayer, ABCParser abcp)
         {
+            if (byPlayer != null)
+            {
+                MessageToClient(sapi, byPlayer, "Stopping abc playback!");
+            }
             list.Remove(abcp);
         }
-
         public ABCParser FindByID(int ID)
         {
             return list.Find(x => x.playerID == ID);

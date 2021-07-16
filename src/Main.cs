@@ -461,7 +461,7 @@ namespace instruments
             }
             else
             {
-                ABCParsers.GetInstance().Remove(abcp);
+                ABCParsers.GetInstance().Remove(serverAPI, fromPlayer, abcp);
             }
             /*
             if (listenerID == -1)
@@ -472,24 +472,15 @@ namespace instruments
         }
         private void StopABC(IPlayer fromPlayer, ABCStopFromClient abcData)
         {
-            // Kill the tickListener
             int clientID = fromPlayer.ClientId;
             ABCParser abcp = ABCParsers.GetInstance().FindByID(clientID);
             if (abcp != null)
             {
-                ABCParsers.GetInstance().Remove(abcp);
+                ABCParsers.GetInstance().Remove(serverAPI, fromPlayer, abcp);
                 ABCStopFromServer packet = new ABCStopFromServer();
                 packet.fromClientID = clientID;
                 IServerNetworkChannel ch = serverAPI.Network.GetChannel("abc");
                 ch.BroadcastPacket(packet);
-                if (ABCParsers.GetInstance().Get().Count == 0)
-                {
-                    /*
-                    serverAPI.Event.UnregisterGameTickListener(listenerID);
-                    listenerID = -1;
-                    */
-                }
-                //MessageToClient(fromPlayer.ClientId, "Stopping abc playback!");
             }
 
             return;
