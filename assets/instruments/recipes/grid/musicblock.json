@@ -1,8 +1,9 @@
 {
-	ingredientPattern: "PPP	PMP	P_P",
+	ingredientPattern: "_C_	PPP	PMP",
 	ingredients: {
 		"P": { type: "item", code: "game:plank-*" },
-		"M": { type: "block", code: "game:metal-parts" }
+		"M": { type: "block", code: "game:metal-parts" },
+		"C": { type: "item", code: "musicblockcone" }
 	},
 	width: 3,
 	height: 3,
