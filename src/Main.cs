@@ -457,7 +457,7 @@ namespace instruments
                     abcSong = abcData.abcData;
                 }
 
-                ABCParsers.GetInstance().MakeNewParser(serverAPI, abcSong, fromPlayer.ClientId, abcData.bandName, abcData.instrument);
+                ABCParsers.GetInstance().MakeNewParser(serverAPI, fromPlayer, abcSong, abcData.bandName, abcData.instrument);
             }
             else
             {
@@ -489,45 +489,14 @@ namespace instruments
                     listenerID = -1;
                     */
                 }
-                MessageToClient(fromPlayer.ClientId, "Stopping abc playback!");
+                //MessageToClient(fromPlayer.ClientId, "Stopping abc playback!");
             }
 
             return;
         }
         private void OnServerGameTick(float dt)
         {
-            int count = ABCParsers.GetInstance().Get().Count;
-            //int index = 0;
-            for (int i=0; i<count; i++)
-            {
-                ABCParser abcp = ABCParsers.GetInstance().Get()[i];
-                ExitStatus parseStatus = abcp.Update(dt);
-                //serverAPI.BroadcastMessageToAllGroups("Part " + index++ + " time " + abcp.currentTime, EnumChatType.Notification);
-                if (parseStatus == ExitStatus.finished || parseStatus == ExitStatus.error)
-                {
-                    if (parseStatus == ExitStatus.finished)
-                        MessageToClient(abcp.playerID, "abc playback finished!");
-                    else
-                        BadABC(abcp.playerID, abcp.charIndex);
-                    // This is my attempt at gracefully removing something from a list                
-                    //abcParsers.RemoveAt(i);
-                    ABCParsers.GetInstance().Remove(abcp);
-                    count--;
-                    i--;
-                }
-            }
-            return;
-        }
-
-        private void BadABC(int playerID, int charIndex)
-        {
-            MessageToClient(playerID, "Error parsing file, char index " + charIndex);
-        }
-        private void MessageToClient(int playerID, string message)
-        {
-            IPlayer player = Array.Find(serverAPI.World.AllOnlinePlayers, x => x.ClientId == playerID);
-            if(player != null) // The player might have left!
-                serverAPI.SendMessage(player, 0, message, EnumChatType.Notification);
+            ABCParsers.GetInstance().Update(serverAPI, dt);
         }
         #endregion
     }

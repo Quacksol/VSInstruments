@@ -55,6 +55,7 @@ namespace instruments
         string bandName = "";
         string songData = "";
         string songName = "No abc selected!";   // Only used to show the current song, not for anything smart
+        int ownerID = -1;                       // The last player to activate the block, for error reporting
 
         internal MusicBlockInventory inventory;
         MusicBlockGUI musicBlockGUI;
@@ -136,7 +137,8 @@ namespace instruments
                 {
                     // Make a new ABCPlayer!
                     if (blockName != "" && songData != "" && instrumentType != InstrumentType.none)
-                        ABCParsers.GetInstance().MakeNewParser(Api as ICoreServerAPI, songData, ID, blockName, bandName, Pos.ToVec3d(), instrumentType);
+                        ABCParsers.GetInstance().MakeNewParser(Api as ICoreServerAPI, byPlayer,
+                            songData, ID, blockName, bandName, Pos.ToVec3d(), instrumentType);
                     else
                         return;
                 }

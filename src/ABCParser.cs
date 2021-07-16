@@ -76,20 +76,21 @@ namespace instruments
         bool endOfFile;
 
         public int playerID;
+        public string playerName; // May be the name of the block, not only players!
         private Vec3d position;
-        string playerName; // May be the name of the block, not only players!
         bool isPlayer;
         public string bandName;
         private ICoreServerAPI serverAPI;
         private InstrumentType instrument;
         private bool startSync;
 
-        public ABCParser(ICoreServerAPI sAPI, int pID, string f, InstrumentType inst, string bn, float masterTime)
+        public ABCParser(ICoreServerAPI sAPI, int pID, string name, string f, InstrumentType inst, string bn, float masterTime)
         {
             // Make an ABC parser for a player. The player's position will be used to move the sound around.
             // For now, read the entire file and make all the chord objects at once
             serverAPI = sAPI;
             playerID = pID;
+            playerName = name;
             file = f;
             instrument = inst;
             bandName = bn;
@@ -103,8 +104,8 @@ namespace instruments
             // For now, read the entire file and make all the chord objects at once
             serverAPI = sAPI;
             playerID = bID;
-            position = pos;
             playerName = name;
+            position = pos;
             file = f;
             instrument = inst;
             bandName = bn;
@@ -933,55 +934,85 @@ namespace instruments
                 return _instance;
             return _instance = new ABCParsers();
         }
+        public void Update(ICoreServerAPI sapi, float dt)
+        {
+            int count = list.Count;
+            for (int i = 0; i < count; i++)
+            {
+                ABCParser abcp = list[i];
+                ExitStatus parseStatus = abcp.Update(dt);
+                //serverAPI.BroadcastMessageToAllGroups("Part " + index++ + " time " + abcp.currentTime, EnumChatType.Notification);
+                if (parseStatus == ExitStatus.finished || parseStatus == ExitStatus.error)
+                {
+                    // TODO
+                    //IPlayer player = Array.Find(sapi.World.AllOnlinePlayers, x => x.ClientId == abcp.playerID);
+                    //if (parseStatus == ExitStatus.finished)
+                    //    MessageToClient(sapi, , "abc playback finished!");
+                    //else
+                    //    ;// BadABC(abcp.playerID, abcp.charIndex);
+                    // This is my attempt at gracefully removing something from a list                
+                    list.Remove(abcp);
+                    count--;
+                    i--;
+                }
+            }
+        }
         public List<ABCParser> Get()
         {
             return list;
         }
-        public void MakeNewParser(ICoreServerAPI sapi, string songData, int ownerID, string bandName, InstrumentType instrument)
+        public void MakeNewParser(ICoreServerAPI sapi, IPlayer byPlayer, string songData, string bandName, InstrumentType instrument)
         {
             // Does some band related checks before creating the parser
             if(bandName == "")
             {
                 // Just a bog standard parser
-                ABCParser abcp = new ABCParser(sapi, ownerID, songData, instrument, bandName, 0);
+                ABCParser abcp = new ABCParser(sapi, byPlayer.ClientId, byPlayer.PlayerName, songData, instrument, bandName, 0);
                 ExitStatus parseOk = abcp.Start();
                 if (parseOk != ExitStatus.allGood)
-                    ;// BadABC(abcp.playerID, abcp.charIndex);
+                    BadABC(sapi, byPlayer, abcp.charIndex);
                 else
+                {
                     list.Add(abcp);
+                    MessageToClient(sapi, byPlayer, "Starting solo abc playback!");
+                }
             }
             else
             {
-                float masterTime = CheckBand(sapi, bandName);
+                float masterTime = CheckBand(sapi, byPlayer, bandName);
 
-                ABCParser abcp = new ABCParser(sapi, ownerID, songData, instrument, bandName, masterTime);
+                ABCParser abcp = new ABCParser(sapi, byPlayer.ClientId, byPlayer.PlayerName, songData, instrument, bandName, masterTime);
                 ExitStatus parseOk = abcp.Start();
                 if (parseOk != ExitStatus.allGood)
-                    ;// BadABC(abcp.playerID, abcp.charIndex);
+                    BadABC(sapi, byPlayer, abcp.charIndex);
                 else
                     list.Add(abcp);
             }
         }
-        public void MakeNewParser(ICoreServerAPI sapi, string songData, int ownerID, string ownerName, string bandName, Vec3d pos, InstrumentType instrument)
+        public void MakeNewParser(ICoreServerAPI sapi, IPlayer byPlayer, string songData, int ownerID, string ownerName, string bandName, Vec3d pos, InstrumentType instrument)
         {
+            // Used by blocks, where the byPlayer isn't the owner!
             if (bandName == "")
             {
                 // Just a bog standard parser
                 ABCParser abcp = new ABCParser(sapi, ownerID, pos, ownerName, songData, instrument, bandName, 0);
                 ExitStatus parseOk = abcp.Start();
                 if (parseOk != ExitStatus.allGood)
-                    ;// BadABC(abcp.playerID, abcp.charIndex);
+                    BadABC(sapi, byPlayer, abcp.charIndex);
                 else
+                {
                     list.Add(abcp);
+                    MessageToClient(sapi, byPlayer, "Starting solo abc playback!");
+                }
             }
             else
             {
-                float masterTime = CheckBand(sapi, bandName);
+                float masterTime = CheckBand(sapi, byPlayer, bandName);
 
                 ABCParser abcp = new ABCParser(sapi, ownerID, pos, ownerName, songData, instrument, bandName, masterTime);
                 ExitStatus parseOk = abcp.Start();
                 if (parseOk != ExitStatus.allGood) // TODO check that the thing is actually destroyed
-                    ;// BadABC(abcp.playerID, abcp.charIndex);
+                    BadABC(sapi, byPlayer, abcp.charIndex);
                 else
                     list.Add(abcp);
             }
@@ -1000,7 +1031,7 @@ namespace instruments
         {
             return list.Find(x => x.playerID == ID);
         }
-        private float CheckBand(ICoreServerAPI sapi, string bandName)
+        private float CheckBand(ICoreServerAPI sapi, IPlayer byPlayer, string bandName)
         {
             bool bandFound = false;
             List<string> bandPlayerNames = new List<string>();
@@ -1010,12 +1041,8 @@ namespace instruments
                 if (p.bandName == bandName)
                 {
                     masterTime = p.currentTime; // Otherwise, copy the master's time
+                    bandPlayerNames.Add(p.playerName);
                     bandFound = true;
-                    IPlayer player = Array.Find(sapi.World.AllOnlinePlayers, x => x.ClientId == p.playerID); // Get the player that owns the abcParser
-                    if (player != null) // Player might have left, or I'm doing weird test stuff
-                        bandPlayerNames.Add(player.PlayerName);
-                    else
-                        bandPlayerNames.Add("ERROR");
                 }
             }
             if (bandFound)
@@ -1023,15 +1050,25 @@ namespace instruments
                 string message = "Joining band \"" + bandName + "\" with players";
                 foreach (string name in bandPlayerNames)
                     message += " " + name + ",";
-                //MessageToClient(fromPlayer.ClientId, message.Substring(0, message.Length - 1)); // substring stuff to remove the last comma
+                MessageToClient(sapi, byPlayer, message.Substring(0, message.Length - 1)); // substring stuff to remove the last comma
             }
             else
             {
                 masterTime = -3000; // Start 3 seconds late, so that other players have time to start
-                                    //MessageToClient(fromPlayer.ClientId, "Starting new band \"" + abcData.bandName + "\"!");
+                MessageToClient(sapi, byPlayer, "Starting new band \"" + bandName + "\"!");
             }
 
             return masterTime;
+        }
+
+        private void BadABC(ICoreServerAPI sapi, IPlayer byPlayer, int charIndex)
+        {
+            MessageToClient(sapi, byPlayer, "Error parsing file, char index " + charIndex);
+        }
+        private void MessageToClient(ICoreServerAPI sapi, IPlayer byPlayer, string message)
+        {
+            if (byPlayer != null) // The player might have left!
+                sapi.SendMessage(byPlayer, 0, message, EnumChatType.Notification);
         }
     }
 }
