@@ -1,19 +1,30 @@
 {
-	code: "musicblock",
-	class: "musicblock",
-	entityclass: "musicblockentity",
-	creativeinventory: {
+	"code": "musicblock",
+	"class": "musicblock",
+	"entityclass": "musicblockentity",
+	"creativeinventory": {
 		"general": [ "*" ],
 		"instruments": [ "*" ]
 	},
-	blockmaterial: "Wood",
-	drawtype: "Cube",
-	textures: {
-		all: { base: "game:block/wood/crate/normal" }
+	"blockmaterial": "Wood",
+	"drawtype": "json",
+	shape: {
+		"base": "block/musicblock"
 	},
-	resistance: 3.5,
-	sounds: {
-		"place": "game:block/anvil",
-		"walk": "game:walk/stone"
+	lightAbsorption: 0,
+	sidesolid: {
+		all: "false"
+	},
+	sideopaque: {
+		all: "false"
+	},
+	collisionbox: { x1: 0, y1: 0, z1: 0, x2: 1, y2: 2, z2: 1},
+	selectionbox: { x1: 0, y1: 0, z1: 0, x2: 1, y2: 2, z2: 1},
+	"resistance": 3.5,
+	"sounds": {
+		"place": "block/planks",
+		"hit": "block/planks",
+		"break": "block/planks",
+		"walk": "walk/wood"
 	}
 }

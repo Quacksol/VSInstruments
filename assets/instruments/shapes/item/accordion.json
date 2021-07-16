@@ -8,7 +8,7 @@
 	"textureSizes": {
 	},
 	"textures": {
-		"steel": "game:block/metal/plate/steel",
+		"steel": "game:block/metal/ingot/steel",
 		"prepared": "game:item/resource/hide/prepared",
 		"sides": "game:block/wood/barrel/sides"
 	},

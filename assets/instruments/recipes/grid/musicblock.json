@@ -1,0 +1,11 @@
+{
+	ingredientPattern: "PPP	PMP	P_P",
+	ingredients: {
+		"P": { type: "item", code: "game:plank-*" },
+		"M": { type: "block", code: "game:metal-parts" }
+	},
+	width: 3,
+	height: 3,
+	name: "musicblockentity",
+	output: { type: "block", code: "musicblock" }
+}
