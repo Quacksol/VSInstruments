@@ -56,7 +56,7 @@ namespace instruments
         private List<Chord> chordBuffer;
         private string file;
         public int charIndex;
-        public int currentTime;
+        public float currentTime;
 
         private Accidental[,] accidentals; // 8 octaves of 7 keys
 
@@ -84,7 +84,7 @@ namespace instruments
         private InstrumentType instrument;
         private bool startSync;
 
-        public ABCParser(ICoreServerAPI sAPI, int pID, string f, InstrumentType inst, string bn, int masterTime)
+        public ABCParser(ICoreServerAPI sAPI, int pID, string f, InstrumentType inst, string bn, float masterTime)
         {
             // Make an ABC parser for a player. The player's position will be used to move the sound around.
             // For now, read the entire file and make all the chord objects at once
@@ -97,7 +97,7 @@ namespace instruments
             isPlayer = true;
             Reset();
         }
-        public ABCParser(ICoreServerAPI sAPI, int bID, Vec3d pos, string name, string f, InstrumentType inst, string bn, int masterTime)
+        public ABCParser(ICoreServerAPI sAPI, int bID, Vec3d pos, string name, string f, InstrumentType inst, string bn, float masterTime)
         {
             // Make an ABC parser for a block. The position is not updated
             // For now, read the entire file and make all the chord objects at once
@@ -125,7 +125,7 @@ namespace instruments
             // If a note's duration is over, deactivate it
             // If that note was the first note of the chord to deactivate, get the next chord
             ExitStatus allOk = ExitStatus.allGood;
-            currentTime += (int)(dt*1000);
+            currentTime += (dt*1000);
 
             if (chordBuffer.Count == 0)
                 return ExitStatus.finished;
@@ -463,7 +463,7 @@ namespace instruments
                 newNote.key = (Char.ToString(newNote.key)).ToLower()[0]; // Force to lowercase. Yeah, it couldn't be more convoluted.
             }
 
-            newNote.duration = (int)ParseDuration(file, ref charIndex); // charIndex++ is done in here!
+            newNote.duration = ParseDuration(file, ref charIndex); // charIndex++ is done in here!
 
             nextChord.AddNote(newNote);
 
@@ -480,7 +480,7 @@ namespace instruments
             float duration = defaultNoteDuration;
             int modifier = GetIntFromStream(inString, ref i);
             if (modifier > 0)
-                duration *= modifier;
+                duration *= (float)modifier;
             // Ok now for some weird business, have fun
             while (CharAvailable(inString, i) && inString[i] == '/')
             {
@@ -490,9 +490,9 @@ namespace instruments
                 i++;
                 modifier = GetIntFromStream(inString, ref i);
                 if (modifier > 0)
-                    duration /= modifier;
+                    duration /= (float)modifier;
                 else
-                    duration /= 2;
+                    duration /= 2f;
             }
 
             // Still not over yet!
@@ -500,14 +500,14 @@ namespace instruments
             {
                 // A > (aka a hornpipe) represents a 'dotted' note
                 // (therefore adds half its current duration to itself)
-                duration += duration / 2;
+                duration += duration / 2f;
                 i++;
             }
 
             // Last step! Check for the durationModifier, one of those (num things.
             if (tuplet)
             {
-                duration *= (long)2 / tupletDuration;
+                duration *= 2f / (float)tupletDuration;
                 tuplet = false;
             }
 
@@ -800,7 +800,7 @@ namespace instruments
             if (inString[i++] == '/')
             {
 
-                bpmFactor = noteDuration / (float)GetIntFromStream(inString, ref i);
+                bpmFactor = (float)noteDuration / (float)GetIntFromStream(inString, ref i);
 
                 while (CharAvailable(inString, i) && inString[i] != '=')
                     i++;
@@ -952,7 +952,7 @@ namespace instruments
             }
             else
             {
-                int masterTime = CheckBand(sapi, bandName);
+                float masterTime = CheckBand(sapi, bandName);
 
                 ABCParser abcp = new ABCParser(sapi, ownerID, songData, instrument, bandName, masterTime);
                 ExitStatus parseOk = abcp.Start();
@@ -976,7 +976,7 @@ namespace instruments
             }
             else
             {
-                int masterTime = CheckBand(sapi, bandName);
+                float masterTime = CheckBand(sapi, bandName);
 
                 ABCParser abcp = new ABCParser(sapi, ownerID, pos, ownerName, songData, instrument, bandName, masterTime);
                 ExitStatus parseOk = abcp.Start();
@@ -1000,11 +1000,11 @@ namespace instruments
         {
             return list.Find(x => x.playerID == ID);
         }
-        private int CheckBand(ICoreServerAPI sapi, string bandName)
+        private float CheckBand(ICoreServerAPI sapi, string bandName)
         {
             bool bandFound = false;
             List<string> bandPlayerNames = new List<string>();
-            int masterTime = 0;
+            float masterTime = 0;
             foreach (ABCParser p in list)
             {
                 if (p.bandName == bandName)
