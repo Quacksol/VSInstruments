@@ -192,11 +192,52 @@ namespace instruments
         }
         private void MakeNote(NoteStart note)
         {
-            if (note.instrument == InstrumentType.drum || note.instrument == InstrumentType.mic) // todo
-                return;
+            string noteString = "/a3";
+            if (note.instrument == InstrumentType.drum)
+            {
+                float div = note.pitch *2 - 1;
+                const float step = 0.046875f;  // 3/64
+                float currentStep = 0f;
+                for (int i = 0; i <= 64; i++)
+                {
+                    if (div < currentStep + step)
+                    {
+                        noteString = "/" + (i+24);
+                        break;
+                    }
+                    currentStep += step;
+                }
+                note.pitch = 1; // Reset the pitch, we don't want any pitch bend for drum
+            }
+            else if (note.instrument == InstrumentType.mic)
+            {
+                Random rnd = new Random();
+                int rNum = rnd.Next(0, 5); // A number between 0 and 4
+                switch (rNum)
+                {
+                    case 0:
+                        noteString += "ba";
+                        break;
+                    case 1:
+                        noteString += "bo";
+                        break;
+                    case 2:
+                        noteString += "da";
+                        break;
+                    case 3:
+                        noteString += "do";
+                        break;
+                    case 4:
+                        noteString += "la";
+                        break;
+                }
+            }
             IClientWorldAccessor clientWorldAccessor = clientApi.World;
-            Sound sound = new Sound(clientWorldAccessor, note.positon, note.pitch, soundLocations[note.instrument] + "/a3.ogg", note.ID);
-            soundList.Add(sound);
+            Sound sound = new Sound(clientWorldAccessor, note.positon, note.pitch, soundLocations[note.instrument] + noteString, note.ID);
+            if (sound.sound == null)
+                Debug.WriteLine("Sound creation failed!");
+            else
+                soundList.Add(sound);
         }
         private void UpdateNote(NoteUpdate note)
         {

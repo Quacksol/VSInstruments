@@ -19,7 +19,7 @@ namespace instruments
 
         public Sound(IClientWorldAccessor client, Vec3d pos, float pitchModifier, string assetLocation, int id, bool play=true)
         {
-            SoundParams soundData = new SoundParams(new AssetLocation("instruments", assetLocation));
+            SoundParams soundData = new SoundParams(new AssetLocation("instruments", assetLocation + ".ogg"));
             soundData.Volume = 0.5f;
             sound = client.LoadSound(soundData);
             if (sound != null)
@@ -103,10 +103,10 @@ namespace instruments
             for (i = 0; i < drumSamples-1; i++)
             {
                 int index = i + 26;
-                string s = index + ".ogg";
+                string s = index + "";
                 drumMap.Add(i, s);
             }
-            drumMap.Add(i, "mute.ogg");
+            drumMap.Add(i, "mute");
 
             chordBuffer = new List<Chord>();
             soundsOngoing = new List<Sound>();
@@ -133,7 +133,7 @@ namespace instruments
             bool playerExists = false;
             {
                 IPlayer player = Array.Find(client.AllOnlinePlayers, x => x.ClientId == sourceID);
-                if (player != null && player.Entity != null)  // 1. No player if it's a block 2. Player's don't have entities if too far from client
+                if (player != null && player.Entity != null)  // 1. No player if it's a block 2. Players don't have entities if too far from client
                 {
                     sourcePosition = new Vec3d(player.Entity.Pos.X, player.Entity.Pos.Y, player.Entity.Pos.Z);
                     playerExists = true;
@@ -199,11 +199,13 @@ namespace instruments
                                             break;
                                     }
                                 }
-                                assetLocation += ".ogg";
                             }
                             Sound newSound = new Sound(client, sourcePosition, pitch, assetLocation, -1, play);
                             newSound.endTime = nowTime + note.duration;
-                            soundsOngoing.Add(newSound);
+                            if (newSound.sound == null)
+                                Debug.WriteLine("Sound creation failed (abc)!");
+                            else
+                               soundsOngoing.Add(newSound);
                         }
                         chordBuffer.RemoveAt(i);
                         chordCount--;
