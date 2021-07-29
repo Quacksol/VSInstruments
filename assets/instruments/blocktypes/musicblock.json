@@ -37,8 +37,13 @@
 		"all": "false"
 	},
 
-	collisionbox: { x1: 0, y1: 0, z1: 0, x2: 1, y2: 1.25, z2: 1, rotateYByType: {  "*-south": 180, "*-west": 90, "*-east": 270 } },
-	selectionbox: { x1: 0, y1: 0, z1: 0, x2: 1, y2: 1.25, z2: 1, rotateYByType: {  "*-south": 180, "*-west": 90, "*-east": 270 } },
+	collisionSelectionBoxesByType:
+	{
+	"*": [
+		{ x1: 0, y1: 0, z1: 0, x2: 1, y2: 1.25, z2: 1, rotateYByType: {  "*-south": 180, "*-west": 90, "*-east": 270 } },
+		{ x1: 0, y1: 1.25, z1: 0, x2: 0.75, y2: 1.95, z2: 0.75, rotateYByType: {  "*-south": 180, "*-west": 90, "*-east": 270 } }
+	]
+	},
 
 	"guiTransform": {
 		"translation": {

@@ -128,6 +128,7 @@ namespace instruments
         bool thisClientPlaying; // Is this client currently playing, or is some other client playing?
         List<Sound> soundList = new List<Sound>(); // For playing single notes sent by players, non-abc style
         List<SoundManager> soundManagers;
+        bool clientSideEnable;
 
         private Dictionary<InstrumentType, string> soundLocations = new Dictionary<InstrumentType, string>();
 
@@ -177,7 +178,11 @@ namespace instruments
             thisClientPlaying = false;
             MusicBlockManager.GetInstance().Reset(); // I think there's a manager for both Server and Client, so reset it I guess
             Definitions.GetInstance().Reset();
+
+            clientSideEnable = true;
+            clientApi.RegisterCommand("instruments", "instrument playback commands", "[enable|disable]", ParseClientCommand);
         }
+
         public override void Dispose()
         {
             // We MIGHT need this when resetting worlds without restarting the game
@@ -263,6 +268,9 @@ namespace instruments
             if (player == null)
                 return;
 
+            if (!clientSideEnable)
+                return;
+
             SoundManager sm = soundManagers.Find(x => (x.sourceID == serverPacket.fromClientID));
             if (sm == null)
             {
@@ -341,6 +349,30 @@ namespace instruments
                 clientApi.Event.UnregisterGameTickListener(listenerIDClient);
                 listenerIDClient = -1;
                 thisClientPlaying = false;
+            }
+        }
+
+        private void ParseClientCommand(int groupId, CmdArgs args)
+        {
+            string command = args.PopWord();
+            switch(command)
+            {
+                case "enable":
+                    clientSideEnable = true;
+                    clientApi.ShowChatMessage("ABC playback enabled!");
+                    break;
+                case "disable":
+                    clientSideEnable = false;
+                    clientApi.ShowChatMessage("ABC playback disabled!");
+                    {
+                        ABCStopFromServer dummy = new ABCStopFromServer();
+                        dummy.fromClientID = clientApi.World.Player.ClientId;
+                        StopSounds(dummy);
+                    }
+                    break;
+                default:
+                    clientApi.ShowChatMessage("Syntax: .instruments [enable|disable]");
+                    break;
             }
         }
 
