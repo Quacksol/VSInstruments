@@ -1,10 +1,11 @@
 ﻿using Vintagestory.API.Client;
 using Vintagestory.API.Common;
-using System.Collections.Generic; // Lists
-using System.Diagnostics; // debug todo remove
 using Vintagestory.API.MathTools;
+using Vintagestory.GameContent;     // GUIHandbook
 
+using System;                   // Action<>
 using System.IO;                // Binary writer n that
+using System.Collections.Generic; // Lists
 using Vintagestory.API.Config;  // Lang stuff
 
 namespace instruments
@@ -45,10 +46,10 @@ namespace instruments
 
     public class ModeSelectGUI : GuiDialog
     {
-        Func<PlayMode, int> ChangeInstrumentMode;
+        Vintagestory.API.Common.Func<PlayMode, int> ChangeInstrumentMode;
         event Action<string> bandNameChange;
         public override string ToggleKeyCombinationCode => null;
-        public ModeSelectGUI(ICoreClientAPI capi, Func<PlayMode, int> ChangeMode, Action<string> bandChange, string bandName) : base(capi)
+        public ModeSelectGUI(ICoreClientAPI capi, Vintagestory.API.Common.Func<PlayMode, int> ChangeMode, Action<string> bandChange, string bandName) : base(capi)
         {
             ChangeInstrumentMode = ChangeMode;
             bandNameChange = bandChange;
@@ -110,17 +111,17 @@ namespace instruments
     {
         public override string ToggleKeyCombinationCode => null;
         //Func<string, int> PlaySong;
-        Func<string, int> PlaySong;
+        Vintagestory.API.Common.Func<string, int> PlaySong;
 
         int listHeight = 500;
         int listWidth = 700;
 
         private string filter = "";
 
-        private List<GuiHandbookPage> allStackListItems = new List<GuiHandbookPage>();
-        private List<GuiHandbookPage> shownStackListItems = new List<GuiHandbookPage>();
+        private List<IFlatListItem> allStackListItems = new List<IFlatListItem>();
+        private List<IFlatListItem> shownStackListItems = new List<IFlatListItem>();
 
-        public SongSelectGUI(ICoreClientAPI capi, Func<string, int> playSong, List<string> files) : base(capi)
+        public SongSelectGUI(ICoreClientAPI capi, Vintagestory.API.Common.Func<string, int> playSong, List<string> files) : base(capi)
         {
             SetupDialog(files);
             PlaySong = playSong;
@@ -169,17 +170,13 @@ namespace instruments
                 CairoFont.WhiteSmallishText(), "search")
                 .BeginClip(clipBounds)
                     .AddInset(insetBounds,3)
-                    .AddInteractiveElement(new GuiElementHandbookList(capi, stackListBounds, (int index) => {
-                        ButtonPressed(index);
-                    },
-                    shownStackListItems),
-                    "stacklist"
-                    )
+                    .AddFlatList(stackListBounds, ButtonPressed, shownStackListItems, "stacklist")
+                    //.AddInteractiveElement(new GuiElementHandbookList(capi, stackListBounds, (int index) => {ButtonPressed(index);}, shownStackListItems), "stacklist")
 
                 .EndClip()
                 .AddVerticalScrollbar((float value) =>
                 {
-                    GuiElementHandbookList stacklist = SingleComposer.GetHandbookStackList("stacklist");
+                    GuiElementFlatList stacklist = SingleComposer.GetFlatList("stacklist");
                     stacklist.insideBounds.fixedY = 3 - value;
                     stacklist.insideBounds.CalcWorldBounds();
                 }, scrollbarBounds, "scrollbar")
@@ -193,7 +190,7 @@ namespace instruments
         {
             // Max val of value will depend on how many songs are in the folder
             GuiElementScrollbar scrollbar = SingleComposer.GetScrollbar("scrollbar");
-            GuiElementHandbookList stacklist = SingleComposer.GetHandbookStackList("stacklist");
+            GuiElementFlatList stacklist = SingleComposer.GetFlatList("stacklist");
             scrollbar.SetHeights(
                 (float)listHeight,
                 (float)stacklist.insideBounds.fixedHeight
@@ -219,7 +216,7 @@ namespace instruments
                 }
                 shownStackListItems.Add(song);
             }
-            GuiElementHandbookList stacklist = SingleComposer.GetHandbookStackList("stacklist");
+            GuiElementFlatList stacklist = SingleComposer.GetFlatList("stacklist");
             stacklist.CalcTotalHeight();
             OnNewScrollbarValue();
         }

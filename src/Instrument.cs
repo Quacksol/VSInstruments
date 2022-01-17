@@ -3,7 +3,8 @@ using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools; // vec3D
 
-using System.IO; // Open files
+using System;       // Action<>
+using System.IO;    // Open files
 using System.Diagnostics; // debug todo remove
 
 namespace instruments
@@ -169,11 +170,13 @@ namespace instruments
         }
         private void Update(EntityAgent byEntity)
         {
+            
             if(!holding)
             {
                 holding = true;
-                capi.Event.AfterActiveSlotChanged += ChangeFromInstrument; // Todo what happens if the player drops the instrument?
+                capi.Event.AfterActiveSlotChanged += ChangeFromInstrument;
             }
+            
             switch (Definitions.GetInstance().GetPlayMode())
             {
                 case PlayMode.lockedTone:
@@ -191,24 +194,7 @@ namespace instruments
                 default:
                     break;
             }
-
-
-                //UpdateGUI(byEntity);
         }
-        /*private void UpdateGUI(EntityAgent byEntity)
-        {
-            if (guiDialog == null)
-            {
-                Debug.WriteLine("NO GUI!");
-            }
-            else
-            {
-                if (guiDialog.IsOpened())
-                    guiDialog.UpdateText(currentNote.ID);
-                else
-                    guiDialog.TryOpen();
-            }
-        }*/
         private void AngleToPitch(float angle)
         {
             // entity.Pos.Pitch goes from 90 to 270
