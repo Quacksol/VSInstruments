@@ -1,7 +1,7 @@
 {
 	ingredientPattern: "PLP	PPP",
 	ingredients: {
-		"L": { type: "item", code: "game:leather-plain"},
+		"L": { type: "item", code: "game:leather-*"},
 		"P": { type: "item", code: "game:plank-*" }
 	},
 	width: 3,

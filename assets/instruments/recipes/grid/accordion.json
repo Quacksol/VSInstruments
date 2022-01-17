@@ -3,7 +3,7 @@
 	ingredients: {
 		"B": { type: "item", code: "game:bone", "quantity": 3},
 		"P": { type: "item", code: "game:plank-*" },
-		"L": { type: "item", code: "game:leather-plain", "quantity": 2 }
+		"L": { type: "item", code: "game:leather-*", "quantity": 2 }
 	},
 	width: 3,
 	height: 2,
