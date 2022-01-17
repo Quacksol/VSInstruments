@@ -10,10 +10,6 @@ using System.Diagnostics;  // Debug todo remove
 
 using System.IO; // Open files
 
-//using System.IO; // Open files
-//using Newtonsoft.Json;
-//using Newtonsoft.Json.Linq;
-
 namespace instruments
 {
     public enum PlayMode

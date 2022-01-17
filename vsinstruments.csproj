@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B754485B-826A-448A-89B8-53EC203C1FCB}</ProjectGuid>
+    <ProjectGuid>{CC3378D3-429B-4184-9A15-64B70D478523}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>vsinstruments</RootNamespace>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>.\</OutputPath>
+    <OutputPath>$(ProjectDir)\bin</OutputPath>
     <IntermediateOutputPath>..\..\obj\Debug\vsinstruments\</IntermediateOutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -26,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\Release\vsinstruments\</OutputPath>
+    <OutputPath>$(ProjectDir)\bin</OutputPath>
     <IntermediateOutputPath>..\..\obj\Release\vsinstruments\</IntermediateOutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -45,260 +45,32 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="VintagestoryAPI">
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>C:\Program Files\Vintagestory\Lib\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VintagestoryAPI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\Program Files\Vintagestory\VintagestoryAPI.dll</HintPath>
     </Reference>
-    <Reference Include="VSCreativeMod">
+    <Reference Include="VSCreativeMod, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\Program Files\Vintagestory\Mods\VSCreativeMod.dll</HintPath>
     </Reference>
-    <Reference Include="VSEssentials">
+    <Reference Include="VSEssentials, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\Program Files\Vintagestory\Mods\VSEssentials.dll</HintPath>
     </Reference>
-    <Reference Include="VSSurvivalMod">
+    <Reference Include="VSSurvivalMod, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\Program Files\Vintagestory\Mods\VSSurvivalMod.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="assets\instruments\sounds\accordion\a0.ogg" />
-    <Content Include="assets\instruments\sounds\accordion\a1.ogg" />
-    <Content Include="assets\instruments\sounds\accordion\a2.ogg" />
-    <Content Include="assets\instruments\sounds\accordion\a3.ogg" />
-    <Content Include="assets\instruments\sounds\accordion\a4.ogg" />
-    <Content Include="assets\instruments\sounds\accordion\a5.ogg" />
-    <Content Include="assets\instruments\sounds\accordion\a6.ogg" />
-    <Content Include="assets\instruments\sounds\accordion\a7.ogg" />
-    <Content Include="assets\instruments\sounds\acousticguitar\a0.ogg" />
-    <Content Include="assets\instruments\sounds\acousticguitar\a1.ogg" />
-    <Content Include="assets\instruments\sounds\acousticguitar\a2.ogg" />
-    <Content Include="assets\instruments\sounds\acousticguitar\a3.ogg" />
-    <Content Include="assets\instruments\sounds\acousticguitar\a4.ogg" />
-    <Content Include="assets\instruments\sounds\acousticguitar\a5.ogg" />
-    <Content Include="assets\instruments\sounds\acousticguitar\a6.ogg" />
-    <Content Include="assets\instruments\sounds\acousticguitar\a7.ogg" />
-    <Content Include="assets\instruments\sounds\clarinet\a0.ogg" />
-    <Content Include="assets\instruments\sounds\clarinet\a1.ogg" />
-    <Content Include="assets\instruments\sounds\clarinet\a2.ogg" />
-    <Content Include="assets\instruments\sounds\clarinet\a3.ogg" />
-    <Content Include="assets\instruments\sounds\clarinet\a4.ogg" />
-    <Content Include="assets\instruments\sounds\clarinet\a5.ogg" />
-    <Content Include="assets\instruments\sounds\clarinet\a6.ogg" />
-    <Content Include="assets\instruments\sounds\clarinet\a7.ogg" />
-    <Content Include="assets\instruments\sounds\drum\26.ogg" />
-    <Content Include="assets\instruments\sounds\drum\27.ogg" />
-    <Content Include="assets\instruments\sounds\drum\28.ogg" />
-    <Content Include="assets\instruments\sounds\drum\29.ogg" />
-    <Content Include="assets\instruments\sounds\drum\30.ogg" />
-    <Content Include="assets\instruments\sounds\drum\31.ogg" />
-    <Content Include="assets\instruments\sounds\drum\32.ogg" />
-    <Content Include="assets\instruments\sounds\drum\33.ogg" />
-    <Content Include="assets\instruments\sounds\drum\34.ogg" />
-    <Content Include="assets\instruments\sounds\drum\35.ogg" />
-    <Content Include="assets\instruments\sounds\drum\36.ogg" />
-    <Content Include="assets\instruments\sounds\drum\37.ogg" />
-    <Content Include="assets\instruments\sounds\drum\38.ogg" />
-    <Content Include="assets\instruments\sounds\drum\39.ogg" />
-    <Content Include="assets\instruments\sounds\drum\40.ogg" />
-    <Content Include="assets\instruments\sounds\drum\41.ogg" />
-    <Content Include="assets\instruments\sounds\drum\42.ogg" />
-    <Content Include="assets\instruments\sounds\drum\43.ogg" />
-    <Content Include="assets\instruments\sounds\drum\44.ogg" />
-    <Content Include="assets\instruments\sounds\drum\45.ogg" />
-    <Content Include="assets\instruments\sounds\drum\46.ogg" />
-    <Content Include="assets\instruments\sounds\drum\47.ogg" />
-    <Content Include="assets\instruments\sounds\drum\48.ogg" />
-    <Content Include="assets\instruments\sounds\drum\49.ogg" />
-    <Content Include="assets\instruments\sounds\drum\50.ogg" />
-    <Content Include="assets\instruments\sounds\drum\51.ogg" />
-    <Content Include="assets\instruments\sounds\drum\52.ogg" />
-    <Content Include="assets\instruments\sounds\drum\53.ogg" />
-    <Content Include="assets\instruments\sounds\drum\54.ogg" />
-    <Content Include="assets\instruments\sounds\drum\55.ogg" />
-    <Content Include="assets\instruments\sounds\drum\56.ogg" />
-    <Content Include="assets\instruments\sounds\drum\57.ogg" />
-    <Content Include="assets\instruments\sounds\drum\58.ogg" />
-    <Content Include="assets\instruments\sounds\drum\59.ogg" />
-    <Content Include="assets\instruments\sounds\drum\60.ogg" />
-    <Content Include="assets\instruments\sounds\drum\61.ogg" />
-    <Content Include="assets\instruments\sounds\drum\62.ogg" />
-    <Content Include="assets\instruments\sounds\drum\63.ogg" />
-    <Content Include="assets\instruments\sounds\drum\64.ogg" />
-    <Content Include="assets\instruments\sounds\drum\65.ogg" />
-    <Content Include="assets\instruments\sounds\drum\66.ogg" />
-    <Content Include="assets\instruments\sounds\drum\67.ogg" />
-    <Content Include="assets\instruments\sounds\drum\68.ogg" />
-    <Content Include="assets\instruments\sounds\drum\69.ogg" />
-    <Content Include="assets\instruments\sounds\drum\70.ogg" />
-    <Content Include="assets\instruments\sounds\drum\71.ogg" />
-    <Content Include="assets\instruments\sounds\drum\72.ogg" />
-    <Content Include="assets\instruments\sounds\drum\73.ogg" />
-    <Content Include="assets\instruments\sounds\drum\74.ogg" />
-    <Content Include="assets\instruments\sounds\drum\75.ogg" />
-    <Content Include="assets\instruments\sounds\drum\76.ogg" />
-    <Content Include="assets\instruments\sounds\drum\77.ogg" />
-    <Content Include="assets\instruments\sounds\drum\78.ogg" />
-    <Content Include="assets\instruments\sounds\drum\79.ogg" />
-    <Content Include="assets\instruments\sounds\drum\80.ogg" />
-    <Content Include="assets\instruments\sounds\drum\81.ogg" />
-    <Content Include="assets\instruments\sounds\drum\82.ogg" />
-    <Content Include="assets\instruments\sounds\drum\83.ogg" />
-    <Content Include="assets\instruments\sounds\drum\84.ogg" />
-    <Content Include="assets\instruments\sounds\drum\85.ogg" />
-    <Content Include="assets\instruments\sounds\drum\86.ogg" />
-    <Content Include="assets\instruments\sounds\drum\87.ogg" />
-    <Content Include="assets\instruments\sounds\drum\88.ogg" />
-    <Content Include="assets\instruments\sounds\drum\mute.ogg" />
-    <Content Include="assets\instruments\sounds\dulcimer\a0.ogg" />
-    <Content Include="assets\instruments\sounds\dulcimer\a1.ogg" />
-    <Content Include="assets\instruments\sounds\dulcimer\a2.ogg" />
-    <Content Include="assets\instruments\sounds\dulcimer\a3.ogg" />
-    <Content Include="assets\instruments\sounds\dulcimer\a4.ogg" />
-    <Content Include="assets\instruments\sounds\dulcimer\a5.ogg" />
-    <Content Include="assets\instruments\sounds\dulcimer\a6.ogg" />
-    <Content Include="assets\instruments\sounds\dulcimer\a7.ogg" />
-    <Content Include="assets\instruments\sounds\grandpiano\a0.ogg" />
-    <Content Include="assets\instruments\sounds\grandpiano\a1.ogg" />
-    <Content Include="assets\instruments\sounds\grandpiano\a2.ogg" />
-    <Content Include="assets\instruments\sounds\grandpiano\a3.ogg" />
-    <Content Include="assets\instruments\sounds\grandpiano\a4.ogg" />
-    <Content Include="assets\instruments\sounds\grandpiano\a5.ogg" />
-    <Content Include="assets\instruments\sounds\grandpiano\a6.ogg" />
-    <Content Include="assets\instruments\sounds\grandpiano\a7.ogg" />
-    <Content Include="assets\instruments\sounds\harp\a0.ogg" />
-    <Content Include="assets\instruments\sounds\harp\a1.ogg" />
-    <Content Include="assets\instruments\sounds\harp\a2.ogg" />
-    <Content Include="assets\instruments\sounds\harp\a3.ogg" />
-    <Content Include="assets\instruments\sounds\harp\a4.ogg" />
-    <Content Include="assets\instruments\sounds\harp\a5.ogg" />
-    <Content Include="assets\instruments\sounds\harp\a6.ogg" />
-    <Content Include="assets\instruments\sounds\harp\a7.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a0ba.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a0bo.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a0da.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a0do.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a0la.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a1ba.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a1bo.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a1da.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a1do.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a1la.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a2ba.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a2bo.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a2da.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a2do.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a2la.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a3ba.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a3bo.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a3da.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a3do.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a3la.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a4ba.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a4bo.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a4da.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a4do.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a4la.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a5ba.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a5bo.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a5da.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a5do.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a5la.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a6ba.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a6bo.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a6da.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a6do.ogg" />
-    <Content Include="assets\instruments\sounds\mic\a6la.ogg" />
-    <Content Include="assets\instruments\sounds\musicbox\a0.ogg" />
-    <Content Include="assets\instruments\sounds\musicbox\a1.ogg" />
-    <Content Include="assets\instruments\sounds\musicbox\a2.ogg" />
-    <Content Include="assets\instruments\sounds\musicbox\a3.ogg" />
-    <Content Include="assets\instruments\sounds\musicbox\a4.ogg" />
-    <Content Include="assets\instruments\sounds\musicbox\a5.ogg" />
-    <Content Include="assets\instruments\sounds\musicbox\a6.ogg" />
-    <Content Include="assets\instruments\sounds\musicbox\a7.ogg" />
-    <Content Include="assets\instruments\sounds\sax\a0.ogg" />
-    <Content Include="assets\instruments\sounds\sax\a1.ogg" />
-    <Content Include="assets\instruments\sounds\sax\a2.ogg" />
-    <Content Include="assets\instruments\sounds\sax\a3.ogg" />
-    <Content Include="assets\instruments\sounds\sax\a4.ogg" />
-    <Content Include="assets\instruments\sounds\sax\a5.ogg" />
-    <Content Include="assets\instruments\sounds\sax\a6.ogg" />
-    <Content Include="assets\instruments\sounds\sax\a7.ogg" />
-    <Content Include="assets\instruments\sounds\steeldrum\a0.ogg" />
-    <Content Include="assets\instruments\sounds\steeldrum\a1.ogg" />
-    <Content Include="assets\instruments\sounds\steeldrum\a2.ogg" />
-    <Content Include="assets\instruments\sounds\steeldrum\a3.ogg" />
-    <Content Include="assets\instruments\sounds\steeldrum\a4.ogg" />
-    <Content Include="assets\instruments\sounds\steeldrum\a5.ogg" />
-    <Content Include="assets\instruments\sounds\steeldrum\a6.ogg" />
-    <Content Include="assets\instruments\sounds\steeldrum\a7.ogg" />
-    <Content Include="assets\instruments\sounds\trumpet\a0.ogg" />
-    <Content Include="assets\instruments\sounds\trumpet\a1.ogg" />
-    <Content Include="assets\instruments\sounds\trumpet\a2.ogg" />
-    <Content Include="assets\instruments\sounds\trumpet\a3.ogg" />
-    <Content Include="assets\instruments\sounds\trumpet\a4.ogg" />
-    <Content Include="assets\instruments\sounds\trumpet\a5.ogg" />
-    <Content Include="assets\instruments\sounds\trumpet\a6.ogg" />
-    <Content Include="assets\instruments\sounds\trumpet\a7.ogg" />
-    <Content Include="assets\instruments\sounds\violin\a0.ogg" />
-    <Content Include="assets\instruments\sounds\violin\a1.ogg" />
-    <Content Include="assets\instruments\sounds\violin\a2.ogg" />
-    <Content Include="assets\instruments\sounds\violin\a3.ogg" />
-    <Content Include="assets\instruments\sounds\violin\a4.ogg" />
-    <Content Include="assets\instruments\sounds\violin\a5.ogg" />
-    <Content Include="assets\instruments\sounds\violin\a6.ogg" />
-    <Content Include="assets\instruments\sounds\violin\a7.ogg" />
     <Content Include="modinfo.json" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\instruments\blocktypes\musicblock.json" />
-    <None Include="assets\instruments\itemtypes\accordion.json" />
-    <None Include="assets\instruments\itemtypes\acousticguitar.json" />
-    <None Include="assets\instruments\itemtypes\clarinet.json" />
-    <None Include="assets\instruments\itemtypes\drum.json" />
-    <None Include="assets\instruments\itemtypes\dulcimer.json" />
-    <None Include="assets\instruments\itemtypes\grandpiano.json" />
-    <None Include="assets\instruments\itemtypes\harp.json" />
-    <None Include="assets\instruments\itemtypes\mboxcomb.json" />
-    <None Include="assets\instruments\itemtypes\mic.json" />
-    <None Include="assets\instruments\itemtypes\musicbox.json" />
-    <None Include="assets\instruments\itemtypes\sax.json" />
-    <None Include="assets\instruments\itemtypes\steeldrum.json" />
-    <None Include="assets\instruments\itemtypes\trumpet.json" />
-    <None Include="assets\instruments\itemtypes\vbow.json" />
-    <None Include="assets\instruments\itemtypes\violin.json" />
-    <None Include="assets\instruments\lang\en.json" />
-    <None Include="assets\instruments\recipes\grid\accordion.json" />
-    <None Include="assets\instruments\recipes\grid\acousticguitar.json" />
-    <None Include="assets\instruments\recipes\grid\clarinet.json" />
-    <None Include="assets\instruments\recipes\grid\drum.json" />
-    <None Include="assets\instruments\recipes\grid\dulcimer.json" />
-    <None Include="assets\instruments\recipes\grid\grandpiano.json" />
-    <None Include="assets\instruments\recipes\grid\harp.json" />
-    <None Include="assets\instruments\recipes\grid\mic.json" />
-    <None Include="assets\instruments\recipes\grid\musicBox.json" />
-    <None Include="assets\instruments\recipes\grid\vbow.json" />
-    <None Include="assets\instruments\recipes\grid\violin.json" />
-    <None Include="assets\instruments\recipes\smithing\mboxcomb.json" />
-    <None Include="assets\instruments\recipes\smithing\sax.json" />
-    <None Include="assets\instruments\recipes\smithing\steeldrum.json" />
-    <None Include="assets\instruments\recipes\smithing\trumpet.json" />
-    <None Include="assets\instruments\shapes\item\accordion.json" />
-    <None Include="assets\instruments\shapes\item\acousticguitar.json" />
-    <None Include="assets\instruments\shapes\item\clarinet.json" />
-    <None Include="assets\instruments\shapes\item\drum.json" />
-    <None Include="assets\instruments\shapes\item\dulcimer.json" />
-    <None Include="assets\instruments\shapes\item\harp.json" />
-    <None Include="assets\instruments\shapes\item\mboxcomb.json" />
-    <None Include="assets\instruments\shapes\item\mic.json" />
-    <None Include="assets\instruments\shapes\item\musicbox.json" />
-    <None Include="assets\instruments\shapes\item\piano.json" />
-    <None Include="assets\instruments\shapes\item\sax.json" />
-    <None Include="assets\instruments\shapes\item\steeldrum.json" />
-    <None Include="assets\instruments\shapes\item\trumpet.json" />
-    <None Include="assets\instruments\shapes\item\vbow.json" />
-    <None Include="assets\instruments\shapes\item\violin.json" />
-    <None Include="assets\instruments\sounds\accordion\tuning.config" />
-    <None Include="assets\instruments\sounds\dulcimer\tuning.config" />
-    <None Include="assets\instruments\sounds\sax\tuning.config" />
+    <Folder Include="assets\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\ABCParser.cs" />
@@ -312,6 +84,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
+copy "$(TargetPath)" "$(ProjectDir)" 
+copy "$(TargetDir)\$(TargetName).pdb" "$(ProjectDir)" 
     </PostBuildEvent>
   </PropertyGroup>
 </Project>
