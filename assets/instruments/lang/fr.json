@@ -1,0 +1,28 @@
+{
+	"item-accordion": "Accordéon",
+	"item-acousticguitar": "Guitare accoustique",
+	"item-clarinet": "Clarinette",
+	"item-dulcimer": "Dulcimer",
+	"item-drum": "Batterie",
+	"item-grandpiano": "Piano",
+	"item-harp": "Harpe",
+	"item-mic": "Microphone",
+	"item-musicbox": "Boîte à musique",
+	"item-sax": "Saxophone",
+	"item-steeldrum": "Steel Drum",
+	"item-trumpet": "Trompette",
+	"item-violin": "Violon",
+	"item-vbow": "Archet",
+	"item-mboxcomb": "Peigne de boîte à musique",
+	"item-musicblockcone": "Cône de bloc à musique",
+
+	"block-musicblock-north": "Bloc à musique",
+	"block-musicblock-south": "Bloc à musique",
+
+	"madefrom-title-brass": "Note:",
+	"madefrom-brass": "Doit être fait en laiton",
+	"madefrom-title-steel": "Note:",
+	"madefrom-steel": "Doit être fait en acier",
+
+	"game:tabname-instruments": "Instruments"
+}
