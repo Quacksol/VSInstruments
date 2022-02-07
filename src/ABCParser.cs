@@ -218,7 +218,8 @@ namespace instruments
                             ParseComposer(file, ref charIndex);
                         }
                         else
-                            ParseNote(file, ref charIndex);
+                            if (ParseNote(file, ref charIndex))
+                                timeout = 32;
                         break;
                     case 'G': // Group, or a lot more likely, a G note. 
                         if (file[charIndex + 1] == ':')
@@ -226,7 +227,8 @@ namespace instruments
                             ParseGroup(file, ref charIndex);
                         }
                         else
-                            ParseNote(file, ref charIndex);
+                            if (ParseNote(file, ref charIndex))
+                                timeout = 32;
                         break;
                     // Note modifiers!
                     case '[': // Chord start
