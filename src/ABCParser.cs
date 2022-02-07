@@ -74,6 +74,8 @@ namespace instruments
         float barTime;              // How far through the bar we are, used to reset accidentals
         float chordStartTime;
         bool endOfFile;
+        int repeatStartIndex;       // Index in file of where a repeat should start
+        List<int> doneRepeats;      // List of repeats that have already been processed, and should be ignored
 
         public int playerID;
         public string playerName; // May be the name of the block, not only players!
@@ -173,7 +175,8 @@ namespace instruments
                     case '%':
                     case '\n':
                     case '\r':
-                        List<char> checkList = new List<char> { '\n' };
+                    case '\\':
+                        List<char> checkList = new List<char> { '\n', '\r', '\\' };
                         SkipCharsUntil(file, ref charIndex, checkList); // Skip until newline
                         charIndex++;
                         break;
@@ -232,9 +235,17 @@ namespace instruments
                         break;
 
                     case '|': // End of bar - reset all accidentals. Also cancel chord, it's a readibility thing idk
-                        inChord = false;
-                        charIndex++;
-                        SetKeySig(true);
+                        if (file[charIndex + 1] == ':')
+                        {
+                            charIndex += 2;
+                            repeatStartIndex = charIndex;
+                        }
+                        else
+                        {
+                            inChord = false;
+                            charIndex++;
+                            SetKeySig(true);
+                        }
                         break;
 
                     case ']': // Chard end
@@ -275,6 +286,43 @@ namespace instruments
                         // Spaces are usually ignored, except for a few things.
                         tuplet = false;
                         charIndex++;
+                        break;
+
+                    case ':':
+                        // Probably a repeat thing
+                        if(file[charIndex + 1] == '|')
+                        {
+                            if (doneRepeats.Contains(charIndex))
+                            {
+                                // ignore it, we've been here before!
+                                charIndex += 2;
+                            }
+                            else
+                            {
+                                doneRepeats.Add(charIndex);
+                                charIndex = repeatStartIndex;
+                            }
+                        }
+                        else if(file[charIndex + 1] == ':')
+                        {
+                            if (doneRepeats.Contains(charIndex))
+                            {
+                                // ignore it, we've been here before!
+                                charIndex += 2;
+                            }
+                            else
+                            {
+                                int nextResetIndex = charIndex;
+                                doneRepeats.Add(charIndex);
+                                charIndex = repeatStartIndex;
+                                repeatStartIndex = nextResetIndex;
+                            }
+                        }
+                        else
+                        {
+                            // ignore it I guess
+                            charIndex++;
+                        }
                         break;
 
                     // Finally, if none of the above, it's a note! Or a number. Let's see:
@@ -359,6 +407,8 @@ namespace instruments
             bool flatDetected = false;
             bool naturalDetected = false;
 
+            if (repeatStartIndex < 0)
+                repeatStartIndex = i;
 
             while (CharAvailable(inString, i) && inString[i] == '^')
             {
@@ -879,6 +929,8 @@ namespace instruments
             chordBuffer = new List<Chord>();
             startSync = true;
             charIndex = 0;
+            repeatStartIndex = -1;
+            doneRepeats = new List<int>();
 
             accidentals = new Accidental[7, 8];
             currentKeySig = C;
