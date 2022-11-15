@@ -63,11 +63,11 @@ namespace instruments
                 {
                     modes[(int)PlayMode.abc].WithIcon(capi, capi.Gui.LoadSvgWithPadding(new AssetLocation("instruments", "textures/icons/abc.svg"), 48, 48, 5, ColorUtil.WhiteArgb));
                     modes[(int)PlayMode.abc].TexturePremultipliedAlpha = false;
-                    modes[(int)PlayMode.fluid].WithIcon(capi, capi.Gui.LoadSvgWithPadding(new AssetLocation("instruments", "textures/icons/fluid.svg"), 48, 48, 5, ColorUtil.WhiteArgb));
+                    modes[(int)PlayMode.fluid].WithIcon(capi, capi.Gui.LoadSvgWithPadding(new AssetLocation("instruments", "textures/icons/3.svg"), 48, 48, 5, ColorUtil.WhiteArgb));
                     modes[(int)PlayMode.fluid].TexturePremultipliedAlpha = false;
-                    modes[(int)PlayMode.lockedSemiTone].WithIcon(capi, capi.Gui.LoadSvgWithPadding(new AssetLocation("instruments", "textures/icons/jeff.svg"), 48, 48, 5, ColorUtil.WhiteArgb));
+                    modes[(int)PlayMode.lockedSemiTone].WithIcon(capi, capi.Gui.LoadSvgWithPadding(new AssetLocation("instruments", "textures/icons/2.svg"), 48, 48, 5, ColorUtil.WhiteArgb));
                     modes[(int)PlayMode.lockedSemiTone].TexturePremultipliedAlpha = false;
-                    modes[(int)PlayMode.lockedTone].WithIcon(capi, capi.Gui.LoadSvgWithPadding(new AssetLocation("instruments", "textures/icons/jeff.svg"), 48, 48, 5, ColorUtil.WhiteArgb));
+                    modes[(int)PlayMode.lockedTone].WithIcon(capi, capi.Gui.LoadSvgWithPadding(new AssetLocation("instruments", "textures/icons/1.svg"), 48, 48, 5, ColorUtil.WhiteArgb));
                     modes[(int)PlayMode.lockedTone].TexturePremultipliedAlpha = false;
                 }
                 return modes;
