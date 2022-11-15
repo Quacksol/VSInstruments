@@ -125,6 +125,7 @@ namespace instruments
         List<Sound> soundList = new List<Sound>(); // For playing single notes sent by players, non-abc style
         List<SoundManager> soundManagers;
         bool clientSideEnable;
+        bool clientSideReady = false;
 
         private Dictionary<InstrumentType, string> soundLocations = new Dictionary<InstrumentType, string>();
 
@@ -175,8 +176,9 @@ namespace instruments
             MusicBlockManager.GetInstance().Reset(); // I think there's a manager for both Server and Client, so reset it I guess
             Definitions.GetInstance().Reset();
 
-            clientSideEnable = true;
             clientApi.RegisterCommand("instruments", "instrument playback commands", "[enable|disable]", ParseClientCommand);
+            clientSideEnable = true;
+            clientSideReady = true;
         }
 
         public override void Dispose()
@@ -190,9 +192,12 @@ namespace instruments
             }
             //soundManagers.Clear(); //Already null!
             soundList.Clear();
+            clientSideReady = false;
         }
         private void MakeNote(NoteStart note)
         {
+            if (!clientSideReady) return;
+
             string noteString = "/a3";
             if (note.instrument == InstrumentType.drum)
             {
@@ -242,6 +247,7 @@ namespace instruments
         }
         private void UpdateNote(NoteUpdate note)
         {
+            if (!clientSideReady) return;
             //Sound sound = soundList.Find(x => x.ID.Contains(note.ID));
             Sound sound = soundList.Find(x => (x.ID == note.ID));
             if (sound == null)
@@ -250,6 +256,7 @@ namespace instruments
         }
         private void StopNote(NoteStop note)
         {
+            if (!clientSideReady) return;
             //Sound sound = soundList.Find(x => x.ID.Contains(note.ID));
             Sound sound = soundList.Find(x => (x.ID == note.ID));
             if (sound == null)
@@ -266,6 +273,8 @@ namespace instruments
 
             if (!clientSideEnable)
                 return;
+
+            if (!clientSideReady) return;
 
             SoundManager sm = soundManagers.Find(x => (x.sourceID == serverPacket.fromClientID));
             if (sm == null)
@@ -289,6 +298,7 @@ namespace instruments
         }
         private void StopSounds(ABCStopFromServer serverPacket)
         {
+            if (!clientSideReady) return;
             IClientPlayer player = clientApi.World.Player; // If the client is still starting up, this will be null!
             if (player == null)
                 return;

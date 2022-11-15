@@ -7,6 +7,9 @@ using System;       // Action<>
 using System.IO;    // Open files
 using System.Diagnostics; // debug todo remove
 
+using Vintagestory.API.Util;  // ToolModes
+using Vintagestory.API.Config;  // Lang
+
 namespace instruments
 {
     public enum InstrumentType
@@ -38,8 +41,8 @@ namespace instruments
         bool abcPlaying = false;
         public InstrumentType instrument;
 
-        // fixme GUIs need to be client only
-        //NoteGUI guiDialog;
+        SkillItem[] toolModes;
+        WorldInteraction[] interactions;
 
         public override void OnLoaded(ICoreAPI api)
         {
@@ -47,6 +50,67 @@ namespace instruments
                 return;
 
             Startup();
+
+            toolModes = ObjectCacheUtil.GetOrCreate(api, "instrumentToolModes", () =>
+            {
+                SkillItem[] modes = new SkillItem[4];
+                modes[(int)PlayMode.abc] = new SkillItem() { Code = new AssetLocation(PlayMode.abc.ToString()), Name = Lang.Get("ABC Mode") };
+                modes[(int)PlayMode.fluid] = new SkillItem() { Code = new AssetLocation(PlayMode.fluid.ToString()), Name = Lang.Get("Fluid Play") };
+                modes[(int)PlayMode.lockedSemiTone] = new SkillItem() { Code = new AssetLocation(PlayMode.lockedSemiTone.ToString()), Name = Lang.Get("Locked Play: Semi Tone") };
+                modes[(int)PlayMode.lockedTone] = new SkillItem() { Code = new AssetLocation(PlayMode.lockedTone.ToString()), Name = Lang.Get("Locked Play: Tone") };
+
+                if (capi != null)
+                {
+                    modes[(int)PlayMode.abc].WithIcon(capi, capi.Gui.LoadSvgWithPadding(new AssetLocation("instruments", "textures/icons/abc.svg"), 48, 48, 5, ColorUtil.WhiteArgb));
+                    modes[(int)PlayMode.abc].TexturePremultipliedAlpha = false;
+                    modes[(int)PlayMode.fluid].WithIcon(capi, capi.Gui.LoadSvgWithPadding(new AssetLocation("instruments", "textures/icons/fluid.svg"), 48, 48, 5, ColorUtil.WhiteArgb));
+                    modes[(int)PlayMode.fluid].TexturePremultipliedAlpha = false;
+                    modes[(int)PlayMode.lockedSemiTone].WithIcon(capi, capi.Gui.LoadSvgWithPadding(new AssetLocation("instruments", "textures/icons/jeff.svg"), 48, 48, 5, ColorUtil.WhiteArgb));
+                    modes[(int)PlayMode.lockedSemiTone].TexturePremultipliedAlpha = false;
+                    modes[(int)PlayMode.lockedTone].WithIcon(capi, capi.Gui.LoadSvgWithPadding(new AssetLocation("instruments", "textures/icons/jeff.svg"), 48, 48, 5, ColorUtil.WhiteArgb));
+                    modes[(int)PlayMode.lockedTone].TexturePremultipliedAlpha = false;
+                }
+                return modes;
+            }
+            );
+
+            interactions = ObjectCacheUtil.GetOrCreate(api, "InstrumentInteractions", () =>
+            {
+                return new WorldInteraction[]
+                {
+                    new WorldInteraction()
+                    {
+                        ActionLangCode = "Perform Action",
+                        MouseButton = EnumMouseButton.Right,
+                    },
+                    new WorldInteraction()
+                    {
+                        ActionLangCode = "Open Menu",
+                        HotKeyCode = "f",
+                    }
+                };
+            }
+            );
+        }
+        public override void OnUnloaded(ICoreAPI api)
+        {
+            for (int i = 0; toolModes != null && i < toolModes.Length; i++)
+            {
+                toolModes[i]?.Dispose();
+            }
+        }
+
+        public override SkillItem[] GetToolModes(ItemSlot slot, IClientPlayer forPlayer, BlockSelection blocksel)
+        {
+            return toolModes;
+        }
+        public override void SetToolMode(ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel, int toolMode)
+        {
+            slot.Itemstack.Attributes.SetInt("toolMode", toolMode);
+        }
+        public override int GetToolMode(ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel)
+        {
+            return Math.Min(toolModes.Length - 1, slot.Itemstack.Attributes.GetInt("toolMode"));
         }
 
         public override void OnHeldInteractStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, bool firstEvent, ref EnumHandHandling handling)
@@ -54,37 +118,29 @@ namespace instruments
             if (!firstEvent)
                 return;
 
-
             bool isClient;
             var client = GetClient(byEntity, out isClient);
             if (isClient)
             {
-                if (byEntity.Controls.Sneak)
+                if (GetPlayMode(slot) != PlayMode.abc)
                 {
-                    ToggleGui();
+                    Vec3d pos = new Vec3d(byEntity.Pos.X, byEntity.Pos.Y, byEntity.Pos.Z);
+                    NoteStart newNote = new NoteStart();
+                    newNote.pitch = currentNote.pitch;
+                    newNote.positon = pos;
+                    newNote.instrument = instrument;
+                    IClientNetworkChannel ch = capi.Network.GetChannel("noteTest");
+                    ch.SendPacket(newNote);
                 }
                 else
                 {
-                    if (Definitions.GetInstance().GetPlayMode() != PlayMode.abc)
+                    if (abcPlaying)
                     {
-                        Vec3d pos = new Vec3d(byEntity.Pos.X, byEntity.Pos.Y, byEntity.Pos.Z);
-                        NoteStart newNote = new NoteStart();
-                        newNote.pitch = currentNote.pitch;
-                        newNote.positon = pos;
-                        newNote.instrument = instrument;
-                        IClientNetworkChannel ch = capi.Network.GetChannel("noteTest");
-                        ch.SendPacket(newNote);
+                        ABCSendStop();
                     }
                     else
                     {
-                        if (abcPlaying)
-                        {
-                            ABCSendStop();
-                        }
-                        else
-                        {
-                            ABCSongSelect();
-                        }
+                        ABCSongSelect();
                     }
                 }
             }
@@ -97,9 +153,9 @@ namespace instruments
 
             if (isClient)
             {            
-                Update(byEntity);
+                Update(slot, byEntity);
                 // Additionally, update the sound packet
-                if (Definitions.GetInstance().GetPlayMode() != PlayMode.abc)
+                if (GetPlayMode(slot) != PlayMode.abc)
                 {
                     Vec3d pos = new Vec3d(byEntity.Pos.X, byEntity.Pos.Y, byEntity.Pos.Z);
                     NoteUpdate newNote = new NoteUpdate();
@@ -119,7 +175,7 @@ namespace instruments
 
             if (isClient)
             {
-                if (Definitions.GetInstance().GetPlayMode() != PlayMode.abc)
+                if (GetPlayMode(slot) != PlayMode.abc)
                 {
                     NoteStop newNote = new NoteStop();
                     IClientNetworkChannel ch = capi.Network.GetChannel("noteTest");
@@ -134,7 +190,7 @@ namespace instruments
             // While doing nothing, and while playing, get the angle and show the note to play on HUD.
             if (byEntity.World is IClientWorldAccessor)
             {
-                Update(byEntity);
+                Update(slot, byEntity);
             }
         }
 
@@ -168,7 +224,7 @@ namespace instruments
             }
             return 1;
         }
-        private void Update(EntityAgent byEntity)
+        private void Update(ItemSlot slot, EntityAgent byEntity)
         {
             
             if(!holding)
@@ -177,7 +233,7 @@ namespace instruments
                 capi.Event.AfterActiveSlotChanged += ChangeFromInstrument;
             }
             
-            switch (Definitions.GetInstance().GetPlayMode())
+            switch (GetPlayMode(slot))
             {
                 case PlayMode.lockedTone:
                     AngleToPitchLockedTone(byEntity.Pos.Pitch);
@@ -271,6 +327,7 @@ namespace instruments
             capi = api as ICoreClientAPI;
             //guiDialog = new NoteGUI(capi);
         }
+#if false
         private bool ToggleGui()
         {
             Action<string> sb = SetBand;
@@ -279,6 +336,7 @@ namespace instruments
 
             return true;
         }
+#endif
 
         private IClientWorldAccessor GetClient(EntityAgent entity, out bool isClient)
         {
@@ -320,9 +378,15 @@ namespace instruments
             // Load abc folder
             if(Definitions.GetInstance().UpdateSongList(capi))
             {
-                SongSelectGUI songGui = new SongSelectGUI(capi, PlaySong, Definitions.GetInstance().GetSongList());
+                Action<string> sb = SetBand;
+                SongSelectGUI songGui = new SongSelectGUI(capi, PlaySong, Definitions.GetInstance().GetSongList(), sb, Definitions.GetInstance().GetBandName());
                 songGui.TryOpen();
             }
+        }
+
+        private PlayMode GetPlayMode(ItemSlot slot)
+        {
+            return (PlayMode)slot.Itemstack.Attributes.GetInt("toolMode", (int)PlayMode.abc);
         }
     }
 
