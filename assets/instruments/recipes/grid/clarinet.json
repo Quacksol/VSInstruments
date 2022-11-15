@@ -1,8 +1,8 @@
 {
-	ingredientPattern: "KA	L_",
+	ingredientPattern: "K_	LR",
 	ingredients: {
 		"K": { type: "item", code: "game:knife-*", isTool: true },
-    "A": { type: "item", code: "game:saw-*", isTool: true },
+    "R": { type: "item", code: "game:cattailtops*" },
 		"L": { type: "block", code: "game:log-*-ud" }
 	},
 	width: 2,
