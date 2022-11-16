@@ -122,6 +122,13 @@ namespace instruments
             var client = GetClient(byEntity, out isClient);
             if (isClient)
             {
+                if (byEntity.Controls.Sneak)
+                {
+                    // Do the default thing instead!
+                    base.OnHeldInteractStart(slot, byEntity, blockSel, entitySel, firstEvent, ref handling);
+                    return;
+                }
+
                 if (GetPlayMode(slot) != PlayMode.abc)
                 {
                     Vec3d pos = new Vec3d(byEntity.Pos.X, byEntity.Pos.Y, byEntity.Pos.Z);
