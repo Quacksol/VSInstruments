@@ -1,8 +1,18 @@
 {
 	"code": "violin",
 	"class": "violin",
+	"behaviors": [{ 
+		"name": "GroundStorable",
+		"properties": {
+			"layout": "WallHalves",
+			"wallOffY": 1,
+			"selectionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 0.1, "z2": 1 },
+			"collisionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 0, "y2": 0, "z2": 0 }
+		}
+	}],
 	"shape": { "base": "item/violin" },
 	"attributes": {
+		"rackable": true,
 		"toolrackTransform": {
 			"rotation": {
 				"x": 90,
@@ -12,7 +22,10 @@
 			},
 			"scale": 1.25
 		},
-		"rackable": true
+		"groundStorageTransform": {
+			"translation": { "x": 0.03, "y": 0, "z": 0.37 },
+			"rotation": { "x": 27, "y": 180, "z": 0 }
+		}
 	},
 	"creativeinventory": {
 		"general": [ "*" ],

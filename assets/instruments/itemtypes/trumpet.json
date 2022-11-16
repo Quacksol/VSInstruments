@@ -1,16 +1,18 @@
 {
 	"code": "trumpet",
 	"class": "trumpet",
+	"behaviors": [{ 
+		"name": "GroundStorable",
+		"properties": {
+			"layout": "WallHalves",
+			"wallOffY": 1,
+			"selectionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 0.1, "z2": 1 },
+			"collisionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 0, "y2": 0, "z2": 0 }
+		}
+	}],
 	"shape": { "base": "item/trumpet" },
 	"attributes": {
-		"handbook": {
-			"extraSections": [
-				{
-					"title": "instruments:madefrom-title-brass",
-					"text": "instruments:madefrom-brass"
-				}
-			]
-		},
+		"rackable": true,
 		"toolrackTransform": {
 			"rotation": {
 				"x": -90
@@ -20,7 +22,18 @@
 			},
 			"scale": 1.25
 		},
-		"rackable": true
+		"groundStorageTransform": {
+			"translation": { "x": 0, "y": 0.04, "z": -0.02 },
+			"rotation": { "x": -74, "y": 90, "z": 0 }
+		},
+		"handbook": {
+			"extraSections": [
+				{
+					"title": "instruments:madefrom-title-brass",
+					"text": "instruments:madefrom-brass"
+				}
+			]
+		}
 	},
 	"creativeinventory": {
 		"general": [ "*" ],
