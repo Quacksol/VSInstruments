@@ -112,12 +112,12 @@ namespace instruments
         {
             return Math.Min(toolModes.Length - 1, slot.Itemstack.Attributes.GetInt("toolMode"));
         }
-
         public override void OnHeldInteractStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, bool firstEvent, ref EnumHandHandling handling)
         {
             if (!firstEvent)
                 return;
 
+            handling = EnumHandHandling.PreventDefault;
             bool isClient;
             var client = GetClient(byEntity, out isClient);
             if (isClient)
@@ -151,7 +151,11 @@ namespace instruments
                     }
                 }
             }
-            handling = EnumHandHandling.PreventDefault;
+            else
+            {
+                // Called on the server - treat like any old item. Allows the instrument to be placed!
+                base.OnHeldInteractStart(slot, byEntity, blockSel, entitySel, firstEvent, ref handling);
+            }
         }
         public override bool OnHeldInteractStep(float secondsUsed, ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel)
         {
