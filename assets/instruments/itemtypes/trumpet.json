@@ -23,7 +23,7 @@
 			"scale": 1.25
 		},
 		"groundStorageTransform": {
-			"translation": { "x": 0, "y": 0.04, "z": -0.02 },
+			"translation": { "x": -0.04, "y": 0, "z": 0.08 },
 			"rotation": { "x": -74, "y": 90, "z": 0 }
 		},
 		"handbook": {
