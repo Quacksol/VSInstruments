@@ -10,6 +10,7 @@
 	}],
 	"shape": { "base": "item/musicbox" },
 	"attributes": {
+		"rackable": true,
 		"toolrackTransform": {
 			"rotation": {
 				"x": -90,
@@ -21,7 +22,9 @@
 			},
 			"scale": 1.25
 		},
-		"rackable": true
+		"groundStorageTransform": {
+			"translation": { "x": -0.05, "y": 0, "z": 0.04 }
+		}
 	},
 	"creativeinventory": {
 		"general": [ "*" ],
