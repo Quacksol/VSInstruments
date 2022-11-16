@@ -1,8 +1,16 @@
 {
 	"code": "harp",
 	"class": "harp",
+	"behaviors": [{
+		"name": "GroundStorable",
+		"properties": { 
+			"layout": "Quadrants",
+			"collisionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 0.125, "z2": 1 }
+		}
+	}],
 	"shape": { "base": "item/harp" },
 	"attributes": {
+		"rackable": true,
 		"toolrackTransform": {
 			"rotation": {
 				"x": -90,
@@ -12,7 +20,11 @@
 			},
 			"scale": 1.25
 		},
-		"rackable": true
+		"groundStorageTransform": {
+			"translation": { "x": -0.02, "y": -0.07, "z": -0.02 },
+			"rotation": { "x": 0, "y": -45, "z": 0 },
+			"scale": 0.85
+		}
 	},
 	"creativeinventory": {
 		"general": [ "*" ],
