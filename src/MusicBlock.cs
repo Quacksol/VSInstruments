@@ -141,6 +141,8 @@ namespace instruments
                             string abcServerBaseDir = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "abc_server"; // EXTREME todo this is copied from main, make into one thing
 
                             RecursiveFileProcessor.ReadFile(abcServerBaseDir + Path.DirectorySeparatorChar + songName, ref songData);
+                            if (songData == "")  // If songData is still empty, then the song wasn't found (or one wasn't selected)
+                                return;
 
                             ABCParsers.GetInstance().MakeNewParser(Api as ICoreServerAPI, byPlayer,
                                 songData, ID, blockName, bandName, Pos.ToVec3d(), instrumentType);

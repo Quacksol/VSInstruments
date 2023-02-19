@@ -516,6 +516,7 @@ namespace instruments
         private const int bufferSize = 32;
         private List<string> abcFiles = new List<string>();
         private List<string> serverAbcFiles = new List<string>();
+        private bool messageDone = false;
 
         string abcBaseDirectory = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "abc";
 
@@ -595,8 +596,12 @@ namespace instruments
             }
             else
             {
-                // Client ABC folder not found, log a message to tell the player where it should be. But still search the server folder
-                capi.ShowChatMessage("ABC warning: Could not find folder at \"" + abcBaseDirectory + "\"");
+                if (!messageDone)
+                {
+                    // Client ABC folder not found, log a message to tell the player where it should be. But still search the server folder
+                    capi.ShowChatMessage("ABC warning: Could not find folder at \"" + abcBaseDirectory + "\". Displaying server files instead.");
+                    messageDone = true;
+                }
             }
             foreach (string song in serverAbcFiles)
                 abcFiles.Add(song);
