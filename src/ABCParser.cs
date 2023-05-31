@@ -175,23 +175,45 @@ namespace instruments
                     case '%':
                     case '\n':
                     case '\r':
-                    case '\\':
-                        List<char> checkList = new List<char> { '\n', '\r', '\\' };
+                        List<char> checkList = new List<char> { '\n', '\r' };
                         SkipCharsUntil(file, ref charIndex, checkList); // Skip until newline
                         charIndex++;
+                        timeout = 32;
                         break;
 
                     // Skip these characters
                     case '\t':  // Tab key
                     case '-':
                     case '/': // Shouldn't appear on its own. Probably 'syntactic grouping' crap that doesn't actually do anything
+                    case '\\': 
+                    case ')': //  If you get a closing bracket, you probably had an opening one for a slur. Seeing as we ignore them, ignore this too 
+                    case 'v': // A decoration
+                    case 'u': // A decoration
+                    case '.': // A decoration
                         charIndex++;
                         break;
+
+                    case '\"': // I think this is a temporary kig sig. Although, it makes everythiong sound worse. No idea, just ignore it
+                        //ParseKeySig(file, ref charIndex, true);  // True means put it in the tempKeySig
+                        charIndex++;
+                        checkList = new List<char> { '\"' };
+                        SkipCharsUntil(file, ref charIndex, checkList); // Skip until end quote
+                        charIndex++;
+                        break;
+
                     case '+': // Decorations, ignore everything until the next + or newline
                         charIndex++;
-                        SkipDecorations(file, ref charIndex);
+                        checkList = new List<char> { '+', '\n' };
+                        SkipCharsUntil(file, ref charIndex, checkList); // Skip until end quote
                         charIndex++;
                         break;
+                    case '!': // More decorations, ignore everything until the next ! or newline
+                        charIndex++;
+                        checkList = new List<char> { '!', '\n' };
+                        SkipCharsUntil(file, ref charIndex, checkList); // Skip until end quote
+                        charIndex++;
+                        break;
+
                     // Headers!
                     case 'K': // Key
                         ParseKeySig(file, ref charIndex);
@@ -212,6 +234,7 @@ namespace instruments
                         ParseMeter(file, ref charIndex);
                         charIndex++;
                         break;
+
                     case 'C': // Composer, or a lot more likely, a C note. 
                         if (file[charIndex + 1] == ':')
                         {
@@ -220,7 +243,20 @@ namespace instruments
                         else
                             if (ParseNote(file, ref charIndex))
                                 timeout = 32;
+                        break; 
+
+                    case 'B': // Source, or a lot more likely, a B note.
+                        if (file[charIndex + 1] == ':')
+                        {
+                            checkList = new List<char> { '\n', '\r' };
+                            SkipCharsUntil(file, ref charIndex, checkList); // Skip until newline
+                            charIndex++;
+                        }
+                        else
+                            if (ParseNote(file, ref charIndex))
+                            timeout = 32;
                         break;
+
                     case 'G': // Group, or a lot more likely, a G note. 
                         if (file[charIndex + 1] == ':')
                         {
@@ -282,6 +318,8 @@ namespace instruments
                     case '(': // Tuplets! A number will follow, meaning triplets, etc
                         charIndex++;
                         tupletDuration = GetIntFromStream(file, ref charIndex); // Should be <10 - add a check?
+                        if (tupletDuration == 0)
+                            ;  // actually just do nothing. It's a slur, we don't care about them. Sticks and stones or something idk
                         break;
 
                     case ' ':
@@ -520,7 +558,7 @@ namespace instruments
 
             newNote.duration = ParseDuration(file, ref charIndex); // charIndex++ is done in here!
 
-            nextChord.AddNote(newNote);
+            nextChord.AddNote(newNote, defaultNoteDuration/2);
 
             if (!inChord)
             {
@@ -614,7 +652,7 @@ namespace instruments
 
             while (true)
             {
-                checkList = new List<char> { '#', 'b', 'm', ' ', '\n' };
+                checkList = new List<char> { '#', 'b', 'm', ' ', '\n', '\"'};
                 SkipCharsUntil(inString, ref i, checkList);
                 if (inString[i] == '#') // Sharp. There may be a minor, so repeat this section
                 {
@@ -807,6 +845,7 @@ namespace instruments
                     currentKeySig = C;
                     break;
             }
+
             SetKeySig(false);
             //Debug.WriteLine("New key: " + key);
         }
@@ -838,6 +877,7 @@ namespace instruments
                     if (acc == Accidental.accNatural || acc == Accidental.accSharp || acc == Accidental.accFlat)  // If an accidental has been applied to this note...
                         if (!wipeAccs)  // And we are not supposed to overwrite accidentals...
                             continue;   // Do not modify this accidental, skip it
+
                     accidentals[i, j] = (Accidental)currentKeySig[i];
                 }
             }
@@ -906,11 +946,6 @@ namespace instruments
         private void ParseGroup(string inString, ref int i)
         {
             List<char> checkList = new List<char> { '\n' };
-            SkipCharsUntil(inString, ref i, checkList);
-        }
-        private void SkipDecorations(string inString, ref int i)
-        {
-            List<char> checkList = new List<char> { '\n', '+' };
             SkipCharsUntil(inString, ref i, checkList);
         }
         private void Reset()

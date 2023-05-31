@@ -347,13 +347,16 @@ namespace instruments
             notes = new List<Note>();
         }
 
-        public void AddNote(Note newNote)
+        public void AddNote(Note newNote, float minimumDuration)
         {
-            notes.Add(newNote);
             if (newNote.duration < duration)
-            {
                 duration = newNote.duration;
-            }
+
+            /*
+            if (newNote.duration < minimumDuration)
+                newNote.duration = minimumDuration;
+            */
+            notes.Add(newNote);
         }
 
         public bool CheckShouldStart(float currentTime)
