@@ -120,5 +120,7 @@
 			"z": 0.5
 		},
 		"scale": 0.8
-	}
+	},
+	"heldTpIdleAnimation": "holdinglanternrighthand",
+	"heldTpUseAnimation": "holdinglanternrighthand"
 }

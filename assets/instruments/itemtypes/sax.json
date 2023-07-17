@@ -97,14 +97,14 @@
 	},
 	"tpHandTransform": {
 		"translation": {
-			"x": -0.87,
+			"x": -0.5,
 			"y": 0,
-			"z": -0.6
+			"z": -0.4
 		},
 		"rotation": {
-			"x": 0,
-			"y": 0,
-			"z": 0
+			"x": 15,
+			"y": 10,
+			"z": -78
 		},
 		"origin": {
 			"x": 0.5,
@@ -112,5 +112,7 @@
 			"z": 0.5
 		},
 		"scale": 0.8
-	}
+	},
+	"heldTpIdleAnimation": "holdbothhandslarge",
+	"heldTpUseAnimation": "holdbothhandslarge"
 }

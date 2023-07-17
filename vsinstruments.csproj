@@ -72,6 +72,7 @@
     <Compile Include="src\FileFunctions.cs" />
     <Compile Include="src\GUI.cs" />
     <Compile Include="src\Instrument.cs" />
+    <Compile Include="src\InstrumentSettings.cs" />
     <Compile Include="src\Main.cs" />
     <Compile Include="src\MusicBlock.cs" />
     <Compile Include="src\Sound.cs" />
@@ -84,6 +85,7 @@
     <PostBuildEvent>
 copy "$(TargetPath)" "$(ProjectDir)" 
 copy "$(TargetDir)\$(TargetName).pdb" "$(ProjectDir)" 
-    </PostBuildEvent>
+    
+</PostBuildEvent>
   </PropertyGroup>
 </Project>
