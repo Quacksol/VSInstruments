@@ -62,6 +62,7 @@ namespace instruments
 
         private bool inChord;
         bool LFound;                // L is default note length. It's important to know if it was defined, or the default length was used
+        bool QFound;                // Q is tempo. If one isn't defined, we need to do some special biz
         float meterValue;
         float defaultNoteLength;    // The default note is a crotchet, minim, etc
         float meterDNL;             // Default note length, as determined by meter (used if no L is given)
@@ -76,6 +77,7 @@ namespace instruments
         bool endOfFile;
         int repeatStartIndex;       // Index in file of where a repeat should start
         List<int> doneRepeats;      // List of repeats that have already been processed, and should be ignored
+        bool hornpipe = false;
 
         public int playerID;
         public string playerName; // May be the name of the block, not only players!
@@ -108,14 +110,14 @@ namespace instruments
             // For now, read the entire file and make all the chord objects at once
             serverAPI = sAPI;
             playerID = bID;
-            playerName = name;
             playerOwnerID = owningPlayerID;
-            position = pos;
+            playerName = name;
             file = f;
             instrument = inst;
             bandName = bn;
             currentTime = masterTime;
             isPlayer = false;
+            position = pos;
             Reset();
         }
 
@@ -588,12 +590,19 @@ namespace instruments
                     duration /= 2f;
             }
 
+            if (hornpipe)
+            {
+                duration /= 2;
+                hornpipe = false;
+            }
+
             // Still not over yet!
             while (CharAvailable(inString, i) && inString[i] == '>')
             {
                 // A > (aka a hornpipe) represents a 'dotted' note
                 // (therefore adds half its current duration to itself)
                 duration += duration / 2f;
+                hornpipe = true;
                 i++;
             }
 
@@ -638,6 +647,8 @@ namespace instruments
             // Calculate the default note length based on the Meter, if it has not already been found
             if (!LFound)
                 defaultNoteLength = meterValue < 0.75f ? 0.0625f : 0.125f;
+            if (!QFound)
+                beatsPerMinute = 120 * (0.25f / bpmFactor);
             // Calculate the default note duration based off of our (potentially new) note length
             CalculateNoteDuration();
         }
@@ -921,6 +932,7 @@ namespace instruments
                 CalculateNoteDuration();
                 i--; // Yes, terrible fix, fight me
             }
+            QFound = true;
         }
         private void ParseDefaultNoteLength(string inString, ref int i)
         {

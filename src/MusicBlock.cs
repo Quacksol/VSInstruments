@@ -19,15 +19,11 @@ namespace instruments
 {
     class MusicBlock : Block
     {
-
         public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
             //return base.OnBlockInteractStart(world, byPlayer, blockSel);
             // Open the GUI to show current song/band, instrument to use, and press another button to choose song
             // Called on the client side. 
-
-            // test - have hard coded song, band and instrument. Send start play thing innit. Should be the same interface.
-
 
             if(world.Api.Side == EnumAppSide.Client)
             {
@@ -49,7 +45,7 @@ namespace instruments
     }
     class BEMusicBlock : BlockEntityContainer
     {
-        int ID; // do we actually need ids?
+        int ID;
 
         string blockName = "Music Block";
         string bandName = "";

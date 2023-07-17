@@ -17,10 +17,12 @@ namespace instruments
         public int ID;
         public float endTime;        
 
-        public Sound(IClientWorldAccessor client, Vec3d pos, float pitchModifier, string assetLocation, int id, bool play=true)
+        public Sound(IClientWorldAccessor client, Vec3d pos, float pitchModifier, string assetLocation, int id, float volume, bool play=true)
         {
+           
+
             SoundParams soundData = new SoundParams(new AssetLocation("instruments", assetLocation + ".ogg"));
-            soundData.Volume = 0.5f;
+            soundData.Volume = volume;
             sound = client.LoadSound(soundData);
             if (sound != null)
             {
@@ -67,6 +69,7 @@ namespace instruments
         private bool active = true;         // The manager should do Update(). False when playback should stop.
         private string instrumentFileLocation;
         private InstrumentType instrument;
+        private float volume;
 
         private Dictionary<int, string> drumMap = new Dictionary<int, string>();
         private Dictionary<int, string> octaveMap = new Dictionary<int, string>();
@@ -116,6 +119,9 @@ namespace instruments
             instrumentFileLocation = location;
             instrument = inst;
             nowTime = startTime;
+
+            // Music Blocks have an ID above 1000, to not clash with players. This is convinient, as I can use this to set the volume appropriately.
+            volume = sID >= 1000 ? InstrumentModCommon.config.blockVolume : InstrumentModCommon.config.playerVolume;
         }
 
         public void AddChord(Vec3d pos, Chord chord)
@@ -200,7 +206,7 @@ namespace instruments
                                     }
                                 }
                             }
-                            Sound newSound = new Sound(client, sourcePosition, pitch, assetLocation, -1, play);
+                            Sound newSound = new Sound(client, sourcePosition, pitch, assetLocation, -1, volume, play);
                             newSound.endTime = nowTime + note.duration;
                             if (newSound.sound == null)
                                 Debug.WriteLine("Sound creation failed (abc)!");

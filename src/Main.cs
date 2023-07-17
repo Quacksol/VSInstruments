@@ -87,6 +87,8 @@ namespace instruments
 
     public class InstrumentModCommon : ModSystem
     {
+        public static InstrumentSettings config;
+
         public override void Start(ICoreAPI api)
         {
             base.Start(api);
@@ -106,6 +108,23 @@ namespace instruments
 
             api.RegisterBlockClass("musicblock", typeof(MusicBlock));
             api.RegisterBlockEntityClass("musicblockentity", typeof(BEMusicBlock));
+
+            // Load settings file
+            try
+            {
+                config = api.LoadModConfig<InstrumentSettings>("instruments.json");
+                if (config == null)
+                {
+                    config = new InstrumentSettings();
+                    //api.StoreModConfig<InstrumentSettings>(config, "potterywheel.json");
+                    api.StoreModConfig(config, "instruments.json");
+                }
+            }
+            catch (System.Exception)
+            {
+                api.Logger.Error("Could not load instruments config, using default values...");
+                config = new InstrumentSettings();
+            }
         }
     }
 
@@ -239,7 +258,7 @@ namespace instruments
                 }
             }
             IClientWorldAccessor clientWorldAccessor = clientApi.World;
-            Sound sound = new Sound(clientWorldAccessor, note.positon, note.pitch, soundLocations[note.instrument] + noteString, note.ID);
+            Sound sound = new Sound(clientWorldAccessor, note.positon, note.pitch, soundLocations[note.instrument] + noteString, note.ID, config.playerVolume);
             if (sound.sound == null)
                 Debug.WriteLine("Sound creation failed!");
             else
