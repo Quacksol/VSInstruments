@@ -1,7 +1,7 @@
-﻿using System.IO; // Open files
-using System.Text; // UTF8 stuff
-using System.Collections.Generic; // Lists
+﻿using System.Collections.Generic; // Lists
 using System.Diagnostics; // debug todo remove
+using System.IO; // Open files
+using System.Text; // UTF8 stuff
 
 
 namespace instruments
@@ -32,7 +32,7 @@ namespace instruments
         // Insert logic for processing found files here.
         public static void ProcessFile(string path, string baseDirectory, ref List<string> abcFiles)
         {
-            if (path.Substring(path.Length - 4) ==  ".abc")
+            if (path.Substring(path.Length - 4) == ".abc")
                 abcFiles.Add(path.Replace(baseDirectory, ""));
         }
         public static bool ReadFile(string path, ref string fileData)

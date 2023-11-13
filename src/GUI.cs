@@ -1,12 +1,11 @@
-﻿using Vintagestory.API.Client;
+﻿using System;                   // Action<>
+using System.Collections.Generic; // Lists
+using System.IO;                // Binary writer n that
+using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Config;  // Lang stuff
 using Vintagestory.API.MathTools;
 using Vintagestory.GameContent;     // GUIHandbook
-
-using System;                   // Action<>
-using System.IO;                // Binary writer n that
-using System.Collections.Generic; // Lists
-using Vintagestory.API.Config;  // Lang stuff
 
 namespace instruments
 {
@@ -33,7 +32,7 @@ namespace instruments
             // Lastly, create the dialog
             SingleComposer = capi.Gui.CreateCompo("NoteDialog", dialogBounds)
                 .AddShadedDialogBG(bgBounds)
-                .AddDynamicText("No note selected!", CairoFont.WhiteDetailText(), EnumTextOrientation.Center, textBounds, "note")
+                .AddDynamicText("No note selected!", CairoFont.WhiteDetailText(), textBounds, "note")
                 .Compose();
         }
 
@@ -131,7 +130,7 @@ namespace instruments
             if (bandNameChange != null)
             {
                 SingleComposer
-                .AddDynamicText("", CairoFont.WhiteDetailText(), EnumTextOrientation.Left, bandStringBounds, "Band name")
+                .AddDynamicText("", CairoFont.WhiteDetailText(), bandStringBounds, "Band name")
                 .AddStaticText("Set Band Name:", CairoFont.WhiteDetailText(), EnumTextOrientation.Center, bandStringNewBounds)
                 .AddTextInput(bandBoxBounds, ub)
                 ;
@@ -164,8 +163,8 @@ namespace instruments
         {
             shownStackListItems.Clear();
             foreach (GuiHandbookTextPage song in allStackListItems)
-            { 
-                if(filter != "")
+            {
+                if (filter != "")
                 {
                     string lowerCase = song.Title.ToLower();
                     if (!lowerCase.Contains(filter.ToLower()))
@@ -251,14 +250,14 @@ namespace instruments
                 .AddShadedDialogBG(bgBounds)
                 .AddDialogTitleBar(DialogTitle, OnTitleBarClose)
                 .BeginChildElements(bgBounds)
-                    .AddDynamicText(Lang.Get("Name: \"" + name + "\""), CairoFont.WhiteSmallText(), EnumTextOrientation.Left, nameBounds, "name")
+                    .AddDynamicText(Lang.Get("Name: \"" + name + "\""), CairoFont.WhiteSmallText(), nameBounds, "name")
                     .AddTextInput(nameInputBounds, OnNameChange)
-                    .AddDynamicText(Lang.Get("Band Name: \"" + bandName + "\""), CairoFont.WhiteSmallText(), EnumTextOrientation.Left, bandnameBounds, "bandName")
+                    .AddDynamicText(Lang.Get("Band Name: \"" + bandName + "\""), CairoFont.WhiteSmallText(), bandnameBounds, "bandName")
                     .AddTextInput(bandnameInputBounds, OnBandNameChange)
                     .AddItemSlotGrid(Inventory, SendInvPacket, 1, new int[] { 0 }, instrumentSlotBounds)
                     .AddStaticText(Lang.Get("Instrument"), CairoFont.WhiteSmallText(), instrumentTextBounds)
-                    .AddDynamicText(Lang.Get("Song File: \n\"" + songName + "\""), CairoFont.WhiteSmallText(), EnumTextOrientation.Left, songNameBounds, "songName")
-                .AddSmallButton(Lang.Get("Song Select"), OnSongSelect, sendButtonBounds, EnumButtonStyle.Normal, EnumTextOrientation.Center, "songSelectButton")
+                    .AddDynamicText(Lang.Get("Song File: \n\"" + songName + "\""), CairoFont.WhiteSmallText(), songNameBounds, "songName")
+                .AddSmallButton(Lang.Get("Song Select"), OnSongSelect, sendButtonBounds, EnumButtonStyle.Normal, "songSelectButton")
                 .EndChildElements()
                 .Compose()
             ;
@@ -321,7 +320,7 @@ namespace instruments
         {
             // Read the selected file, and send the contents to the server
             string songData = "";
-            // Try to read the file. If it failed, it's propably a server file, so we should send the filename when starting playback, just as with handheld instruments.
+            // Try to read the file. If it failed, it's propably a server file, so we should send the filename when starting playback, just as with handheld +.
             RecursiveFileProcessor.ReadFile(Definitions.GetInstance().ABCBasePath() + Path.DirectorySeparatorChar + filePath, ref songData);
 
             SingleComposer.GetDynamicText("songName").SetNewText("Song File: \n\"" + filePath + "\"");
@@ -353,7 +352,7 @@ namespace instruments
             if (slotid == 0)
             {
                 //if (Inventory[0].Itemstack?.Collectible.GetType())// FirstCodePart().Equals("parcel") == true)
-                    ;   // Allow playback? Only allow it if the item is in the slot (and disallow other items)
+                ;   // Allow playback? Only allow it if the item is in the slot (and disallow other items)
             }
         }
 

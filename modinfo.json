@@ -1,12 +1,13 @@
 {
-  "type": "code",
-  "modid": "instruments",
-  "name": "Instruments",
-  "description": "Play music together on a variety of instruments!",
-  "author": "Quacksol",
-  "version": "1.2.2",
-  "dependency": {
-    "game": "1.18.0"
-  }
+    "type": "code",
+    "modid": "vsinstruments",
+    "name": "Instruments",
+    "authors": [
+        "Quacksol"
+    ],
+    "description": "Play music together on a variety of instruments!",
+    "version": "1.2.3",
+    "dependencies": {
+        "game": "1.18.15"
+    }
 }
-

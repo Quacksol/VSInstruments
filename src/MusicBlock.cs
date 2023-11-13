@@ -1,23 +1,20 @@
-﻿using Vintagestory.API.Common;
-using Vintagestory.API.Client;
-using Vintagestory.API.Server;
+﻿using System;
 using System.Collections.Generic; // List
 using System.Diagnostics;  // Debug todo remove
-
-using Vintagestory.API.Common.Entities;
-using Vintagestory.API.MathTools;
 using System.IO;
-using Vintagestory.API.Datastructures;
-using System;
-
-
+using Vintagestory.API.Client;
+using Vintagestory.API.Common;
+using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Config;
+using Vintagestory.API.Datastructures;
+using Vintagestory.API.MathTools;
+using Vintagestory.API.Server;
 using Vintagestory.GameContent;
 
 
 namespace instruments
 {
-    class MusicBlock : Block
+    internal class MusicBlock : Block
     {
         public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
@@ -25,25 +22,26 @@ namespace instruments
             // Open the GUI to show current song/band, instrument to use, and press another button to choose song
             // Called on the client side. 
 
-            if(world.Api.Side == EnumAppSide.Client)
+            if (world.Api.Side == EnumAppSide.Client)
             {
                 // GUI stuff
 
             }
 
-            if(world.Api.Side == EnumAppSide.Server)
+            if (world.Api.Side == EnumAppSide.Server)
             {
                 //if (!byPlayer.WorldData.EntityControls.Sneak)
                 {
                     BEMusicBlock be = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BEMusicBlock;
-                    if(be != null)
-                        be.OnUse(byPlayer);                
+                    if (be != null)
+                        be.OnUse(byPlayer);
                 }
             }
             return true;
         }
     }
-    class BEMusicBlock : BlockEntityContainer
+
+    internal class BEMusicBlock : BlockEntityContainer
     {
         int ID;
 
@@ -61,7 +59,7 @@ namespace instruments
         {
             // Set up inventory here - I'm copying necessaries' mailbox, seems simple enough.
             inventory = new MusicBlockInventory(null, null);
-            inventory.SlotModified += OnSlotModified;            
+            inventory.SlotModified += OnSlotModified;
         }
         public override InventoryBase Inventory
         {
@@ -100,7 +98,7 @@ namespace instruments
             songData = tree.GetString("file");
             songName = tree.GetString("songname");
         }
-        
+
         public override void OnBlockPlaced(ItemStack byItemStack = null)
         {
             base.OnBlockPlaced(byItemStack);
@@ -112,7 +110,7 @@ namespace instruments
                 return;
             MusicBlockManager.GetInstance().RemoveID(ID);
 
-            if(isPlaying)
+            if (isPlaying)
             {
                 ABCParser abcp = ABCParsers.GetInstance().FindByID(ID);
                 ABCStopFromServer packet = new ABCStopFromServer(); // todo copied from main, make a function
@@ -132,7 +130,7 @@ namespace instruments
                     // Make a new ABCPlayer!
                     if (blockName != "" && songName != "" && instrumentType != InstrumentType.none)
                     {
-                        if(songData == "") // If there is no songData, the file is probably a server file. Read it from the abc_server folder
+                        if (songData == "") // If there is no songData, the file is probably a server file. Read it from the abc_server folder
                         {
                             string abcServerBaseDir = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "abc_server"; // EXTREME todo this is copied from main, make into one thing
 
@@ -296,7 +294,7 @@ namespace instruments
             if (item != null)
             {
                 InstrumentItem dummy = (item.Item as InstrumentItem);
-                if(dummy != null)
+                if (dummy != null)
                     instrumentType = dummy.instrument;
             }
             else
@@ -327,7 +325,7 @@ namespace instruments
         {
             // Search the list for a free ID
             int i = IDOffset;
-            for(int ID=0; ID<activeBlockIDs.Count; ID++)
+            for (int ID = 0; ID < activeBlockIDs.Count; ID++)
             {
                 if (activeBlockIDs.Contains(i))
                 {
@@ -345,7 +343,8 @@ namespace instruments
             activeBlockIDs.Remove(id);
         }
     }
-    class MusicBlockInventory : InventoryBase, ISlotProvider
+
+    internal class MusicBlockInventory : InventoryBase, ISlotProvider
     {
         // 'Borrowed' from necessaries' mailbox. Thanks Zig <3
         ItemSlot[] slots;

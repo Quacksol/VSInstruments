@@ -1,9 +1,9 @@
-﻿using Vintagestory.API.Server;
-using Vintagestory.API.Common;
-using System;               // Array.Find()
+﻿using System;               // Array.Find()
 using System.Collections.Generic; // List
 using System.Diagnostics;  // Debug todo remove
+using Vintagestory.API.Common;
 using Vintagestory.API.MathTools; // vec3D
+using Vintagestory.API.Server;
 
 /*
  * This file is for the server only.
@@ -133,7 +133,7 @@ namespace instruments
             // If a note's duration is over, deactivate it
             // If that note was the first note of the chord to deactivate, get the next chord
             ExitStatus allOk = ExitStatus.allGood;
-            currentTime += (dt*1000);
+            currentTime += (dt * 1000);
 
             if (chordBuffer.Count == 0)
                 return ExitStatus.finished;
@@ -187,7 +187,7 @@ namespace instruments
                     case '\t':  // Tab key
                     case '-':
                     case '/': // Shouldn't appear on its own. Probably 'syntactic grouping' crap that doesn't actually do anything
-                    case '\\': 
+                    case '\\':
                     case ')': //  If you get a closing bracket, you probably had an opening one for a slur. Seeing as we ignore them, ignore this too 
                     case 'v': // A decoration
                     case 'u': // A decoration
@@ -244,8 +244,8 @@ namespace instruments
                         }
                         else
                             if (ParseNote(file, ref charIndex))
-                                timeout = 32;
-                        break; 
+                            timeout = 32;
+                        break;
 
                     case 'B': // Source, or a lot more likely, a B note.
                         if (file[charIndex + 1] == ':')
@@ -266,7 +266,7 @@ namespace instruments
                         }
                         else
                             if (ParseNote(file, ref charIndex))
-                                timeout = 32;
+                            timeout = 32;
                         break;
                     // Note modifiers!
                     case '[': // Chord start
@@ -294,16 +294,16 @@ namespace instruments
                             // Chord is finished. Or is it?
                             // Check for duration, to see if the whole chord needs its duration modified
                             charIndex++;
-                            
+
                             float durationMod = ParseDuration(file, ref charIndex); // charIndex++ is done in here!
                             durationMod /= defaultNoteDuration;
-                            if(durationMod != 1)
+                            if (durationMod != 1)
                             {
                                 foreach (Note n in nextChord.notes)
                                     n.duration = (long)(n.duration * durationMod);
                                 nextChord.duration = (long)(nextChord.duration * durationMod);
                             }
-                            
+
                             ChordDone();
                             inChord = false;
                         }
@@ -332,7 +332,7 @@ namespace instruments
 
                     case ':':
                         // Probably a repeat thing
-                        if(file[charIndex + 1] == '|')
+                        if (file[charIndex + 1] == '|')
                         {
                             if (doneRepeats.Contains(charIndex))
                             {
@@ -345,7 +345,7 @@ namespace instruments
                                 charIndex = repeatStartIndex;
                             }
                         }
-                        else if(file[charIndex + 1] == ':')
+                        else if (file[charIndex + 1] == ':')
                         {
                             if (doneRepeats.Contains(charIndex))
                             {
@@ -391,7 +391,7 @@ namespace instruments
                 ;
             else
             {
-                if(startSync)
+                if (startSync)
                 {
                     // This is the first chord that finishes after currentTime.
                     // Make a dummy chord in order to sync with the master.
@@ -414,11 +414,11 @@ namespace instruments
                     }
                 }
                 chordBuffer.Add(nextChord);
-                
-                if(isPlayer)
+
+                if (isPlayer)
                 {
                     IPlayer player = Array.Find(serverAPI.World.AllOnlinePlayers, x => x.ClientId == playerID);
-                    position = new Vec3d(player.Entity.Pos.X, player.Entity.Pos.Y, player.Entity.Pos.Z); 
+                    position = new Vec3d(player.Entity.Pos.X, player.Entity.Pos.Y, player.Entity.Pos.Z);
                 }
 
                 ABCUpdateFromServer packet = new ABCUpdateFromServer();
@@ -431,11 +431,11 @@ namespace instruments
             }
             chordStartTime += nextChordDuration;
             barTime += nextChordDuration;
-           /* if (barTime > barDuration)
-            {
-                barTime -= barDuration;
-                //SetKeySig(); // This is not supposed to happen, makes other songs go all fucky
-            }*/
+            /* if (barTime > barDuration)
+             {
+                 barTime -= barDuration;
+                 //SetKeySig(); // This is not supposed to happen, makes other songs go all fucky
+             }*/
 
             nextChord = new Chord();
             nextChord.startTime = chordStartTime;
@@ -560,7 +560,7 @@ namespace instruments
 
             newNote.duration = ParseDuration(file, ref charIndex); // charIndex++ is done in here!
 
-            nextChord.AddNote(newNote, defaultNoteDuration/2);
+            nextChord.AddNote(newNote, defaultNoteDuration / 2);
 
             if (!inChord)
             {
@@ -643,7 +643,7 @@ namespace instruments
                     meterValue = 1;
                 }
             }
-            
+
             // Calculate the default note length based on the Meter, if it has not already been found
             if (!LFound)
                 defaultNoteLength = meterValue < 0.75f ? 0.0625f : 0.125f;
@@ -663,7 +663,7 @@ namespace instruments
 
             while (true)
             {
-                checkList = new List<char> { '#', 'b', 'm', ' ', '\n', '\"'};
+                checkList = new List<char> { '#', 'b', 'm', ' ', '\n', '\"' };
                 SkipCharsUntil(inString, ref i, checkList);
                 if (inString[i] == '#') // Sharp. There may be a minor, so repeat this section
                 {
@@ -675,7 +675,7 @@ namespace instruments
                     i++;
                     acc = Accidental.flat;
                 }
-                else if(inString[i] == ' ') // Space - will probably have a maj/min after it, stay in the loop
+                else if (inString[i] == ' ') // Space - will probably have a maj/min after it, stay in the loop
                 {
                     i++;
                 }
@@ -704,7 +704,7 @@ namespace instruments
                 case 'C':
                     if (acc == Accidental.sharp)
                     {
-                        if(minor)
+                        if (minor)
                             currentKeySig = E;
                         else
                             currentKeySig = Cs;
@@ -716,7 +716,7 @@ namespace instruments
                     }
                     else
                     {
-                        if(minor)
+                        if (minor)
                             currentKeySig = Bf;
                         else
                             currentKeySig = C;
@@ -725,7 +725,7 @@ namespace instruments
                 case 'F':
                     if (acc == Accidental.sharp)
                     {
-                        if(minor)
+                        if (minor)
                             currentKeySig = A;
                         else
                             currentKeySig = Fs;
@@ -746,14 +746,14 @@ namespace instruments
                 case 'A':
                     if (acc == Accidental.sharp)
                     {
-                        if(minor)
+                        if (minor)
                             currentKeySig = Cs;
                         else
                             currentKeySig = A; // Does not exist
                     }
                     else if (acc == Accidental.flat)
                     {
-                        if(minor)
+                        if (minor)
                             currentKeySig = Cf;
                         else
                             currentKeySig = Af;
@@ -774,7 +774,7 @@ namespace instruments
                     }
                     else if (acc == Accidental.flat)
                     {
-                        if(minor)
+                        if (minor)
                             currentKeySig = Df;
                         else
                             currentKeySig = Bf;
@@ -795,7 +795,7 @@ namespace instruments
                     }
                     else if (acc == Accidental.flat)
                     {
-                        if(minor)
+                        if (minor)
                             currentKeySig = Gf;
                         else
                             currentKeySig = Ef;
@@ -811,7 +811,7 @@ namespace instruments
                 case 'G':
                     if (acc == Accidental.sharp)
                     {
-                        if(minor)
+                        if (minor)
                             currentKeySig = B;
                         else
                             currentKeySig = G; // Does not exist
@@ -832,7 +832,7 @@ namespace instruments
                 case 'D':
                     if (acc == Accidental.sharp)
                     {
-                        if(minor)
+                        if (minor)
                             currentKeySig = Fs;
                         else
                             currentKeySig = D; // Does not exist
@@ -878,7 +878,7 @@ namespace instruments
         }
         */
 
-        void SetKeySig(bool wipeAccs=false)
+        void SetKeySig(bool wipeAccs = false)
         {
             for (int j = 0; j < 8; j++)
             {
@@ -923,7 +923,7 @@ namespace instruments
             {
                 // If '/' was not present, they just gave us our tempo
                 beatsPerMinute = noteDuration;
-                if(LFound)
+                if (LFound)
                     bpmFactor = defaultNoteLength;
                 else
                     bpmFactor = 1 / meterDNL;
@@ -938,7 +938,7 @@ namespace instruments
         {
             // Parse the default note length, to find the default note length. 
             // Remove the expected ':' character
-            List<char> checkList = new List<char>{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+            List<char> checkList = new List<char> { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
             SkipCharsUntil(inString, ref i, checkList);
             // Get the value for the length from the fractional form (ex: 4/4)
             defaultNoteLength = GetIntFromStream(inString, ref i);
@@ -1048,7 +1048,7 @@ namespace instruments
                 {
                     // TODO
                     IPlayer player = Array.Find(sapi.World.AllOnlinePlayers, x => x.ClientId == abcp.playerOwnerID);
-                    if(player != null)
+                    if (player != null)
                     {
                         if (parseStatus == ExitStatus.finished)
                             MessageToClient(sapi, player, "abc playback finished!");
@@ -1069,7 +1069,7 @@ namespace instruments
         public void MakeNewParser(ICoreServerAPI sapi, IPlayer byPlayer, string songData, string bandName, InstrumentType instrument)
         {
             // Does some band related checks before creating the parser
-            if(bandName == "")
+            if (bandName == "")
             {
                 // Just a bog standard parser
                 ABCParser abcp = new ABCParser(sapi, byPlayer.ClientId, byPlayer.PlayerName, songData, instrument, bandName, 0);

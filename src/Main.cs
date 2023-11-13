@@ -1,14 +1,13 @@
-﻿using Vintagestory.API.MathTools; // vec3D
-using Vintagestory.API.Client;
-using Vintagestory.API.Common;
-using Vintagestory.API.Config; // GlobalConstants
-using Vintagestory.API.Server;
-using ProtoBuf;
+﻿using ProtoBuf;
 using System;               // Array.Find()
 using System.Collections.Generic; // List
 using System.Diagnostics;  // Debug todo remove
-
 using System.IO; // Open files
+using Vintagestory.API.Client;
+using Vintagestory.API.Common;
+using Vintagestory.API.Config; // GlobalConstants
+using Vintagestory.API.MathTools; // vec3D
+using Vintagestory.API.Server;
 
 namespace instruments
 {
@@ -220,14 +219,14 @@ namespace instruments
             string noteString = "/a3";
             if (note.instrument == InstrumentType.drum)
             {
-                float div = note.pitch *2 - 1;
+                float div = note.pitch * 2 - 1;
                 const float step = 0.046875f;  // 3/64
                 float currentStep = 0f;
                 for (int i = 0; i <= 64; i++)
                 {
                     if (div < currentStep + step)
                     {
-                        noteString = "/" + (i+24);
+                        noteString = "/" + (i + 24);
                         break;
                     }
                     currentStep += step;
@@ -380,7 +379,7 @@ namespace instruments
         private void ParseClientCommand(int groupId, CmdArgs args)
         {
             string command = args.PopWord();
-            switch(command)
+            switch (command)
             {
                 case "enable":
                     clientSideEnable = true;
@@ -418,7 +417,7 @@ namespace instruments
         long listenerID = -1;
         string abcBaseDir;
 
-        struct PlaybackData
+        private struct PlaybackData
         {
             public int ClientID;
             public string abcData;
@@ -452,7 +451,7 @@ namespace instruments
                 .SetMessageHandler<ABCUpdateFromServer>(null)
                 ;
 
-                serverAPI.Event.RegisterGameTickListener(OnServerGameTick, 1); // arg1 is millisecond Interval
+            serverAPI.Event.RegisterGameTickListener(OnServerGameTick, 1); // arg1 is millisecond Interval
             MusicBlockManager.GetInstance().Reset();
 
             abcBaseDir = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "abc_server";
@@ -480,7 +479,7 @@ namespace instruments
             {
                 return; // No files in the folder
             }
-            foreach(string song in abcFiles)
+            foreach (string song in abcFiles)
             {
                 ABCSendSongFromServer packet = new ABCSendSongFromServer();
                 packet.abcFilename = song;
@@ -544,7 +543,7 @@ namespace instruments
             if (abcp == null)
             {
                 string abcSong = "";
-                if(abcData.isServerFile)
+                if (abcData.isServerFile)
                 {
                     // The contained string is NOT a full song, but a link to it on the server.
                     // Find this file, load it, and make the abcParser in the same way

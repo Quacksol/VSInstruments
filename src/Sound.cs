@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using ProtoBuf;
+using System; // Random
+using System.Collections.Generic;
+using System.Diagnostics;  // Debug todo remove
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools; // vec3D
-using System; // Random
-
-using System.Diagnostics;  // Debug todo remove
-
-
-using ProtoBuf;
 
 namespace instruments
 {
@@ -15,11 +12,11 @@ namespace instruments
     {
         public ILoadedSound sound;
         public int ID;
-        public float endTime;        
+        public float endTime;
 
-        public Sound(IClientWorldAccessor client, Vec3d pos, float pitchModifier, string assetLocation, int id, float volume, bool play=true)
+        public Sound(IClientWorldAccessor client, Vec3d pos, float pitchModifier, string assetLocation, int id, float volume, bool play = true)
         {
-           
+
 
             SoundParams soundData = new SoundParams(new AssetLocation("instruments", assetLocation + ".ogg"));
             soundData.Volume = volume;
@@ -55,7 +52,7 @@ namespace instruments
         }
     }
 
-    class SoundManager
+    internal class SoundManager
     {
         // An object for each client that is playing something. There is one SoundManager for each 'sound source'.
         // Each client will have a list of these
@@ -103,7 +100,7 @@ namespace instruments
             // Drum
             // D1 lowest
             // E6 highest
-            for (i = 0; i < drumSamples-1; i++)
+            for (i = 0; i < drumSamples - 1; i++)
             {
                 int index = i + 26;
                 string s = index + "";
@@ -147,14 +144,14 @@ namespace instruments
             }
 
             // Check if a chord in the buffer should play.
-            nowTime += (dt*1000);
+            nowTime += (dt * 1000);
             int chordCount = chordBuffer.Count;
             if (chordCount == 0)
                 ;
             else
-                for(int i=0; i<chordCount; i++)
+                for (int i = 0; i < chordCount; i++)
                 {
-                    if(chordBuffer[i].CheckShouldStart(nowTime))
+                    if (chordBuffer[i].CheckShouldStart(nowTime))
                     {
                         foreach (Note note in chordBuffer[i].notes)
                         {
@@ -165,10 +162,10 @@ namespace instruments
                             {
                                 int index = KeyToIndex(note);
 
-                                if(index < 0)
+                                if (index < 0)
                                 {
                                     play = false;
-                                    index = drumSamples-1;
+                                    index = drumSamples - 1;
                                 }
                                 assetLocation = instrumentFileLocation + "/" + drumMap[index];
                                 pitch = 1;
@@ -182,11 +179,11 @@ namespace instruments
                                     play = false;
                                 }
                                 assetLocation = instrumentFileLocation + "/" + octaveMap[note.octave];
-                                if(instrument == InstrumentType.mic)
+                                if (instrument == InstrumentType.mic)
                                 {
                                     Random rnd = new Random();
                                     int rNum = rnd.Next(0, 5); // A number between 0 and 4
-                                    switch(rNum)
+                                    switch (rNum)
                                     {
                                         case 0:
                                             assetLocation += "ba";
@@ -211,7 +208,7 @@ namespace instruments
                             if (newSound.sound == null)
                                 Debug.WriteLine("Sound creation failed (abc)!");
                             else
-                               soundsOngoing.Add(newSound);
+                                soundsOngoing.Add(newSound);
                         }
                         chordBuffer.RemoveAt(i);
                         chordCount--;
@@ -231,7 +228,7 @@ namespace instruments
             else
                 for (int i = 0; i < soundCount; i++)
                 {
-                    if(soundsOngoing[i].endTime < nowTime)
+                    if (soundsOngoing[i].endTime < nowTime)
                     {
                         soundsOngoing[i].StopSound();
                         soundsOngoing.RemoveAt(i);
@@ -269,27 +266,27 @@ namespace instruments
 
             switch (key)
             {
-            case 'a':
-            case 'b':
-            case 'c':
-            case 'd':
-            case 'e':
-            case 'f':
-            case 'g':
-                noteIndex = key - 'a';
-                break;
-            case 'A':
-            case 'B':
-            case 'C':
-            case 'D':
-            case 'E':
-            case 'F':
-            case 'G':
-                noteIndex = key - 'A';
-                break;
-            default:
-                // z means rest.
-                return -1;
+                case 'a':
+                case 'b':
+                case 'c':
+                case 'd':
+                case 'e':
+                case 'f':
+                case 'g':
+                    noteIndex = key - 'a';
+                    break;
+                case 'A':
+                case 'B':
+                case 'C':
+                case 'D':
+                case 'E':
+                case 'F':
+                case 'G':
+                    noteIndex = key - 'A';
+                    break;
+                default:
+                    // z means rest.
+                    return -1;
             }
 
             pitchMod = frequencies[noteIndex, accMod];
@@ -334,7 +331,7 @@ namespace instruments
 
             if (index < 0 || index >= drumSamples)
                 index = -1;
-            
+
             return index;
         }
 

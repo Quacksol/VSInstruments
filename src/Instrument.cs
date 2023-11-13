@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;       // Action<>
+using System.Collections.Generic;
+using System.Diagnostics; // debug todo remove
+using System.IO;    // Open files
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
-using Vintagestory.API.MathTools; // vec3D
-
-using System;       // Action<>
-using System.IO;    // Open files
-using System.Diagnostics; // debug todo remove
-
-using Vintagestory.API.Util;  // ToolModes
 using Vintagestory.API.Config;  // Lang
+using Vintagestory.API.MathTools; // vec3D
+using Vintagestory.API.Util;  // ToolModes
 
 namespace instruments
 {
@@ -163,7 +161,7 @@ namespace instruments
             var client = GetClient(byEntity, out isClient);
 
             if (isClient)
-            {            
+            {
                 Update(slot, byEntity);
                 // Additionally, update the sound packet
                 if (GetPlayMode(slot) != PlayMode.abc)
@@ -237,13 +235,13 @@ namespace instruments
         }
         private void Update(ItemSlot slot, EntityAgent byEntity)
         {
-            
-            if(!holding)
+
+            if (!holding)
             {
                 holding = true;
                 capi.Event.AfterActiveSlotChanged += ChangeFromInstrument;
             }
-            
+
             switch (GetPlayMode(slot))
             {
                 case PlayMode.lockedTone:
@@ -359,7 +357,7 @@ namespace instruments
             capi.Event.AfterActiveSlotChanged -= ChangeFromInstrument;
             holding = false;
             //guiDialog?.TryClose();
-            if(abcPlaying)
+            if (abcPlaying)
             {
                 abcPlaying = false;
                 ABCSendStop();
@@ -387,7 +385,7 @@ namespace instruments
         private void ABCSongSelect()
         {
             // Load abc folder
-            if(Definitions.GetInstance().UpdateSongList(capi))
+            if (Definitions.GetInstance().UpdateSongList(capi))
             {
                 Action<string> sb = SetBand;
                 SongSelectGUI songGui = new SongSelectGUI(capi, PlaySong, Definitions.GetInstance().GetSongList(), sb, Definitions.GetInstance().GetBandName());
