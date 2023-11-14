@@ -1,3 +1,4 @@
+[
 {
 	ingredientPattern: "_C_	PPP	PMP",
 	ingredients: {
@@ -7,6 +8,18 @@
 	},
 	width: 3,
 	height: 3,
-	name: "musicblockentity",
+	recipeGroup: 1,
+	output: { type: "block", code: "musicblock-south" }
+},
+{
+	ingredientPattern: "_C_	PPP	PMP",
+	ingredients: {
+		"P": {type: "item", code: "game:plank-*"},
+		"M": {type: "item", code: "game:metalnailsandstrips-*"},
+		"C": {type: "item", code: "musicblockcone"}
+	},
+	width: 3,
+	height: 3,
 	output: { type: "block", code: "musicblock-south" }
 }
+]
