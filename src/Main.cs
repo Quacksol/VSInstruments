@@ -104,6 +104,11 @@ namespace instruments
             api.RegisterItemClass("steeldrum", typeof(SteelDrumItem));
             api.RegisterItemClass("trumpet", typeof(TrumpetItem));
             api.RegisterItemClass("violin", typeof(ViolinItem));
+            api.RegisterItemClass("banjo", typeof(BanjoItem));
+            api.RegisterItemClass("bones", typeof(BonesItem));
+            api.RegisterItemClass("harmonica", typeof(HarmonicaItem));
+            api.RegisterItemClass("ocarina", typeof(OcarinaItem));
+            api.RegisterItemClass("overdriveguitar", typeof(OverdriveGuitarItem));
 
             api.RegisterBlockClass("musicblock", typeof(MusicBlock));
             api.RegisterBlockEntityClass("musicblockentity", typeof(BEMusicBlock));
@@ -189,6 +194,11 @@ namespace instruments
             soundLocations.Add(InstrumentType.sax, "sounds/sax");
             soundLocations.Add(InstrumentType.steelDrum, "sounds/steeldrum");
             soundLocations.Add(InstrumentType.violin, "sounds/violin");
+            soundLocations.Add(InstrumentType.banjo, "sounds/banjo");
+            soundLocations.Add(InstrumentType.bones, "sounds/bones");
+            soundLocations.Add(InstrumentType.harmonica, "sounds/harmonica");
+            soundLocations.Add(InstrumentType.ocarina, "sounds/ocarina");
+            soundLocations.Add(InstrumentType.overdriveguitar, "sounds/overdriveguitar");
 
             thisClientPlaying = false;
             MusicBlockManager.GetInstance().Reset(); // I think there's a manager for both Server and Client, so reset it I guess

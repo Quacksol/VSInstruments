@@ -28,6 +28,11 @@ namespace instruments
         harp,
         mic,
         drum,
+        banjo,
+        bones,
+        harmonica,
+        ocarina,
+        overdriveguitar,
         none
     }
     public class InstrumentItem : Item
@@ -501,6 +506,46 @@ namespace instruments
         public override void OnLoaded(ICoreAPI api)
         {
             instrument = InstrumentType.drum;
+            base.OnLoaded(api);
+        }
+    }
+    public class BanjoItem : InstrumentItem
+    {
+        public override void OnLoaded(ICoreAPI api)
+        {
+            instrument = InstrumentType.banjo;
+            base.OnLoaded(api);
+        }
+    }
+    public class BonesItem : InstrumentItem
+    {
+        public override void OnLoaded(ICoreAPI api)
+        {
+            instrument = InstrumentType.bones;
+            base.OnLoaded(api);
+        }
+    }
+    public class HarmonicaItem : InstrumentItem
+    {
+        public override void OnLoaded(ICoreAPI api)
+        {
+            instrument = InstrumentType.harmonica;
+            base.OnLoaded(api);
+        }
+    }
+    public class OcarinaItem : InstrumentItem
+    {
+        public override void OnLoaded(ICoreAPI api)
+        {
+            instrument = InstrumentType.ocarina;
+            base.OnLoaded(api);
+        }
+    }
+        public class OverdriveGuitarItem : InstrumentItem
+    {
+        public override void OnLoaded(ICoreAPI api)
+        {
+            instrument = InstrumentType.overdriveguitar;
             base.OnLoaded(api);
         }
     }
