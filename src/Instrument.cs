@@ -12,27 +12,41 @@ namespace instruments
 {
     public enum InstrumentType
     {
-        trumpet = 0,
-        sax,
-        dulcimer,
-        accordian,
+        trumpet = 0,        // implemented
+        sax,                // implemented
+        dulcimer,           // implemented
+        accordion,          // implemented
         bass,
-        violin,
-        clarinet,
+        violin,             // implemented
+        clarinet,           // implemented
         flute,
-        bagpipes,
-        steelDrum,
-        acousticGuitar,
-        grandPiano,
-        musicBox,
-        harp,
-        mic,
-        drum,
-        banjo,
-        bones,
-        harmonica,
-        ocarina,
-        overdriveguitar,
+        steeldrum,          // implemented
+        acousticguitar,     // implemented
+        grandpiano,         // implemented
+        musicbox,           // implemented
+        harp,               // implemented
+        mic,                // implemented
+        drum,               // implemented
+        banjo,              // implemented (needs model)
+        bones,              // implemented (needs model)
+        harmonica,          // implemented (needs model)
+        ocarina,            // implemented (needs model)
+        overdriveguitar,    // implemented (needs model)
+        bagpipes,           // implemented (needs model)
+        balalaika,          // implemented (needs model)
+        celesta,            // implemented (needs model)
+        cello,              // implemented (needs model)
+        didgeridoo,         // implemented (needs model)
+        harpsichord,        // implemented (needs model)
+        hurdygurdy,         // implemented (needs model)
+        lute,               // implemented (needs model)
+        mandolin,           // implemented (needs model)
+        panflute,           // implemented (needs model)
+        piccolo,            // implemented (needs model)
+        recorder,           // implemented (needs model)
+        sitar,              // implemented (needs model)
+        tuba,               // implemented (needs model)
+        ukulele,            // implemented (needs model)
         none
     }
     public class InstrumentItem : Item
@@ -425,7 +439,7 @@ namespace instruments
     {
         public override void OnLoaded(ICoreAPI api)
         {
-            instrument = InstrumentType.accordian;
+            instrument = InstrumentType.accordion;
             base.OnLoaded(api);
         }
     }
@@ -457,7 +471,7 @@ namespace instruments
     {
         public override void OnLoaded(ICoreAPI api)
         {
-            instrument = InstrumentType.steelDrum;
+            instrument = InstrumentType.steeldrum;
             base.OnLoaded(api);
         }
     }
@@ -465,7 +479,7 @@ namespace instruments
     {
         public override void OnLoaded(ICoreAPI api)
         {
-            instrument = InstrumentType.acousticGuitar;
+            instrument = InstrumentType.acousticguitar;
             base.OnLoaded(api);
         }
     }
@@ -473,7 +487,7 @@ namespace instruments
     {
         public override void OnLoaded(ICoreAPI api)
         {
-            instrument = InstrumentType.grandPiano;
+            instrument = InstrumentType.grandpiano;
             base.OnLoaded(api);
         }
     }
@@ -481,7 +495,7 @@ namespace instruments
     {
         public override void OnLoaded(ICoreAPI api)
         {
-            instrument = InstrumentType.musicBox;
+            instrument = InstrumentType.musicbox;
             base.OnLoaded(api);
         }
     }
@@ -541,7 +555,127 @@ namespace instruments
             base.OnLoaded(api);
         }
     }
-        public class OverdriveGuitarItem : InstrumentItem
+        public class BagPipesItem : InstrumentItem
+    {
+        public override void OnLoaded(ICoreAPI api)
+        {
+            instrument = InstrumentType.bagpipes;
+            base.OnLoaded(api);
+        }
+    }
+            public class BalalaikaItem : InstrumentItem
+    {
+        public override void OnLoaded(ICoreAPI api)
+        {
+            instrument = InstrumentType.balalaika;
+            base.OnLoaded(api);
+        }
+    }
+            public class CelestaItem : InstrumentItem
+    {
+        public override void OnLoaded(ICoreAPI api)
+        {
+            instrument = InstrumentType.celesta;
+            base.OnLoaded(api);
+        }
+    }
+            public class CelloItem : InstrumentItem
+    {
+        public override void OnLoaded(ICoreAPI api)
+        {
+            instrument = InstrumentType.cello;
+            base.OnLoaded(api);
+        }
+    }
+            public class DidgeridooItem : InstrumentItem
+    {
+        public override void OnLoaded(ICoreAPI api)
+        {
+            instrument = InstrumentType.didgeridoo;
+            base.OnLoaded(api);
+        }
+    }
+            public class HarpsichordItem : InstrumentItem
+    {
+        public override void OnLoaded(ICoreAPI api)
+        {
+            instrument = InstrumentType.harpsichord;
+            base.OnLoaded(api);
+        }
+    }
+            public class HurdyGurdyItem : InstrumentItem
+    {
+        public override void OnLoaded(ICoreAPI api)
+        {
+            instrument = InstrumentType.hurdygurdy;
+            base.OnLoaded(api);
+        }
+    }
+            public class LuteItem : InstrumentItem
+    {
+        public override void OnLoaded(ICoreAPI api)
+        {
+            instrument = InstrumentType.lute;
+            base.OnLoaded(api);
+        }
+    }
+            public class MandolinItem : InstrumentItem
+    {
+        public override void OnLoaded(ICoreAPI api)
+        {
+            instrument = InstrumentType.mandolin;
+            base.OnLoaded(api);
+        }
+    }
+            public class PanfluteItem : InstrumentItem
+    {
+        public override void OnLoaded(ICoreAPI api)
+        {
+            instrument = InstrumentType.panflute;
+            base.OnLoaded(api);
+        }
+    }
+            public class PiccoloItem : InstrumentItem
+    {
+        public override void OnLoaded(ICoreAPI api)
+        {
+            instrument = InstrumentType.piccolo;
+            base.OnLoaded(api);
+        }
+    }
+            public class RecorderItem : InstrumentItem
+    {
+        public override void OnLoaded(ICoreAPI api)
+        {
+            instrument = InstrumentType.recorder;
+            base.OnLoaded(api);
+        }
+    }
+            public class SitarItem : InstrumentItem
+    {
+        public override void OnLoaded(ICoreAPI api)
+        {
+            instrument = InstrumentType.sitar;
+            base.OnLoaded(api);
+        }
+    }
+            public class TubaItem : InstrumentItem
+    {
+        public override void OnLoaded(ICoreAPI api)
+        {
+            instrument = InstrumentType.tuba;
+            base.OnLoaded(api);
+        }
+    }
+            public class UkuleleItem : InstrumentItem
+    {
+        public override void OnLoaded(ICoreAPI api)
+        {
+            instrument = InstrumentType.ukulele;
+            base.OnLoaded(api);
+        }
+    }
+            public class OverdriveGuitarItem : InstrumentItem
     {
         public override void OnLoaded(ICoreAPI api)
         {

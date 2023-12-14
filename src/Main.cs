@@ -104,11 +104,28 @@ namespace instruments
             api.RegisterItemClass("steeldrum", typeof(SteelDrumItem));
             api.RegisterItemClass("trumpet", typeof(TrumpetItem));
             api.RegisterItemClass("violin", typeof(ViolinItem));
+
             api.RegisterItemClass("banjo", typeof(BanjoItem));
             api.RegisterItemClass("bones", typeof(BonesItem));
             api.RegisterItemClass("harmonica", typeof(HarmonicaItem));
             api.RegisterItemClass("ocarina", typeof(OcarinaItem));
             api.RegisterItemClass("overdriveguitar", typeof(OverdriveGuitarItem));
+
+            api.RegisterItemClass("bagpipes", typeof(BagPipesItem));
+            api.RegisterItemClass("balalaika", typeof(BalalaikaItem));
+            api.RegisterItemClass("celesta", typeof(CelestaItem));
+            api.RegisterItemClass("cello", typeof(CelloItem));
+            api.RegisterItemClass("didgeridoo", typeof(DidgeridooItem));
+            api.RegisterItemClass("harpsichord", typeof(HarpsichordItem));
+            api.RegisterItemClass("hurdygurdy", typeof(HurdyGurdyItem));
+            api.RegisterItemClass("lute", typeof(LuteItem));
+            api.RegisterItemClass("mandolin", typeof(MandolinItem));
+            api.RegisterItemClass("panflute", typeof(PanfluteItem));
+            api.RegisterItemClass("piccolo", typeof(PiccoloItem));
+            api.RegisterItemClass("recorder", typeof(RecorderItem));
+            api.RegisterItemClass("sitar", typeof(SitarItem));
+            api.RegisterItemClass("tuba", typeof(TubaItem));
+            api.RegisterItemClass("ukulele", typeof(UkuleleItem));
 
             api.RegisterBlockClass("musicblock", typeof(MusicBlock));
             api.RegisterBlockEntityClass("musicblockentity", typeof(BEMusicBlock));
@@ -181,24 +198,13 @@ namespace instruments
 
             soundManagers = new List<SoundManager>();
 
-            soundLocations.Add(InstrumentType.accordian, "sounds/accordion");
-            soundLocations.Add(InstrumentType.acousticGuitar, "sounds/acousticguitar");
-            soundLocations.Add(InstrumentType.clarinet, "sounds/clarinet");
-            soundLocations.Add(InstrumentType.dulcimer, "sounds/dulcimer");
-            soundLocations.Add(InstrumentType.drum, "sounds/drum");
-            soundLocations.Add(InstrumentType.grandPiano, "sounds/grandpiano");
-            soundLocations.Add(InstrumentType.harp, "sounds/harp");
-            soundLocations.Add(InstrumentType.mic, "sounds/mic");
-            soundLocations.Add(InstrumentType.musicBox, "sounds/musicbox");
-            soundLocations.Add(InstrumentType.trumpet, "sounds/trumpet");
-            soundLocations.Add(InstrumentType.sax, "sounds/sax");
-            soundLocations.Add(InstrumentType.steelDrum, "sounds/steeldrum");
-            soundLocations.Add(InstrumentType.violin, "sounds/violin");
-            soundLocations.Add(InstrumentType.banjo, "sounds/banjo");
-            soundLocations.Add(InstrumentType.bones, "sounds/bones");
-            soundLocations.Add(InstrumentType.harmonica, "sounds/harmonica");
-            soundLocations.Add(InstrumentType.ocarina, "sounds/ocarina");
-            soundLocations.Add(InstrumentType.overdriveguitar, "sounds/overdriveguitar");
+            // Go through the list of all instruments (in Instrument.cs) and add a sound file location for each entry.
+            // Make sure the folder name is exactly the same as in the enum!
+            for (InstrumentType i = 0; i < InstrumentType.none; i++)
+            {
+                string s = "sounds/"+i.ToString();
+                soundLocations.Add(i, s);
+            }
 
             thisClientPlaying = false;
             MusicBlockManager.GetInstance().Reset(); // I think there's a manager for both Server and Client, so reset it I guess
