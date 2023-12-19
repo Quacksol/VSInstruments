@@ -1,6 +1,7 @@
 ﻿using System;               // Array.Find()
 using System.Collections.Generic; // List
 using System.Diagnostics;  // Debug todo remove
+using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools; // vec3D
 using Vintagestory.API.Server;
@@ -1027,6 +1028,7 @@ namespace instruments
     {
         private static ABCParsers _instance;
         List<ABCParser> list;
+        ICoreServerAPI api;
         private ABCParsers()
         {
             list = new List<ABCParser>();
@@ -1036,6 +1038,10 @@ namespace instruments
             if (_instance != null)
                 return _instance;
             return _instance = new ABCParsers();
+        }
+        public void SetAPI(ICoreServerAPI newApi)
+        {
+            api = newApi;
         }
         public void Update(ICoreServerAPI sapi, float dt)
         {
@@ -1051,7 +1057,16 @@ namespace instruments
                     if (player != null)
                     {
                         if (parseStatus == ExitStatus.finished)
+                        {
                             MessageToClient(sapi, player, "abc playback finished!");
+                            
+                            // TODO copied from in instrument. Make into a single function pls
+                            ABCStopFromServer packet = new ABCStopFromServer(); // todo copied from main, make a function
+                            packet.fromClientID = abcp.playerID;
+                            IServerNetworkChannel ch = api.Network.GetChannel("abc");
+                            ch.BroadcastPacket(packet);
+                            
+                        }
                         else
                             BadABC(sapi, player, abcp.charIndex);
                     }

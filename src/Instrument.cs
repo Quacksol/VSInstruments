@@ -55,7 +55,6 @@ namespace instruments
         private NoteFrequency currentNote;
         private ICoreClientAPI capi;
         bool holding = false;
-        bool abcPlaying = false;
         public InstrumentType instrument;
 
         SkillItem[] toolModes;
@@ -158,7 +157,7 @@ namespace instruments
                 }
                 else
                 {
-                    if (abcPlaying)
+                    if (Definitions.GetInstance().IsPlaying())
                     {
                         ABCSendStop();
                     }
@@ -252,6 +251,7 @@ namespace instruments
             }
             return 1;
         }
+ 
         private void Update(ItemSlot slot, EntityAgent byEntity)
         {
 
@@ -376,9 +376,9 @@ namespace instruments
             capi.Event.AfterActiveSlotChanged -= ChangeFromInstrument;
             holding = false;
             //guiDialog?.TryClose();
-            if (abcPlaying)
+            if (Definitions.GetInstance().IsPlaying())
             {
-                abcPlaying = false;
+                Definitions.GetInstance().SetIsPlaying(false);
                 ABCSendStop();
             }
         }
@@ -391,14 +391,13 @@ namespace instruments
             newABC.isServerFile = isServerOwned;
             IClientNetworkChannel ch = capi.Network.GetChannel("abc");
             ch.SendPacket(newABC);
-            abcPlaying = true;
+            Definitions.GetInstance().SetIsPlaying(true);
         }
         private void ABCSendStop()
         {
             ABCStopFromClient newABC = new ABCStopFromClient();
             IClientNetworkChannel ch = capi.Network.GetChannel("abc");
             ch.SendPacket(newABC);
-            abcPlaying = false;
         }
 
         private void ABCSongSelect()
@@ -694,6 +693,7 @@ namespace instruments
         private List<string> abcFiles = new List<string>();
         private List<string> serverAbcFiles = new List<string>();
         private bool messageDone = false;
+        private bool abcPlaying = false;
 
         string abcBaseDirectory = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "abc";
 
@@ -801,6 +801,11 @@ namespace instruments
         {
             return abcBaseDirectory;
         }
+        public void SetIsPlaying(bool toggle)
+        {
+            abcPlaying = toggle;
+        }
+        public bool IsPlaying() { return abcPlaying; }
         public void Reset()
         {
             abcFiles.Clear();
