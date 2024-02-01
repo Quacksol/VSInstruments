@@ -6,8 +6,8 @@
         "Quacksol"
     ],
     "description": "Play music together on a variety of instruments!",
-    "version": "1.2.4",
+    "version": "1.2.5",
     "dependencies": {
-        "game": "1.18.15"
+        "game": "1.19.3"
     }
 }

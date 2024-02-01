@@ -83,6 +83,8 @@ namespace instruments
 
         const int drumSamples = 64;
 
+        const float MAX_DURATION = 250;
+
         public SoundManager(IClientWorldAccessor clientAcc, int sID, string location, InstrumentType inst, float startTime)
         {
             client = clientAcc;
@@ -204,7 +206,10 @@ namespace instruments
                                 }
                             }
                             Sound newSound = new Sound(client, sourcePosition, pitch, assetLocation, -1, volume, play);
-                            newSound.endTime = nowTime + note.duration;
+                            float duration = note.duration;
+                            if (duration < MAX_DURATION)
+                                duration = MAX_DURATION;
+                            newSound.endTime = nowTime + duration;
                             if (newSound.sound == null)
                                 Debug.WriteLine("Sound creation failed (abc)!");
                             else

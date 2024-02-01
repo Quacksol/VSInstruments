@@ -1,0 +1,172 @@
+{
+	"editor": {
+		"allAngles": false,
+		"entityTextureMode": false
+	},
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textureSizes": {
+	},
+	"textures": {
+		"steel": "game:block/metal/ingot/steel",
+		"prepared": "game:item/resource/hide/prepared",
+		"sides": "game:block/wood/barrel/sides"
+	},
+	"elements": [
+		{
+			"name": "baseleft",
+			"from": [ 1.0, 0.0, 4.0 ], 
+			"to": [ 3.0, 7.0, 12.0 ], 
+			"rotationOrigin": [ 1.0, 0.0, 4.0 ],
+			"faces": {
+				"north": { "texture": "#sides", "uv": [ 0.0, 8.0, 2.0, 15.0 ] },
+				"east": { "texture": "#sides", "uv": [ 2.0, 8.0, 10.0, 15.0 ] },
+				"south": { "texture": "#sides", "uv": [ 10.0, 8.0, 12.0, 15.0 ] },
+				"west": { "texture": "#sides", "uv": [ 0.0, 0.0, 8.0, 7.0 ] },
+				"up": { "texture": "#sides", "uv": [ 0.0, 0.0, 2.0, 8.0 ] },
+				"down": { "texture": "#sides", "uv": [ 2.0, 0.0, 4.0, 8.0 ] }
+			},
+			"children": [
+				{
+					"name": "baseright",
+					"from": [ 11.0, 0.0, 0.0 ], 
+					"to": [ 13.0, 7.0, 8.0 ], 
+					"rotationOrigin": [ 11.0, 0.0, 0.0 ],
+					"faces": {
+						"north": { "texture": "#sides", "uv": [ 0.0, 0.0, 2.0, 7.0 ] },
+						"east": { "texture": "#sides", "uv": [ 0.0, 0.0, 8.0, 7.0 ] },
+						"south": { "texture": "#sides", "uv": [ 0.0, 0.0, 2.0, 7.0 ] },
+						"west": { "texture": "#sides", "uv": [ 0.0, 0.0, 8.0, 7.0 ] },
+						"up": { "texture": "#sides", "uv": [ 0.0, 0.0, 2.0, 8.0 ] },
+						"down": { "texture": "#sides", "uv": [ 0.0, 0.0, 2.0, 8.0 ] }
+					}
+				},
+				{
+					"name": "bellows",
+					"from": [ 3.0, 0.0, 0.0 ], 
+					"to": [ 4.0, 7.0, 8.0 ], 
+					"rotationOrigin": [ 3.0, 0.0, 0.0 ],
+					"faces": {
+						"north": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 7.0 ] },
+						"east": { "texture": "#prepared", "uv": [ 4.0, 5.0, 12.0, 12.0 ] },
+						"south": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 7.0 ] },
+						"west": { "texture": "#prepared", "uv": [ 4.0, 5.0, 12.0, 12.0 ] },
+						"up": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 8.0 ] },
+						"down": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 8.0 ] }
+					}
+				},
+				{
+					"name": "bellows4",
+					"from": [ 5.0, 0.0, 0.0 ], 
+					"to": [ 6.0, 7.0, 8.0 ], 
+					"rotationOrigin": [ 5.0, 0.0, 0.0 ],
+					"faces": {
+						"north": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 7.0 ] },
+						"east": { "texture": "#prepared", "uv": [ 4.0, 5.0, 12.0, 12.0 ] },
+						"south": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 7.0 ] },
+						"west": { "texture": "#prepared", "uv": [ 4.0, 5.0, 12.0, 12.0 ] },
+						"up": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 8.0 ] },
+						"down": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 8.0 ] }
+					}
+				},
+				{
+					"name": "bellows5",
+					"from": [ 7.0, 0.0, 0.0 ], 
+					"to": [ 8.0, 7.0, 8.0 ], 
+					"rotationOrigin": [ 7.0, 0.0, 0.0 ],
+					"faces": {
+						"north": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 7.0 ] },
+						"east": { "texture": "#prepared", "uv": [ 4.0, 5.0, 12.0, 12.0 ] },
+						"south": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 7.0 ] },
+						"west": { "texture": "#prepared", "uv": [ 4.0, 5.0, 12.0, 12.0 ] },
+						"up": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 8.0 ] },
+						"down": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 8.0 ] }
+					}
+				},
+				{
+					"name": "bellows6",
+					"from": [ 9.0, 0.0, 0.0 ], 
+					"to": [ 10.0, 7.0, 8.0 ], 
+					"rotationOrigin": [ 9.0, 0.0, 0.0 ],
+					"faces": {
+						"north": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 7.0 ] },
+						"east": { "texture": "#prepared", "uv": [ 4.0, 5.0, 12.0, 12.0 ] },
+						"south": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 7.0 ] },
+						"west": { "texture": "#prepared", "uv": [ 4.0, 5.0, 12.0, 12.0 ] },
+						"up": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 8.0 ] },
+						"down": { "texture": "#steel", "uv": [ 0.0, 0.0, 1.0, 8.0 ] }
+					}
+				},
+				{
+					"name": "bellowsinner",
+					"from": [ 2.0, 1.0, 1.0 ], 
+					"to": [ 3.0, 6.0, 7.0 ], 
+					"rotationOrigin": [ 2.0, 1.0, 1.0 ],
+					"faces": {
+						"north": { "texture": "#prepared", "uv": [ 8.0, 5.5, 9.0, 10.5 ] },
+						"east": { "texture": "#prepared", "uv": [ 5.0, 5.5, 11.0, 10.5 ] },
+						"south": { "texture": "#prepared", "uv": [ 7.5, 5.0, 8.5, 10.0 ] },
+						"west": { "texture": "#prepared", "uv": [ 5.0, 5.5, 11.0, 10.5 ] },
+						"up": { "texture": "#prepared", "uv": [ 7.5, 4.0, 8.5, 10.0 ] },
+						"down": { "texture": "#prepared", "uv": [ 7.0, 5.5, 8.0, 11.5 ] }
+					}
+				},
+				{
+					"name": "bellowsinner8",
+					"from": [ 4.0, 1.0, 1.0 ], 
+					"to": [ 5.0, 6.0, 7.0 ], 
+					"rotationOrigin": [ 4.0, 1.0, 1.0 ],
+					"faces": {
+						"north": { "texture": "#prepared", "uv": [ 8.0, 5.5, 9.0, 10.5 ] },
+						"east": { "texture": "#prepared", "uv": [ 5.0, 5.5, 11.0, 10.5 ] },
+						"south": { "texture": "#prepared", "uv": [ 7.5, 5.0, 8.5, 10.0 ] },
+						"west": { "texture": "#prepared", "uv": [ 5.0, 5.5, 11.0, 10.5 ] },
+						"up": { "texture": "#prepared", "uv": [ 7.5, 4.0, 8.5, 10.0 ] },
+						"down": { "texture": "#prepared", "uv": [ 7.0, 5.5, 8.0, 11.5 ] }
+					}
+				},
+				{
+					"name": "bellowsinner9",
+					"from": [ 6.0, 1.0, 1.0 ], 
+					"to": [ 7.0, 6.0, 7.0 ], 
+					"rotationOrigin": [ 6.0, 1.0, 1.0 ],
+					"faces": {
+						"north": { "texture": "#prepared", "uv": [ 8.0, 5.5, 9.0, 10.5 ] },
+						"east": { "texture": "#prepared", "uv": [ 5.0, 5.5, 11.0, 10.5 ] },
+						"south": { "texture": "#prepared", "uv": [ 7.5, 5.0, 8.5, 10.0 ] },
+						"west": { "texture": "#prepared", "uv": [ 5.0, 5.5, 11.0, 10.5 ] },
+						"up": { "texture": "#prepared", "uv": [ 7.5, 4.0, 8.5, 10.0 ] },
+						"down": { "texture": "#prepared", "uv": [ 7.0, 5.5, 8.0, 11.5 ] }
+					}
+				},
+				{
+					"name": "bellowsinner10",
+					"from": [ 8.0, 1.0, 1.0 ], 
+					"to": [ 9.0, 6.0, 7.0 ], 
+					"rotationOrigin": [ 8.0, 1.0, 1.0 ],
+					"faces": {
+						"north": { "texture": "#prepared", "uv": [ 8.0, 5.5, 9.0, 10.5 ] },
+						"east": { "texture": "#prepared", "uv": [ 5.0, 5.5, 11.0, 10.5 ] },
+						"south": { "texture": "#prepared", "uv": [ 7.5, 5.0, 8.5, 10.0 ] },
+						"west": { "texture": "#prepared", "uv": [ 5.0, 5.5, 11.0, 10.5 ] },
+						"up": { "texture": "#prepared", "uv": [ 7.5, 4.0, 8.5, 10.0 ] },
+						"down": { "texture": "#prepared", "uv": [ 7.0, 5.5, 8.0, 11.5 ] }
+					}
+				},
+				{
+					"name": "bellowsinner11",
+					"from": [ 10.0, 1.0, 1.0 ], 
+					"to": [ 11.0, 6.0, 7.0 ], 
+					"rotationOrigin": [ 10.0, 1.0, 1.0 ],
+					"faces": {
+						"north": { "texture": "#prepared", "uv": [ 8.0, 5.5, 9.0, 10.5 ] },
+						"east": { "texture": "#prepared", "uv": [ 5.0, 5.5, 11.0, 10.5 ] },
+						"south": { "texture": "#prepared", "uv": [ 7.5, 5.0, 8.5, 10.0 ] },
+						"west": { "texture": "#prepared", "uv": [ 5.0, 5.5, 11.0, 10.5 ] },
+						"up": { "texture": "#prepared", "uv": [ 7.5, 4.0, 8.5, 10.0 ] },
+						"down": { "texture": "#prepared", "uv": [ 7.0, 5.5, 8.0, 11.5 ] }
+					}
+				}
+			]
+		}
+	]}

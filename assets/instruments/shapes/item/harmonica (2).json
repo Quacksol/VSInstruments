@@ -1,0 +1,77 @@
+{
+	"editor": {
+		"collapsedPaths": "Root/base,Root/origin,Root/mouthpiece/end2,Root/base2,Root/mouthpiece,Root/base/base2",
+		"allAngles": false,
+		"entityTextureMode": false
+	},
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textureSizes": {
+	},
+	"textures": {
+		"lead": "game:block/metal/plate/lead",
+		"platinum": "game:block/metal/plate/platinum",
+		"steel": "game:block/metal/plate/steel"
+	},
+	"elements": [
+		{
+			"name": "Cube1",
+			"from": [ 6.8, 0.8, 10.5 ],
+			"to": [ 9.3, 7.3, 11.0 ],
+			"rotationOrigin": [ 6.0, 1.0, 11.0 ],
+			"rotationX": -90.0,
+			"faces": {
+				"north": { "texture": "#lead", "uv": [ 0.5, 0.0, 3.0, 6.5 ] },
+				"east": { "texture": "#lead", "uv": [ 7.5, 0.0, 8.0, 6.5 ], "windMode": [-1,-1,-1,-1] },
+				"south": { "texture": "#lead", "uv": [ 2.5, 0.0, 5.0, 6.5 ], "windMode": [-1,-1,-1,-1] },
+				"west": { "texture": "#lead", "uv": [ 10.5, 0.0, 11.0, 6.5 ], "windMode": [-1,-1,-1,-1] },
+				"up": { "texture": "#lead", "uv": [ 0.0, 0.0, 2.5, 0.5 ], "windMode": [-1,-1,-1,-1] },
+				"down": { "texture": "#lead", "uv": [ 5.0, 3.0, 7.5, 3.5 ], "windMode": [-1,-1,-1,-1] }
+			}
+		},
+		{
+			"name": "Cube2",
+			"from": [ 7.0, 1.0, 11.0 ],
+			"to": [ 9.0, 7.0, 11.5 ],
+			"rotationOrigin": [ 7.0, 1.0, 11.0 ],
+			"rotationX": -90.0,
+			"faces": {
+				"north": { "texture": "#platinum", "uv": [ 0.5, 0.0, 2.5, 6.0 ], "windMode": [-1,-1,-1,-1] },
+				"east": { "texture": "#platinum", "uv": [ 7.5, 0.0, 8.0, 6.0 ], "windMode": [-1,-1,-1,-1] },
+				"south": { "texture": "#platinum", "uv": [ 2.5, 0.0, 4.5, 6.0 ], "windMode": [-1,-1,-1,-1] },
+				"west": { "texture": "#platinum", "uv": [ 10.5, 0.0, 11.0, 6.0 ], "windMode": [-1,-1,-1,-1] },
+				"up": { "texture": "#platinum", "uv": [ 0.0, 0.0, 2.0, 0.5 ], "windMode": [-1,-1,-1,-1] },
+				"down": { "texture": "#platinum", "uv": [ 5.0, 3.0, 7.0, 3.5 ], "windMode": [-1,-1,-1,-1] }
+			}
+		},
+		{
+			"name": "Cube3",
+			"from": [ 7.0, 0.0, 11.0 ],
+			"to": [ 9.0, 6.0, 11.5 ],
+			"rotationOrigin": [ 7.0, 0.0, 11.0 ],
+			"rotationX": -90.0,
+			"faces": {
+				"north": { "texture": "#platinum", "uv": [ 0.5, 0.0, 2.5, 6.0 ] },
+				"east": { "texture": "#platinum", "uv": [ 7.5, 0.0, 8.0, 6.0 ], "windMode": [-1,-1,-1,-1] },
+				"south": { "texture": "#platinum", "uv": [ 2.5, 0.0, 4.5, 6.0 ], "windMode": [-1,-1,-1,-1] },
+				"west": { "texture": "#platinum", "uv": [ 10.5, 0.0, 11.0, 6.0 ], "windMode": [-1,-1,-1,-1] },
+				"up": { "texture": "#platinum", "uv": [ 0.0, 0.0, 2.0, 0.5 ], "windMode": [-1,-1,-1,-1] },
+				"down": { "texture": "#platinum", "uv": [ 5.0, 3.0, 7.0, 3.5 ], "windMode": [-1,-1,-1,-1] }
+			}
+		},
+		{
+			"name": "Cube4",
+			"from": [ 6.7, 0.15, 9.5 ],
+			"to": [ 7.2, 5.95, 9.7 ],
+			"rotationOrigin": [ 5.0, 1.0, 10.0 ],
+			"rotationX": -90.0,
+			"faces": {
+				"north": { "texture": "#lead", "uv": [ 0.5, 0.0, 1.0, 5.5 ], "windMode": [-1,-1,-1,-1] },
+				"east": { "texture": "#steel", "uv": [ 7.5, 0.0, 8.0, 5.5 ], "windMode": [-1,-1,-1,-1] },
+				"south": { "texture": "#steel", "uv": [ 2.5, 0.0, 3.0, 5.5 ], "windMode": [-1,-1,-1,-1] },
+				"west": { "texture": "#steel", "uv": [ 10.5, 0.0, 11.0, 5.5 ], "windMode": [-1,-1,-1,-1] },
+				"up": { "texture": "#steel", "uv": [ 0.0, 0.0, 0.5, 0.5 ], "windMode": [-1,-1,-1,-1] },
+				"down": { "texture": "#steel", "uv": [ 5.0, 3.0, 5.5, 3.5 ] }
+			}
+		}
+	]}

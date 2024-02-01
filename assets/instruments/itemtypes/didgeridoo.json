@@ -1,0 +1,109 @@
+{
+	"code": "didgeridoo",
+	"class": "didgeridoo",
+	"behaviors": [{
+		"name": "GroundStorable",
+		"properties": {
+			"layout": "WallHalves",
+			"wallOffY": 1,
+			"selectionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 0.1, "z2": 1 },
+			"collisionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 0, "y2": 0, "z2": 0 }
+		}
+	}],
+	"shape": { "base": "item/didgeridoo" },
+	"attributes": {
+		"rackable": true,
+		"toolrackTransform": {
+			"rotation": {
+				"x": -90
+			},
+			"translation": {
+				"x": -0.2,
+				"z": -0.4
+			},
+			"scale": 1.25
+		},
+		"groundStorageTransform": {
+			"translation": { "x": 0, "y": 0.04, "z": -0.02 },
+			"rotation": { "x": -74, "y": 90, "z": 0 }
+		}
+	},
+	"creativeinventory": {
+		"general": [ "*" ],
+		"items": [ "*" ],
+		"instruments": [ "*" ]
+	},
+	"guiTransform": {
+		"translation": {
+			"x": 0,
+			"y": 0,
+			"z": 0
+		},
+		"rotation": {
+			"x": 146,
+			"y": -45,
+			"z": 0
+		},
+		"origin": {
+			"x": 0.4,
+			"y": 0.3,
+			"z": 0.5
+		},
+		"scale": 1.8
+	},
+	"fpHandTransform": {
+		"translation": {
+			"x": 0.7,
+			"y": 0.2,
+			"z": 0.2
+		},
+		"rotation": {
+			"x": 43,
+			"y": -3,
+			"z": 6
+		},
+		"origin": {
+			"x": 1,
+			"y": 0.4,
+			"z": 0.5
+		},
+		"scale": 3.4
+	},
+	"groundTransform": {
+		"translation": {
+			"x": 0,
+			"y": 0,
+			"z": 0
+		},
+		"rotation": {
+			"x": 0,
+			"y": 0,
+			"z": 0
+		},
+		"origin": {
+			"x": 1,
+			"y": 0,
+			"z": 0.5
+		},
+		"scale": 4.17
+	},
+	"tpHandTransform": {
+		"translation": {
+			"x": -0.7,
+			"y": 0.06,
+			"z": -0.45
+		},
+		"rotation": {
+			"x": 40,
+			"y": 13,
+			"z": -130
+		},"origin": {
+			"x": 0.5,
+			"y": 0,
+			"z": 0.5
+		},
+		"scale": 0.8
+	},
+	"heldTpIdleAnimation": "holdbothhands",
+	"heldTpUseAnimation": "holdbothhands"
+}

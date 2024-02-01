@@ -1,11 +1,13 @@
 {
 	"code": "banjo",
 	"class": "banjo",
-	"behaviors": [{
+	"behaviors": [{ 
 		"name": "GroundStorable",
-		"properties": { 
-			"layout": "Quadrants",
-			"collisionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 0.125, "z2": 1 }
+		"properties": {
+			"layout": "WallHalves",
+			"wallOffY": 1,
+			"selectionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 0.1, "z2": 1 },
+			"collisionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 0, "y2": 0, "z2": 0 }
 		}
 	}],
 	"shape": { "base": "item/banjo" },
@@ -13,17 +15,16 @@
 		"rackable": true,
 		"toolrackTransform": {
 			"rotation": {
-				"x": 180,
-				"y": -90
+				"x": 90,
+				"z": -90
 			},
 			"translation": {
-				"y": -0.65
 			},
 			"scale": 1.25
 		},
 		"groundStorageTransform": {
-			"translation": { "x": 0.03, "y": -0.08, "z": 0.03 },
-			"scale": 0.85
+			"translation": { "x": 0.03, "y": 0, "z": 0.37 },
+			"rotation": { "x": 27, "y": 180, "z": 0 }
 		}
 	},
 	"creativeinventory": {
@@ -43,11 +44,11 @@
 			"z": 0
 		},
 		"origin": {
-			"x": 0.5,
-			"y": 0.25,
+			"x": 0.62,
+			"y": 0.5,
 			"z": 0.5
 		},
-		"scale": 1.8
+		"scale": 1.5
 	},
 	"fpHandTransform": {
 		"translation": {
@@ -87,21 +88,21 @@
 	},
 	"tpHandTransform": {
 		"translation": {
-			"x": -0.5,
+			"x": -0.75,
 			"y": 0,
-			"z": -0.4
+			"z": -0.6
 		},
 		"rotation": {
-			"x": 90,
-			"y": 0,
-			"z": -90
+			"x": 0,
+			"y": 90,
+			"z": -75
 		},
 		"origin": {
 			"x": 0.5,
 			"y": 0,
 			"z": 0.5
 		},
-		"scale": 0.75
+		"scale": 0.8
 	},
 	"heldTpIdleAnimation": "holdbothhandslarge",
 	"heldTpUseAnimation": "holdbothhandslarge"
