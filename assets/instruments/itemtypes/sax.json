@@ -113,6 +113,5 @@
 		},
 		"scale": 0.8
 	},
-	"heldTpIdleAnimation": "holdbothhandslarge",
 	"heldTpUseAnimation": "holdbothhandslarge"
 }
