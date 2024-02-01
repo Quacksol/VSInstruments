@@ -58,9 +58,9 @@ namespace instruments
         // Each client will have a list of these
         // The server passes sounds into this, and each client updates the notes in it, per tick or so
         public int sourceID;                // The ID of the player who is playing the sounds for this manager
+        public Vec3d sourcePosition;       // The position of the player of this manager. Will need to update as the player moves.
         private List<Chord> chordBuffer;    // The list of chords received from the server. As the tune progresses, chords from this list will be played.
         private List<Sound> soundsOngoing;  // The list of existing Sounds that exist currently.
-        private Vec3d sourcePosition;       // The position of the player of this manager. Will need to update as the player moves.
         private IClientWorldAccessor client;
         private float nowTime = 0;
         private bool active = true;         // The manager should do Update(). False when playback should stop.
@@ -169,6 +169,7 @@ namespace instruments
                                 }
                                 assetLocation = instrumentFileLocation + "/" + drumMap[index];
                                 pitch = 1;
+                                note.duration = Math.Max(note.duration, 1000);
                             }
                             else
                             {

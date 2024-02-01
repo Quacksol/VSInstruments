@@ -83,8 +83,8 @@ namespace instruments
         public int playerID;
         public string playerName; // May be the name of the block, not only players!
         public int playerOwnerID;   // The ID of the player that created the parser, not the same as playerID for blocks
-        bool isPlayer;
-        private Vec3d position;
+        public bool isPlayer;
+        public Vec3d position;
         public string bandName;
         private ICoreServerAPI serverAPI;
         private InstrumentType instrument;
@@ -1058,18 +1058,25 @@ namespace instruments
                     {
                         if (parseStatus == ExitStatus.finished)
                         {
-                            MessageToClient(sapi, player, "abc playback finished!");
-                            
-                            // TODO copied from in instrument. Make into a single function pls
-                            ABCStopFromServer packet = new ABCStopFromServer(); // todo copied from main, make a function
-                            packet.fromClientID = abcp.playerID;
-                            IServerNetworkChannel ch = api.Network.GetChannel("abc");
-                            ch.BroadcastPacket(packet);
-                            
+                            MessageToClient(sapi, player, "abc playback finished!");                           
                         }
                         else
                             BadABC(sapi, player, abcp.charIndex);
                     }
+                    // TODO copied from in instrument. Make into a single function pls
+                    ABCStopFromServer packet = new ABCStopFromServer(); // todo copied from main, make a function
+                    packet.fromClientID = abcp.playerID;
+                    IServerNetworkChannel ch = api.Network.GetChannel("abc");
+                    ch.BroadcastPacket(packet);
+
+                    if (!abcp.isPlayer)
+                    {
+                        BlockPos bp = new BlockPos((int)abcp.position.X, (int)abcp.position.Y, (int)abcp.position.Z);
+                        BlockEntity block = sapi.World.BlockAccessor.GetBlockEntity(bp);
+                        if (block != null)
+                            ((BEMusicBlock)block).isPlaying = false;
+                    }
+                    
                     // This is my attempt at gracefully removing something from a list                
                     list.Remove(abcp);
                     count--;

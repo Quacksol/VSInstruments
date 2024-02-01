@@ -54,7 +54,7 @@ namespace instruments
         MusicBlockGUI musicBlockGUI;
 
         InstrumentType instrumentType = InstrumentType.none;
-        bool isPlaying = false;
+        public bool isPlaying = false;
         public BEMusicBlock()
         {
             // Set up inventory here - I'm copying necessaries' mailbox, seems simple enough.
