@@ -65,8 +65,8 @@ namespace instruments
         private float nowTime = 0;
         private bool active = true;         // The manager should do Update(). False when playback should stop.
         private string instrumentFileLocation;
-        private InstrumentType instrument;
         private float volume;
+        public InstrumentType instrument;
 
         private Dictionary<int, string> drumMap = new Dictionary<int, string>();
         private Dictionary<int, string> octaveMap = new Dictionary<int, string>();

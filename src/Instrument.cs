@@ -38,6 +38,7 @@ namespace instruments
         private ICoreClientAPI capi;
         bool holding = false;
         public InstrumentType instrument;
+        protected string animation;
 
         SkillItem[] toolModes;
         WorldInteraction[] interactions;
@@ -405,6 +406,7 @@ namespace instruments
         public override void OnLoaded(ICoreAPI api)
         {
             instrument = InstrumentType.trumpet;
+            animation = "holdbothhands";
             base.OnLoaded(api);
         }
     }
@@ -413,6 +415,7 @@ namespace instruments
         public override void OnLoaded(ICoreAPI api)
         {
             instrument = InstrumentType.clarinet;
+            animation = "holdbothhands";
             base.OnLoaded(api);
         }
     }
@@ -421,6 +424,7 @@ namespace instruments
         public override void OnLoaded(ICoreAPI api)
         {
             instrument = InstrumentType.accordion;
+            animation = "holdbothhandslarge";
             base.OnLoaded(api);
         }
     }
@@ -429,6 +433,7 @@ namespace instruments
         public override void OnLoaded(ICoreAPI api)
         {
             instrument = InstrumentType.sax;
+            animation = "holdbothhandslarge";
             base.OnLoaded(api);
         }
     }
@@ -437,6 +442,7 @@ namespace instruments
         public override void OnLoaded(ICoreAPI api)
         {
             instrument = InstrumentType.violin;
+            animation = "holdinglanternrighthand";
             base.OnLoaded(api);
         }
     }
@@ -445,6 +451,7 @@ namespace instruments
         public override void OnLoaded(ICoreAPI api)
         {
             instrument = InstrumentType.dulcimer;
+            animation = "holdbothhandslarge";
             base.OnLoaded(api);
         }
     }
@@ -453,6 +460,7 @@ namespace instruments
         public override void OnLoaded(ICoreAPI api)
         {
             instrument = InstrumentType.steeldrum;
+            animation = "holdbothhandslarge";
             base.OnLoaded(api);
         }
     }
@@ -461,6 +469,7 @@ namespace instruments
         public override void OnLoaded(ICoreAPI api)
         {
             instrument = InstrumentType.acousticguitar;
+            animation = "holdbothhandslarge";
             base.OnLoaded(api);
         }
     }
@@ -469,6 +478,7 @@ namespace instruments
         public override void OnLoaded(ICoreAPI api)
         {
             instrument = InstrumentType.grandpiano;
+            animation = "holdbothhandslarge";
             base.OnLoaded(api);
         }
     }
@@ -477,6 +487,7 @@ namespace instruments
         public override void OnLoaded(ICoreAPI api)
         {
             instrument = InstrumentType.musicbox;
+            animation = "holdbothhandslarge";
             base.OnLoaded(api);
         }
     }
@@ -485,6 +496,7 @@ namespace instruments
         public override void OnLoaded(ICoreAPI api)
         {
             instrument = InstrumentType.harp;
+            animation = "holdbothhands";
             base.OnLoaded(api);
         }
     }
@@ -493,6 +505,7 @@ namespace instruments
         public override void OnLoaded(ICoreAPI api)
         {
             instrument = InstrumentType.mic;
+            animation = "holdinglanternrighthand";
             base.OnLoaded(api);
         }
     }
@@ -501,6 +514,7 @@ namespace instruments
         public override void OnLoaded(ICoreAPI api)
         {
             instrument = InstrumentType.drum;
+            animation = "holdbothhandslarge";
             base.OnLoaded(api);
         }
     }
@@ -511,6 +525,7 @@ namespace instruments
         private PlayMode mode = PlayMode.abc;
         private static Definitions _instance;
         private Dictionary<int, NoteFrequency> noteMap = new Dictionary<int, NoteFrequency>();
+        private Dictionary<Enum, string> animMap = new Dictionary<Enum, string>();
         private const int bufferSize = 32;
         private List<string> abcFiles = new List<string>();
         private List<string> serverAbcFiles = new List<string>();
@@ -548,6 +563,23 @@ namespace instruments
             noteMap.Add(i++, new NoteFrequency("g4", 1.7818f));
             noteMap.Add(i++, new NoteFrequency("g^4", 1.8877f));
             noteMap.Add(i++, new NoteFrequency("a5", 2.0000f));
+
+            // There's probably a better way to do this but I cba tbh
+            animMap.Add(InstrumentType.sax, "holdbothhandslarge");
+            animMap.Add(InstrumentType.dulcimer, "holdbothhandslarge");
+            animMap.Add(InstrumentType.accordion, "holdbothhandslarge");
+            //animMap.Add(InstrumentType.bass,
+            animMap.Add(InstrumentType.violin, "holdinglanternrighthand");
+            animMap.Add(InstrumentType.clarinet, "holdbothhands");
+            //animMap.Add(InstrumentType.flute,
+            //animMap.Add(InstrumentType.bagpipes,
+            animMap.Add(InstrumentType.steeldrum, "holdbothhandslarge");
+            animMap.Add(InstrumentType.acousticguitar, "holdbothhandslarge");
+            animMap.Add(InstrumentType.grandpiano, "holdbothhandslarge");
+            animMap.Add(InstrumentType.musicbox, "holdbothhandslarge");
+            animMap.Add(InstrumentType.harp, "holdbothhands");
+            animMap.Add(InstrumentType.mic, "holdinglanternrighthand");
+            animMap.Add(InstrumentType.drum, "holdbothhandslarge");
         }
         public static Definitions GetInstance()
         {
@@ -583,6 +615,10 @@ namespace instruments
         public List<string> GetSongList()
         {
             return abcFiles;
+        }
+        public string GetAnimation(InstrumentType type)
+        {
+            return animMap[type];
         }
         public bool UpdateSongList(ICoreClientAPI capi)
         {
