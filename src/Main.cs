@@ -176,19 +176,13 @@ namespace instruments
 
             soundManagers = new List<SoundManager>();
 
-            soundLocations.Add(InstrumentType.accordian, "sounds/accordion");
-            soundLocations.Add(InstrumentType.acousticGuitar, "sounds/acousticguitar");
-            soundLocations.Add(InstrumentType.clarinet, "sounds/clarinet");
-            soundLocations.Add(InstrumentType.dulcimer, "sounds/dulcimer");
-            soundLocations.Add(InstrumentType.drum, "sounds/drum");
-            soundLocations.Add(InstrumentType.grandPiano, "sounds/grandpiano");
-            soundLocations.Add(InstrumentType.harp, "sounds/harp");
-            soundLocations.Add(InstrumentType.mic, "sounds/mic");
-            soundLocations.Add(InstrumentType.musicBox, "sounds/musicbox");
-            soundLocations.Add(InstrumentType.trumpet, "sounds/trumpet");
-            soundLocations.Add(InstrumentType.sax, "sounds/sax");
-            soundLocations.Add(InstrumentType.steelDrum, "sounds/steeldrum");
-            soundLocations.Add(InstrumentType.violin, "sounds/violin");
+            // Go through the list of all instruments (in Instrument.cs) and add a sound file location for each entry.
+            // Make sure the folder name is exactly the same as in the enum!
+            for (InstrumentType i = 0; i < InstrumentType.none; i++)
+            {
+                string s = "sounds/"+i.ToString();
+                soundLocations.Add(i, s);
+            }
 
             thisClientPlaying = false;
             MusicBlockManager.GetInstance().Reset(); // I think there's a manager for both Server and Client, so reset it I guess
@@ -325,7 +319,10 @@ namespace instruments
             if (sm != null)
             {
                 if (sm.sourceID == player.ClientId)
+                {
                     thisClientPlaying = false;
+                    Definitions.GetInstance().SetIsPlaying(false);
+                }
                 sm.Kill();
                 soundManagers.Remove(sm);
                 CheckSoundManagersEmpty();
@@ -453,6 +450,7 @@ namespace instruments
 
             serverAPI.Event.RegisterGameTickListener(OnServerGameTick, 1); // arg1 is millisecond Interval
             MusicBlockManager.GetInstance().Reset();
+            ABCParsers.GetInstance().SetAPI(serverAPI);
 
             abcBaseDir = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "abc_server";
             serverAPI.Event.PlayerJoin += SendSongs;
@@ -506,39 +504,6 @@ namespace instruments
         }
         private void StartABC(IPlayer fromPlayer, ABCStartFromClient abcData)
         {
-            // TEST
-            /*
-            ABCParser abcps = abcParsers.Find(x => x.playerID == 20);
-            if (abcps == null)
-            {
-                string filey = "";
-                RecursiveFileProcessor.ReadFile("C:\\Program Files\\Vintagestory\\abc\\zelda\\Dark World.abc", ref filey);
-                abcps = new ABCParser(serverAPI, 20, filey, InstrumentType.clarinet, "s", 0);
-                abcps.Start();
-                abcParsers.Add(abcps);
-            }*/
-            /*
-            ABCParser abcps2 = abcParsers.Find(x => x.playerID == 21);
-            if (abcps2 == null)
-            {
-                string filey = "";
-                RecursiveFileProcessor.ReadFile("C:\\Program Files\\Vintagestory\\abc\\pokemon theme\\ocarina.abc", ref filey);
-                abcps2 = new ABCParser(serverAPI, 20, filey, InstrumentType.clarinet, "s", 0);
-                abcps2.Start();
-                abcParsers.Add(abcps2);
-            }*/
-            /*
-            ABCParser abcps3 = abcParsers.Find(x => x.playerID == 22);
-            if (abcps3 == null)
-            {
-                string filey = "";
-                RecursiveFileProcessor.ReadFile("C:\\Program Files\\Vintagestory\\abc\\pokemon theme\\perc.abc", ref filey);
-                abcps3 = new ABCParser(serverAPI, 20, filey, InstrumentType.drum, "s", 0);
-                abcps3.Start();
-                abcParsers.Add(abcps3);
-            }
-            */
-
             ABCParser abcp = ABCParsers.GetInstance().FindByID(fromPlayer.ClientId);
             if (abcp == null)
             {
