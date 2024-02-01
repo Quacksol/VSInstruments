@@ -4,6 +4,7 @@ using System.Diagnostics; // debug todo remove
 using System.IO;    // Open files
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Config;  // Lang
 using Vintagestory.API.MathTools; // vec3D
 using Vintagestory.API.Util;  // ToolModes
@@ -121,7 +122,7 @@ namespace instruments
             {
                 if (byEntity.Controls.Sneak)
                 {
-                    // Do the default thing instead!
+                    // Do the default thing instead! In this case, usually, place the item.
                     base.OnHeldInteractStart(slot, byEntity, blockSel, entitySel, firstEvent, ref handling);
                     return;
                 }

@@ -306,6 +306,10 @@ namespace instruments
                     playerHeldItem = clientApi.World.Player.Entity.RightHandItemSlot.GetStackName();
                 }
             }
+            // Set the animation
+            IPlayer otherPlayer = Array.Find(clientApi.World.AllOnlinePlayers, x => x.ClientId == sm.sourceID);
+            if (otherPlayer != null)  // Either a musicBlock or something weird
+                otherPlayer.Entity.StartAnimation("holdbothhands");
             sm.AddChord(serverPacket.positon, serverPacket.newChord);
         }
         private void StopSounds(ABCStopFromServer serverPacket)
@@ -323,6 +327,9 @@ namespace instruments
                     thisClientPlaying = false;
                     Definitions.GetInstance().SetIsPlaying(false);
                 }
+                IPlayer otherPlayer = Array.Find(clientApi.World.AllOnlinePlayers, x => x.ClientId == sm.sourceID);
+                if (otherPlayer != null)  // Either a musicBlock or something weird
+                    otherPlayer.Entity.StopAnimation("holdbothhands");
                 sm.Kill();
                 soundManagers.Remove(sm);
                 CheckSoundManagersEmpty();
