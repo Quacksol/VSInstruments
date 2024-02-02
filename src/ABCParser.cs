@@ -155,7 +155,7 @@ namespace instruments
             while (chordBuffer.Count < Definitions.GetInstance().GetBufferSize() && timeout > 0)
             {
                 timeout--;
-                if (charIndex > file.Length || endOfFile)
+                if (charIndex >= file.Length || endOfFile)
                     break;
                 switch (file[charIndex])
                 {

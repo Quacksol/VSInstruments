@@ -16,8 +16,6 @@ namespace instruments
 
         public Sound(IClientWorldAccessor client, Vec3d pos, float pitchModifier, string assetLocation, int id, float volume, bool play = true)
         {
-
-
             SoundParams soundData = new SoundParams(new AssetLocation("instruments", assetLocation + ".ogg"));
             soundData.Volume = volume;
             sound = client.LoadSound(soundData);
