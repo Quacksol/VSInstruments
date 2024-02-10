@@ -565,6 +565,7 @@ namespace instruments
             noteMap.Add(i++, new NoteFrequency("a5", 2.0000f));
 
             // There's probably a better way to do this but I cba tbh
+            animMap.Add(InstrumentType.trumpet, "holdbothhands");
             animMap.Add(InstrumentType.sax, "holdbothhandslarge");
             animMap.Add(InstrumentType.dulcimer, "holdbothhandslarge");
             animMap.Add(InstrumentType.accordion, "holdbothhandslarge");

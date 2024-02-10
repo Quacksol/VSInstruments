@@ -86,6 +86,8 @@ namespace instruments
 
     public class InstrumentModCommon : ModSystem
     {
+        protected bool otherPlayerSync = true;
+        protected bool serversideAnimSync = false;
         public static InstrumentSettings config;
 
         public override void Start(ICoreAPI api)
@@ -305,10 +307,12 @@ namespace instruments
                     playerHeldItem = clientApi.World.Player.Entity.RightHandItemSlot.GetStackName();
                 }
             }
-            // Set the animation
-            IPlayer otherPlayer = Array.Find(clientApi.World.AllOnlinePlayers, x => x.ClientId == sm.sourceID);
-            if (otherPlayer != null && otherPlayer.Entity != null)  // Either a musicBlock, the player is no longer connected, or the player is out of render range. Or something weird
-                otherPlayer.Entity.StartAnimation(Definitions.GetInstance().GetAnimation(serverPacket.instrument));
+            if (otherPlayerSync)
+            {
+                // Set the animation
+                IPlayer otherPlayer = Array.Find(clientApi.World.AllOnlinePlayers, x => x.ClientId == sm.sourceID);
+                otherPlayer?.Entity?.StartAnimation(Definitions.GetInstance().GetAnimation(serverPacket.instrument));
+            }
             sm.AddChord(serverPacket.positon, serverPacket.newChord);
         }
         private void StopSounds(ABCStopFromServer serverPacket)
@@ -325,10 +329,13 @@ namespace instruments
                 {
                     thisClientPlaying = false;
                     Definitions.GetInstance().SetIsPlaying(false);
+                    //player?.Entity?.StopAnimation(Definitions.GetInstance().GetAnimation(sm.instrument));
                 }
-                IPlayer otherPlayer = Array.Find(clientApi.World.AllOnlinePlayers, x => x.ClientId == sm.sourceID);
-                if (otherPlayer != null && otherPlayer.Entity != null)  // Either a musicBlock, the player is no longer connected, or the player is out of render range. Or something weird
-                    otherPlayer.Entity.StopAnimation(Definitions.GetInstance().GetAnimation(sm.instrument));
+                if (otherPlayerSync)
+                {
+                    IPlayer otherPlayer = Array.Find(clientApi.World.AllOnlinePlayers, x => x.ClientId == sm.sourceID);
+                    otherPlayer?.Entity?.StopAnimation(Definitions.GetInstance().GetAnimation(sm.instrument));
+                }
                 sm.Kill();
                 soundManagers.Remove(sm);
                 CheckSoundManagersEmpty();
@@ -526,6 +533,8 @@ namespace instruments
                 }
 
                 ABCParsers.GetInstance().MakeNewParser(serverAPI, fromPlayer, abcSong, abcData.bandName, abcData.instrument);
+                if (serversideAnimSync)
+                    fromPlayer?.Entity?.StartAnimation(Definitions.GetInstance().GetAnimation(abcData.instrument));
             }
             else
             {
@@ -549,6 +558,9 @@ namespace instruments
                 packet.fromClientID = clientID;
                 IServerNetworkChannel ch = serverAPI.Network.GetChannel("abc");
                 ch.BroadcastPacket(packet);
+
+                if(serversideAnimSync)
+                    fromPlayer?.Entity?.StopAnimation(Definitions.GetInstance().GetAnimation(abcp.instrument));
             }
 
             return;

@@ -86,8 +86,8 @@ namespace instruments
         public bool isPlayer;
         public Vec3d position;
         public string bandName;
+        public InstrumentType instrument;
         private ICoreServerAPI serverAPI;
-        private InstrumentType instrument;
         private bool startSync;
 
         public ABCParser(ICoreServerAPI sAPI, int pID, string name, string f, InstrumentType inst, string bn, float masterTime)
