@@ -327,7 +327,7 @@ namespace instruments
                     Definitions.GetInstance().SetIsPlaying(false);
                 }
                 IPlayer otherPlayer = Array.Find(clientApi.World.AllOnlinePlayers, x => x.ClientId == sm.sourceID);
-                if (otherPlayer != null)  // Either a musicBlock or something weird
+                if (otherPlayer != null && otherPlayer.Entity != null)  // Either a musicBlock, the player is no longer connected, or the player is out of render range. Or something weird
                     otherPlayer.Entity.StopAnimation(Definitions.GetInstance().GetAnimation(sm.instrument));
                 sm.Kill();
                 soundManagers.Remove(sm);
