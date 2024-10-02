@@ -445,7 +445,7 @@ namespace instruments
         {
             Note newNote = new Note();
             int noteIndex = -1;
-            int octaveIndex = 3; // 4 is middle, but 2 sounds MUCH better - start there
+            int octaveIndex = 2; // 4 is middle, but 2 sounds MUCH better - start there
             bool sharpDetected = false;
             bool flatDetected = false;
             bool naturalDetected = false;
