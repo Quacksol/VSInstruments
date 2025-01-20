@@ -176,10 +176,10 @@ namespace instruments
                     tree.ToBytes(writer);
                     data = ms.ToArray();
                 }
-
+                BlockPos bp = new BlockPos(Pos.X, Pos.Y, Pos.Z);
                 ((ICoreServerAPI)Api).Network.SendBlockEntityPacket(
                     (IServerPlayer)byPlayer,
-                    Pos.X, Pos.Y, Pos.Z,
+                    bp,
                     69,
                     data
                 );
